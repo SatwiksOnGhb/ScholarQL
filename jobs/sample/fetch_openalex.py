@@ -13,7 +13,7 @@ OpenAlex has no arXiv categories, so "cs.LG" is approximated as: on arXiv, tagge
 "Machine learning" concept, primary topic in the "Artificial Intelligence" subfield,
 2018-2024, with an abstract. Most-cited first, so the sample contains well-known papers.
 
-Usage (from jobs/):  uv run python sample/fetch_openalex.py [--n 500] [--out ../data/sample]
+Usage (from jobs/):  uv run python -m sample.fetch_openalex [--n 500] [--out ../data/sample]
 Set OPENALEX_API_KEY in the repo-root .env (optional) for a higher daily budget.
 """
 
@@ -25,6 +25,8 @@ from pathlib import Path
 
 import httpx
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
+
+from common import SAMPLE_DIR, load_env_file
 
 API = "https://api.openalex.org/works"
 ARXIV = "S4306400194"
@@ -52,7 +54,6 @@ FIELDS = ",".join(
     ]
 )
 MIN_ABSTRACT_WORDS = 40  # skip stubs like "This paper is withdrawn."
-REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def openalex_id(url: str | None) -> int | None:
@@ -136,21 +137,10 @@ def to_records(work: dict) -> tuple[dict, dict] | None:
     return content, meta
 
 
-def load_env_file() -> None:
-    """Read OPENALEX_API_KEY from the repo-root .env without overriding the real env."""
-    env = REPO_ROOT / ".env"
-    if not env.exists():
-        return
-    for line in env.read_text(encoding="utf-8").splitlines():
-        key, sep, value = line.partition("=")
-        if sep and not key.strip().startswith("#"):
-            os.environ.setdefault(key.strip(), value.strip())
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--n", type=int, default=500, help="number of papers (default 500)")
-    parser.add_argument("--out", type=Path, default=REPO_ROOT / "data" / "sample")
+    parser.add_argument("--out", type=Path, default=SAMPLE_DIR)
     args = parser.parse_args()
     load_env_file()
 

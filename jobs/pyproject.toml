@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Offline jobs: sample data, embeddings, author profiles"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "fastembed>=0.9.0",
     "httpx>=0.28",
+    "pymongo>=4.19.0",
     "tenacity>=9.0",
 ]

@@ -2,7 +2,7 @@
 line-length = 100
 target-version = "py312"
 # Folders whose top-level packages count as "ours" when sorting imports (api/app -> `app`)
-src = [".", "api"]
+src = [".", "api", "jobs"]
 
 [lint]
 # E/F: pycodestyle + pyflakes (defaults), I: import sorting, UP: modern syntax, B: likely bugs

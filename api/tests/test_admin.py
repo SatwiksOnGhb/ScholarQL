@@ -35,7 +35,14 @@ def _cell(route: str, total: int, rated: int, correct: int) -> dict:
 def test_shape_stats_from_facets():
     facets = {
         "overall": [
-            {"total": 10, "failed": 2, "with_feedback": 4, "correct": 3, "latency": [100.0, 900.0]}
+            {
+                "total": 10,
+                "seeded": 7,
+                "failed": 2,
+                "with_feedback": 4,
+                "correct": 3,
+                "latency": [100.0, 900.0],
+            }
         ],
         "by_route_week": [_cell("sql", 6, 4, 3), _cell("hybrid", 4, 0, 0)],
         "latency_by_route": [{"_id": "sql", "count": 6, "latency": [120.04, 880.06]}],
@@ -44,6 +51,7 @@ def test_shape_stats_from_facets():
     }
     s = shape_stats(facets, SINCE, 8)
     assert (s.total_queries, s.failed_queries, s.failure_rate) == (10, 2, 0.2)
+    assert s.seeded_queries == 7
     assert (s.with_feedback, s.accuracy, s.p95_latency_ms) == (4, 0.75, 900.0)
     assert s.accuracy_by_route_week[0].accuracy == 0.75
     assert s.accuracy_by_route_week[1].accuracy is None  # no feedback that week
@@ -63,7 +71,7 @@ def test_shape_stats_empty_database():
         )
     }
     s = shape_stats(empty, SINCE, 8)
-    assert s.total_queries == 0
+    assert s.total_queries == 0 and s.seeded_queries == 0
     assert s.accuracy is None and s.failure_rate is None and s.p95_latency_ms is None
 
 

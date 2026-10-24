@@ -62,6 +62,11 @@
             ],
             "title": "P95 Latency Ms"
           },
+          "seeded_queries": {
+            "description": "How many of total_queries are fake demo logs (jobs/seed); 0 = all real",
+            "title": "Seeded Queries",
+            "type": "integer"
+          },
           "since": {
             "description": "Start of the window (UTC)",
             "format": "date-time",
@@ -92,6 +97,7 @@
           "since",
           "weeks",
           "total_queries",
+          "seeded_queries",
           "failed_queries",
           "failure_rate",
           "with_feedback",

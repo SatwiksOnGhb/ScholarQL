@@ -41,6 +41,8 @@ def stats_pipeline(since: datetime) -> list[dict[str, Any]]:
                             "_id": None,
                             "total": {"$sum": 1},
                             "failed": {"$sum": {"$cond": ["$ok", 0, 1]}},
+                            # Fake logs from jobs/seed; the page warns when any are present
+                            "seeded": {"$sum": {"$cond": [{"$eq": ["$seed", True]}, 1, 0]}},
                             "with_feedback": {"$sum": HAS_FEEDBACK},
                             "correct": {"$sum": IS_CORRECT},
                             "latency": P50_P95,
@@ -113,6 +115,7 @@ def shape_stats(facets: dict[str, list[dict]], since: datetime, weeks: int) -> A
         since=since,
         weeks=weeks,
         total_queries=total,
+        seeded_queries=overall.get("seeded", 0),
         failed_queries=overall.get("failed", 0),
         failure_rate=_ratio(overall.get("failed", 0), total),
         with_feedback=with_feedback,

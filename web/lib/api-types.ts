@@ -227,6 +227,11 @@ export interface components {
             /** P95 Latency Ms */
             p95_latency_ms: number | null;
             /**
+             * Seeded Queries
+             * @description How many of total_queries are fake demo logs (jobs/seed); 0 = all real
+             */
+            seeded_queries: number;
+            /**
              * Since
              * Format: date-time
              * @description Start of the window (UTC)

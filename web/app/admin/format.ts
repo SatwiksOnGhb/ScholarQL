@@ -22,8 +22,10 @@ export function ms(value: number | null | undefined): string {
   return value >= 1000 ? `${(value / 1000).toFixed(1)} s` : `${Math.round(value)} ms`;
 }
 
+/** 1,284 stays exact; only 10,000 and up compact (12.9K), so small counts never blur. */
 export function compact(n: number): string {
-  return n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K` : String(n);
+  if (n < 10_000) return n.toLocaleString("en-US");
+  return `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K`;
 }
 
 /** "2026-W43" -> "W43" for axis ticks */

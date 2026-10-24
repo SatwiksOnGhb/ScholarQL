@@ -37,6 +37,9 @@ class AdminStats(BaseModel):
     since: datetime = Field(description="Start of the window (UTC)")
     weeks: int
     total_queries: int
+    seeded_queries: int = Field(
+        description="How many of total_queries are fake demo logs (jobs/seed); 0 = all real"
+    )
     failed_queries: int
     failure_rate: float | None
     with_feedback: int

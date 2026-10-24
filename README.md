@@ -64,6 +64,10 @@ Start just the databases with `docker compose up postgres mongodb`, then:
   # -> [(paper_id, score), ...] best first; filters: year_from, year_to, venue_id
   ```
   Needs embeddings in MongoDB: run the jobs in [`jobs/`](jobs/README.md) first.
+- Query logging (for B): `/ask` already calls `log_query()` from
+  `app/services/query_log.py` for every answer and failure, and returns the log's ID as
+  `query_id`; `POST /feedback` stores the verdict on that log. Swap the placeholder answer in
+  `routers/ask.py` for the engine and keep those calls.
 - Placeholder routes read `api/app/fake_data.py` (fake IDs). Search for `TODO(A)` and
   `TODO(B)` to find what each teammate swaps in.
 

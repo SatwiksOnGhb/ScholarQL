@@ -32,7 +32,7 @@ class AskResponse(Answer):
 
 
 class FeedbackRequest(BaseModel):
-    query_id: str
+    query_id: str = Field(pattern=r"^[0-9a-f]{24}$", description="query_id from POST /ask")
     correct: bool
     comment: str | None = Field(None, max_length=1000)
 

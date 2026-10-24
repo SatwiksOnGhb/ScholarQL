@@ -47,7 +47,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Feedback */
+        /**
+         * Feedback
+         * @description Thumbs up/down on an answer. Sending feedback again replaces the earlier verdict.
+         */
         post: operations["feedback_feedback_post"];
         delete?: never;
         options?: never;
@@ -353,7 +356,10 @@ export interface components {
             comment?: string | null;
             /** Correct */
             correct: boolean;
-            /** Query Id */
+            /**
+             * Query Id
+             * @description query_id from POST /ask
+             */
             query_id: string;
         };
         /** FeedbackResponse */
@@ -765,6 +771,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FeedbackResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Invalid request */

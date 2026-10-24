@@ -420,6 +420,8 @@
             "type": "boolean"
           },
           "query_id": {
+            "description": "query_id from POST /ask",
+            "pattern": "^[0-9a-f]{24}$",
             "title": "Query Id",
             "type": "string"
           }
@@ -1294,6 +1296,7 @@
     },
     "/feedback": {
       "post": {
+        "description": "Thumbs up/down on an answer. Sending feedback again replaces the earlier verdict.",
         "operationId": "feedback_feedback_post",
         "requestBody": {
           "content": {
@@ -1315,6 +1318,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not found"
           },
           "422": {
             "content": {

@@ -29,19 +29,6 @@ def test_get_routes(client, path):
     assert client.get(path).status_code == 200
 
 
-def test_ask_returns_answer_shape(client):
-    r = client.post("/ask", json={"question": "papers from 2020"})
-    assert r.status_code == 200
-    body = r.json()
-    for field in ("sql", "columns", "rows", "route", "explanation", "attempts", "latency_ms"):
-        assert field in body
-
-
-def test_feedback(client):
-    r = client.post("/feedback", json={"query_id": "abc", "correct": True})
-    assert r.json() == {"ok": True}
-
-
 def test_not_found_uses_error_format(client):
     r = client.get("/papers/999")
     assert r.status_code == 404

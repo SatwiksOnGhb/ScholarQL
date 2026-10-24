@@ -1,19 +1,35 @@
-// Placeholder home page for task 1. The real shell (navigation, pages) comes in task 4.
-export default function Home() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+import Link from "next/link";
 
+import { NAV_ITEMS } from "@/components/nav";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { ApiStatus } from "./api-status";
+
+export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center gap-4 px-6 py-24">
-      <h1 className="text-4xl font-semibold tracking-tight">ScholarQL</h1>
-      <p className="text-lg text-zinc-600 dark:text-zinc-400">
-        Ask questions about research papers in plain English.
-      </p>
-      <p className="text-sm text-zinc-500">
-        API:{" "}
-        <a className="underline" href={`${apiUrl}/docs`}>
-          {apiUrl}/docs
-        </a>
-      </p>
-    </main>
+    <div className="space-y-10">
+      <section className="space-y-3 pt-6">
+        <h1 className="text-4xl font-semibold tracking-tight">ScholarQL</h1>
+        <p className="max-w-2xl text-lg text-muted-foreground">
+          Ask questions about research papers in plain English. Get exact answers, with the SQL
+          that produced them.
+        </p>
+        <ApiStatus />
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {NAV_ITEMS.map(({ href, label, description, icon: Icon }) => (
+          <Link key={href} href={href} className="group">
+            <Card className="h-full transition-colors group-hover:bg-muted/50">
+              <CardHeader>
+                <Icon className="mb-2 size-5 text-muted-foreground" />
+                <CardTitle>{label}</CardTitle>
+                <CardDescription>{description}</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+        ))}
+      </section>
+    </div>
   );
 }

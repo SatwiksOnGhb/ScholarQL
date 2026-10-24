@@ -59,6 +59,20 @@ Start just the databases with `docker compose up postgres mongodb`, then:
 - Placeholder routes read `api/app/fake_data.py` (fake IDs). Search for `TODO(A)` and
   `TODO(B)` to find what each teammate swaps in.
 
+## Web conventions
+
+- Call the API only through the typed client in `web/lib/api.ts`:
+  `unwrap(api.GET("/papers/{paper_id}", { params: { path: { paper_id: 1001 } } }))`.
+  Paths, params and response types are checked at build time.
+- **After changing an API model or route**, regenerate the contract files and commit them:
+  ```bash
+  cd api && uv run python scripts/export_openapi.py   # -> web/lib/openapi.json
+  cd ../web && pnpm gen:api                           # -> web/lib/api-types.ts
+  ```
+  CI fails if either file is stale, and `pnpm build` fails if a page no longer matches the API.
+- Shared components live in `web/components/` (shadcn/ui primitives in `components/ui/`;
+  add more with `pnpm dlx shadcn@latest add <name>`).
+
 ## Repo layout and owners
 
 | Path         | Owner | What                                         |

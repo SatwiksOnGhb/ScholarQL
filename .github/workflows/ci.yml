@@ -45,6 +45,16 @@ jobs:
         working-directory: api
         run: uv run --frozen pytest -q
 
+      # Contract check: the committed spec must match what FastAPI generates now
+      - name: OpenAPI spec is up to date
+        working-directory: api
+        run: |
+          uv run --frozen python scripts/export_openapi.py
+          git diff --exit-code ../web/lib/openapi.json || {
+            echo "::error::web/lib/openapi.json is stale. Run: cd api && uv run python scripts/export_openapi.py && cd ../web && pnpm gen:api"
+            exit 1
+          }
+
   web:
     name: Web (lint + build)
     runs-on: ubuntu-latest
@@ -67,6 +77,15 @@ jobs:
 
       - name: Install
         run: pnpm install --frozen-lockfile
+
+      # Contract check: the committed TypeScript types must match the committed spec
+      - name: API types are up to date
+        run: |
+          pnpm gen:api
+          git diff --exit-code lib/api-types.ts || {
+            echo "::error::web/lib/api-types.ts is stale. Run: cd web && pnpm gen:api"
+            exit 1
+          }
 
       - name: Lint
         run: pnpm lint

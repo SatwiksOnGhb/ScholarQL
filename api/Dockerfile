@@ -24,4 +24,7 @@ RUN python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-smal
 COPY app ./app
 
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Hosts like Render choose the port via $PORT (8000 locally). --proxy-headers makes uvicorn
+# use the visitor's IP from X-Forwarded-For, so per-IP rate limits work behind the host's proxy.
+# (docker-compose overrides this command with a --reload version for development.)
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips '*'"]

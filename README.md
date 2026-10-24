@@ -41,6 +41,12 @@ docker compose down -v         # stop AND wipe both databases
 The API container reloads automatically when you edit files in `api/app/`. For fast web
 development, run the web app outside Docker: `cd web && pnpm install && pnpm dev`.
 
+## Deployment
+
+Vercel (web), Render (API), Neon (PostgreSQL) and MongoDB Atlas M0, all free tiers.
+Step-by-step guide: [`docs/deployment.md`](docs/deployment.md). Environment variables are
+documented in [`.env.example`](.env.example).
+
 ## Working without Docker
 
 Start just the databases with `docker compose up postgres mongodb`, then:

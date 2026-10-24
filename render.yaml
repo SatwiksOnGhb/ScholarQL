@@ -1,0 +1,26 @@
+# Render Blueprint: the API as a free Docker web service. See docs/deployment.md.
+# Secrets (sync: false) are entered in the Render dashboard when the Blueprint is created.
+services:
+  - type: web
+    name: scholarql-api
+    runtime: docker
+    plan: free
+    region: singapore  # closest Render region to India
+    rootDir: api
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass  # deploy main only after GitHub Actions CI passes
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: MONGODB_DB
+        value: scholarql
+      - key: DATABASE_URL  # Neon connection string
+        sync: false
+      - key: MONGODB_URI  # Atlas mongodb+srv:// connection string
+        sync: false
+      - key: CORS_ORIGINS  # the Vercel production URL, e.g. https://scholarql.vercel.app
+        sync: false
+      - key: CORS_ORIGIN_REGEX  # optional: allow Vercel preview deployments
+        sync: false

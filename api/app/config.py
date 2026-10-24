@@ -26,6 +26,9 @@ class Settings(BaseSettings):
 
     # Comma-separated list, e.g. "http://localhost:3000,https://scholarql.vercel.app"
     cors_origins: str = "http://localhost:3000"
+    # Optional regex for origins that change per deploy, e.g. Vercel preview URLs:
+    # "https://scholarql(-[a-z0-9-]+)?\.vercel\.app"
+    cors_origin_regex: str | None = None
 
     # slowapi limit strings, per client IP
     rate_limit_default: str = "60/minute"

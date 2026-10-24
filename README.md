@@ -43,8 +43,21 @@ development, run the web app outside Docker: `cd web && pnpm install && pnpm dev
 
 ## Working without Docker
 
-- API: `cd api && uv sync && uv run uvicorn app.main:app --reload`
+Start just the databases with `docker compose up postgres mongodb`, then:
+
+- API: `cd api && uv sync && uv run uvicorn app.main:app --reload --loop asyncio:SelectorEventLoop`
+  (the `--loop` flag is needed on Windows: psycopg's async mode can't use Windows' default
+  event loop; it's harmless elsewhere)
+- API tests: `cd api && uv run pytest`
 - Web: `cd web && pnpm install && pnpm dev`
+
+## API conventions
+
+- Every error response has the same body: `{"error": {"code", "message", "details"}}`.
+  Raise `ApiError(404, "not_found", "...")` from `app/errors.py` in a route.
+- Rate limits per IP: 60/min by default, 10/min on `/ask` and `/reviewers`.
+- Placeholder routes read `api/app/fake_data.py` (fake IDs). Search for `TODO(A)` and
+  `TODO(B)` to find what each teammate swaps in.
 
 ## Repo layout and owners
 

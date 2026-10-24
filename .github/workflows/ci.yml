@@ -40,7 +40,10 @@ jobs:
         working-directory: api
         run: uv lock --check
 
-      # TODO: add `uv run pytest` here once the API has tests
+      # No databases in this job; the tests don't need them
+      - name: API tests
+        working-directory: api
+        run: uv run --frozen pytest -q
 
   web:
     name: Web (lint + build)

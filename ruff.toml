@@ -1,6 +1,8 @@
 # Shared Ruff config for all Python in the repo (api/, jobs/, engine/, pipeline/, bench/)
 line-length = 100
 target-version = "py312"
+# Folders whose top-level packages count as "ours" when sorting imports (api/app -> `app`)
+src = [".", "api"]
 
 [lint]
 # E/F: pycodestyle + pyflakes (defaults), I: import sorting, UP: modern syntax, B: likely bugs

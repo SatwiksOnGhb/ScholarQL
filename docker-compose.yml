@@ -30,11 +30,14 @@ services:
     environment:
       MONGODB_INITDB_ROOT_USERNAME: ${MONGO_USER:-scholarql}
       MONGODB_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-scholarql}
+      MONGODB_DB: ${MONGODB_DB:-scholarql}  # read by mongo/init/01-collections.js
     ports:
       - "${MONGO_PORT:-27017}:27017"
     volumes:
       - mongodata:/data/db
       - mongoconfig:/data/configdb
+      # *.js / *.sh here run once, on the first start with an empty volume (collections + validation)
+      - ./mongo/init:/docker-entrypoint-initdb.d:ro
 
   api:
     build: ./api

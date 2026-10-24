@@ -1,0 +1,22 @@
+FROM python:3.12-slim
+
+# uv installs the exact versions pinned in uv.lock
+COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /uvx /bin/
+
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    PATH="/opt/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install dependencies first so this layer is cached until the lockfile changes.
+# The venv lives in /opt/venv so the dev bind mount of ./app doesn't hide it.
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+COPY app ./app
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

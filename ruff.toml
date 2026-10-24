@@ -1,0 +1,7 @@
+# Shared Ruff config for all Python in the repo (api/, jobs/, engine/, pipeline/, bench/)
+line-length = 100
+target-version = "py312"
+
+[lint]
+# E/F: pycodestyle + pyflakes (defaults), I: import sorting, UP: modern syntax, B: likely bugs
+select = ["E", "F", "I", "UP", "B"]

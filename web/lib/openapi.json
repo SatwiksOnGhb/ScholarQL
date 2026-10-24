@@ -154,6 +154,56 @@
         "title": "AskResponse",
         "type": "object"
       },
+      "AuthorOption": {
+        "properties": {
+          "author_id": {
+            "title": "Author Id",
+            "type": "integer"
+          },
+          "institution_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Institution Name"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "paper_count": {
+            "title": "Paper Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "author_id",
+          "name",
+          "paper_count"
+        ],
+        "title": "AuthorOption",
+        "type": "object"
+      },
+      "AuthorsResponse": {
+        "properties": {
+          "authors": {
+            "items": {
+              "$ref": "#/components/schemas/AuthorOption"
+            },
+            "title": "Authors",
+            "type": "array"
+          }
+        },
+        "required": [
+          "authors"
+        ],
+        "title": "AuthorsResponse",
+        "type": "object"
+      },
       "CitationEdge": {
         "properties": {
           "cited_id": {
@@ -274,6 +324,63 @@
           "error"
         ],
         "title": "ErrorResponse",
+        "type": "object"
+      },
+      "ExcludedAuthor": {
+        "properties": {
+          "author_id": {
+            "title": "Author Id",
+            "type": "integer"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "reason": {
+            "enum": [
+              "submitting_author",
+              "coauthor"
+            ],
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "author_id",
+          "reason"
+        ],
+        "title": "ExcludedAuthor",
+        "type": "object"
+      },
+      "ExcludedInstitution": {
+        "properties": {
+          "institution_id": {
+            "title": "Institution Id",
+            "type": "integer"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "institution_id"
+        ],
+        "title": "ExcludedInstitution",
         "type": "object"
       },
       "FailureReason": {
@@ -412,6 +519,17 @@
           "title": {
             "title": "Title",
             "type": "string"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
           }
         },
         "required": [
@@ -614,7 +732,7 @@
             "title": "Institution Name"
           },
           "matching_papers": {
-            "description": "Why this reviewer was suggested",
+            "description": "The author's papers closest to the abstract: why they were suggested",
             "items": {
               "$ref": "#/components/schemas/MatchingPaper"
             },
@@ -625,8 +743,12 @@
             "title": "Name",
             "type": "string"
           },
+          "paper_count": {
+            "title": "Paper Count",
+            "type": "integer"
+          },
           "score": {
-            "description": "Similarity of the author's profile to the abstract",
+            "description": "Similarity of the author's profile to the abstract (0..1)",
             "title": "Score",
             "type": "number"
           }
@@ -635,6 +757,7 @@
           "author_id",
           "name",
           "score",
+          "paper_count",
           "matching_papers"
         ],
         "title": "Reviewer",
@@ -653,6 +776,7 @@
             "items": {
               "type": "integer"
             },
+            "maxItems": 20,
             "title": "Author Ids",
             "type": "array"
           },
@@ -672,12 +796,20 @@
       },
       "ReviewerResponse": {
         "properties": {
-          "excluded_author_ids": {
+          "excluded_authors": {
             "description": "Dropped by the conflict-of-interest check",
             "items": {
-              "type": "integer"
+              "$ref": "#/components/schemas/ExcludedAuthor"
             },
-            "title": "Excluded Author Ids",
+            "title": "Excluded Authors",
+            "type": "array"
+          },
+          "excluded_institutions": {
+            "description": "Institutions of the submitting authors; nobody from them is suggested",
+            "items": {
+              "$ref": "#/components/schemas/ExcludedInstitution"
+            },
+            "title": "Excluded Institutions",
             "type": "array"
           },
           "reviewers": {
@@ -690,7 +822,8 @@
         },
         "required": [
           "reviewers",
-          "excluded_author_ids"
+          "excluded_authors",
+          "excluded_institutions"
         ],
         "title": "ReviewerResponse",
         "type": "object"
@@ -1429,7 +1562,7 @@
     },
     "/reviewers": {
       "post": {
-        "operationId": "find_reviewers_reviewers_post",
+        "operationId": "suggest_reviewers_reviewers_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1480,9 +1613,108 @@
               }
             },
             "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "MongoDB unavailable"
           }
         },
-        "summary": "Find Reviewers",
+        "summary": "Suggest Reviewers",
+        "tags": [
+          "reviewers"
+        ]
+      }
+    },
+    "/reviewers/authors": {
+      "get": {
+        "description": "Author picker for the submitting-authors field.",
+        "operationId": "authors_reviewers_authors_get",
+        "parameters": [
+          {
+            "description": "Part of an author's name",
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "description": "Part of an author's name",
+              "maxLength": 100,
+              "minLength": 2,
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "MongoDB unavailable"
+          }
+        },
+        "summary": "Authors",
         "tags": [
           "reviewers"
         ]

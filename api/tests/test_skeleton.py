@@ -37,14 +37,6 @@ def test_ask_returns_answer_shape(client):
         assert field in body
 
 
-def test_reviewers_excludes_coauthors(client):
-    r = client.post("/reviewers", json={"abstract": "x" * 30, "author_ids": [5004]})
-    assert r.status_code == 200
-    body = r.json()
-    assert body["excluded_author_ids"] == [5004, 5005]  # 5005 co-authored with 5004
-    assert all(rv["author_id"] not in (5004, 5005) for rv in body["reviewers"])
-
-
 def test_feedback(client):
     r = client.post("/feedback", json={"query_id": "abc", "correct": True})
     assert r.json() == {"ok": True}

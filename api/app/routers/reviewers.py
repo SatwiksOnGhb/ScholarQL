@@ -1,45 +1,28 @@
-"""Reviewer finder with a conflict-of-interest check. Owned by Person C.
+"""Reviewer finder with a conflict-of-interest check. Owned by Person C."""
 
-PLACEHOLDER: suggests authors from the fake catalog, dropping the submitting authors and
-their co-authors. Task 9 replaces this with author-profile vector search plus coauthors().
-"""
+from fastapi import APIRouter, Query, Request
 
-from fastapi import APIRouter, Request
-
-from app import fake_data as fake
 from app.config import settings
 from app.limits import limiter
-from app.models.reviewers import MatchingPaper, Reviewer, ReviewerRequest, ReviewerResponse
+from app.models.common import ErrorResponse
+from app.models.reviewers import AuthorsResponse, ReviewerRequest, ReviewerResponse
+from app.services.reviewers import find_reviewers, search_authors
 
-router = APIRouter(tags=["reviewers"])
+router = APIRouter(prefix="/reviewers", tags=["reviewers"])
+
+UNAVAILABLE = {503: {"model": ErrorResponse, "description": "MongoDB unavailable"}}
 
 
-@router.post("/reviewers")
+@router.post("", responses=UNAVAILABLE)
 @limiter.limit(settings.rate_limit_heavy)  # embeds the abstract on every call
-async def find_reviewers(request: Request, body: ReviewerRequest) -> ReviewerResponse:
-    submitted = set(body.author_ids)
-    coauthors = {
-        a for p in fake.PAPERS.values() if submitted & set(p["author_ids"]) for a in p["author_ids"]
-    }
-    excluded = sorted((submitted | coauthors) & fake.AUTHORS.keys())
+async def suggest_reviewers(request: Request, body: ReviewerRequest) -> ReviewerResponse:
+    return await find_reviewers(body.abstract.strip(), body.author_ids, body.k)
 
-    reviewers = []
-    for rank, author in enumerate(
-        a for a in fake.AUTHORS.values() if a["author_id"] not in excluded
-    ):
-        score = round(0.9 - 0.05 * rank, 3)
-        papers = [p for p in fake.PAPERS.values() if author["author_id"] in p["author_ids"]]
-        reviewers.append(
-            Reviewer(
-                author_id=author["author_id"],
-                name=author["name"],
-                institution_id=author["institution_id"],
-                institution_name=fake.INSTITUTIONS[author["institution_id"]]["name"],
-                score=score,
-                matching_papers=[
-                    MatchingPaper(paper_id=p["paper_id"], title=p["title"], score=score)
-                    for p in papers
-                ],
-            )
-        )
-    return ReviewerResponse(reviewers=reviewers[: body.k], excluded_author_ids=excluded)
+
+@router.get("/authors", responses=UNAVAILABLE)
+async def authors(
+    q: str = Query(min_length=2, max_length=100, description="Part of an author's name"),
+    limit: int = Query(10, ge=1, le=50),
+) -> AuthorsResponse:
+    """Author picker for the submitting-authors field."""
+    return AuthorsResponse(authors=await search_authors(q.strip(), limit))

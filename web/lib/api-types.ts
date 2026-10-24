@@ -115,8 +115,28 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Find Reviewers */
-        post: operations["find_reviewers_reviewers_post"];
+        /** Suggest Reviewers */
+        post: operations["suggest_reviewers_reviewers_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviewers/authors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Authors
+         * @description Author picker for the submitting-authors field.
+         */
+        get: operations["authors_reviewers_authors_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -234,6 +254,22 @@ export interface components {
              */
             sql: string | null;
         };
+        /** AuthorOption */
+        AuthorOption: {
+            /** Author Id */
+            author_id: number;
+            /** Institution Name */
+            institution_name?: string | null;
+            /** Name */
+            name: string;
+            /** Paper Count */
+            paper_count: number;
+        };
+        /** AuthorsResponse */
+        AuthorsResponse: {
+            /** Authors */
+            authors: components["schemas"]["AuthorOption"][];
+        };
         /** CitationEdge */
         CitationEdge: {
             /** Cited Id */
@@ -284,6 +320,25 @@ export interface components {
          */
         ErrorResponse: {
             error: components["schemas"]["ErrorBody"];
+        };
+        /** ExcludedAuthor */
+        ExcludedAuthor: {
+            /** Author Id */
+            author_id: number;
+            /** Name */
+            name?: string | null;
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "submitting_author" | "coauthor";
+        };
+        /** ExcludedInstitution */
+        ExcludedInstitution: {
+            /** Institution Id */
+            institution_id: number;
+            /** Name */
+            name?: string | null;
         };
         /** FailureReason */
         FailureReason: {
@@ -344,6 +399,8 @@ export interface components {
             score: number;
             /** Title */
             title: string;
+            /** Year */
+            year?: number | null;
         };
         /** Paper */
         Paper: {
@@ -407,14 +464,16 @@ export interface components {
             institution_name?: string | null;
             /**
              * Matching Papers
-             * @description Why this reviewer was suggested
+             * @description The author's papers closest to the abstract: why they were suggested
              */
             matching_papers: components["schemas"]["MatchingPaper"][];
             /** Name */
             name: string;
+            /** Paper Count */
+            paper_count: number;
             /**
              * Score
-             * @description Similarity of the author's profile to the abstract
+             * @description Similarity of the author's profile to the abstract (0..1)
              */
             score: number;
         };
@@ -436,10 +495,15 @@ export interface components {
         /** ReviewerResponse */
         ReviewerResponse: {
             /**
-             * Excluded Author Ids
+             * Excluded Authors
              * @description Dropped by the conflict-of-interest check
              */
-            excluded_author_ids: number[];
+            excluded_authors: components["schemas"]["ExcludedAuthor"][];
+            /**
+             * Excluded Institutions
+             * @description Institutions of the submitting authors; nobody from them is suggested
+             */
+            excluded_institutions: components["schemas"]["ExcludedInstitution"][];
             /** Reviewers */
             reviewers: components["schemas"]["Reviewer"][];
         };
@@ -897,7 +961,7 @@ export interface operations {
             };
         };
     };
-    find_reviewers_reviewers_post: {
+    suggest_reviewers_reviewers_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -939,6 +1003,75 @@ export interface operations {
             };
             /** @description Server error */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description MongoDB unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    authors_reviewers_authors_get: {
+        parameters: {
+            query: {
+                /** @description Part of an author's name */
+                q: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorsResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description MongoDB unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

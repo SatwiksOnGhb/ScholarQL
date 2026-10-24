@@ -1,7 +1,7 @@
-"""Paper titles and venue names for search results and filters.
+"""Paper titles, venue and institution names for search and the reviewer finder.
 
-These live in A's PostgreSQL tables (`paper`, `venue`). Until they exist, fall back to the
-sample metadata written by jobs/sample/fetch_openalex.py.
+These live in A's PostgreSQL tables (`paper`, `venue`, `institution`). Until they exist,
+fall back to the sample metadata written by jobs/sample/fetch_openalex.py.
 TODO(A): once the schema is loaded, check the column names below match, then delete the
 fallback.
 """
@@ -25,6 +25,12 @@ log = logging.getLogger(__name__)
 _NOT_READY = (psycopg.errors.UndefinedTable, psycopg.OperationalError, PoolTimeout, RuntimeError)
 
 
+def _plain_ints(ids: list[int]) -> list[int]:
+    # PyMongo returns big IDs as bson.Int64 and small ones as int; psycopg can't send a
+    # list that mixes the two, so normalise before querying PostgreSQL
+    return [int(i) for i in ids]
+
+
 @dataclass(frozen=True)
 class PaperSummary:
     title: str
@@ -39,6 +45,7 @@ class VenueCount:
 
 
 async def paper_summaries(ids: list[int]) -> dict[int, PaperSummary]:
+    ids = _plain_ints(ids)
     try:
         async with postgres.get_pool().connection(timeout=2) as conn:
             cur = await conn.execute(
@@ -72,6 +79,28 @@ async def top_venues(limit: int = 50) -> list[VenueCount]:
         counts = Counter(m["venue_id"] for m in meta.values() if m.get("venue_id") is not None)
         names = {m["venue_id"]: m["venue_name"] for m in meta.values() if m.get("venue_id")}
         return [VenueCount(vid, names[vid], n) for vid, n in counts.most_common(limit)]
+
+
+async def institution_names(ids: list[int]) -> dict[int, str]:
+    if not ids:
+        return {}
+    ids = _plain_ints(ids)
+    try:
+        async with postgres.get_pool().connection(timeout=2) as conn:
+            cur = await conn.execute(
+                # TODO(A): check the column name (the synopsis ER says inst_id)
+                "SELECT institution_id, name FROM institution WHERE institution_id = ANY(%s)",
+                (ids,),
+            )
+            return dict(await cur.fetchall())
+    except _NOT_READY:
+        wanted = set(ids)
+        return {
+            a["institution_id"]: a["institution_name"]
+            for m in _sample_meta().values()
+            for a in m["authors"]
+            if a.get("institution_id") in wanted and a.get("institution_name")
+        }
 
 
 def _sample_meta() -> dict[int, dict]:

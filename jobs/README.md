@@ -45,6 +45,9 @@ uv run python -m embed.build_authors   # author_profiles (mean of their papers) 
 - Both create or update their vector index from `mongo/vector-indexes.json` and wait until
   it's queryable.
 - Point them at A's real file with `--content` / `--meta`.
+- `embed_papers` also fills the **temporary** `sample_paper_meta` collection (titles, venues,
+  institutions) that the API shows until A's PostgreSQL tables exist. `# TODO(A)`: drop it
+  then (`db.sample_paper_meta.drop()`).
 
 ## 3. Demo analytics data (until B's engine has real traffic)
 

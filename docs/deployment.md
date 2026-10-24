@@ -124,9 +124,9 @@ Open the Vercel URL:
 - [ ] **Analytics**: charts show the seeded data
 - [ ] **Ask**: returns the placeholder answer; Yes/No saves feedback
 
-Known limitation of the dry run: search and reviewer results show titles like
-"Paper W2963403868". Titles come from A's `paper` table (or, locally, the sample file in
-`data/sample/`, which isn't in the image). They appear once A's data is in Neon.
+Paper titles, venues and institution names come from A's tables in Neon once they exist.
+Until then they come from the temporary `sample_paper_meta` collection that `embed_papers`
+loads in step 1. If results show titles like "Paper W2963403868", re-run step 1.
 
 ---
 

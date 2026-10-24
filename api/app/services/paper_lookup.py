@@ -1,23 +1,20 @@
 """Paper titles, venue and institution names for search and the reviewer finder.
 
-These live in A's PostgreSQL tables (`paper`, `venue`, `institution`). Until they exist,
-fall back to the sample metadata written by jobs/sample/fetch_openalex.py.
+These live in A's PostgreSQL tables (`paper`, `venue`, `institution`). Until they exist, fall
+back to the temporary MongoDB collection `sample_paper_meta`, which jobs/embed/embed_papers.py
+fills from the sample data (works the same locally and when deployed).
 TODO(A): once the schema is loaded, check the column names below match, then delete the
-fallback.
+fallback and drop sample_paper_meta.
 """
 
-import json
 import logging
-from collections import Counter
 from dataclasses import dataclass
-from functools import lru_cache
-from pathlib import Path
 
 import psycopg
 from psycopg_pool import PoolTimeout
+from pymongo.errors import PyMongoError
 
-from app.config import settings
-from app.db import postgres
+from app.db import mongo, postgres
 
 log = logging.getLogger(__name__)
 
@@ -29,6 +26,11 @@ def _plain_ints(ids: list[int]) -> list[int]:
     # PyMongo returns big IDs as bson.Int64 and small ones as int; psycopg can't send a
     # list that mixes the two, so normalise before querying PostgreSQL
     return [int(i) for i in ids]
+
+
+def _sample_meta():
+    """TEMPORARY fallback collection (TODO(A))."""
+    return mongo.get_db().sample_paper_meta
 
 
 @dataclass(frozen=True)
@@ -55,13 +57,13 @@ async def paper_summaries(ids: list[int]) -> dict[int, PaperSummary]:
             )
             return {pid: PaperSummary(title, venue) for pid, title, venue in await cur.fetchall()}
     except _NOT_READY as exc:
-        log.debug("paper table not available (%s); using sample metadata", type(exc).__name__)
-        meta = _sample_meta()
-        return {
-            pid: PaperSummary(meta[pid]["title"], meta[pid].get("venue_name"))
-            for pid in ids
-            if pid in meta
-        }
+        log.debug("paper table not available (%s); using sample_paper_meta", type(exc).__name__)
+    try:
+        cursor = _sample_meta().find({"_id": {"$in": ids}}, {"title": 1, "venue_name": 1})
+        return {d["_id"]: PaperSummary(d["title"], d.get("venue_name")) async for d in cursor}
+    except PyMongoError as exc:
+        log.warning("sample_paper_meta unavailable: %s", exc)
+        return {}
 
 
 async def top_venues(limit: int = 50) -> list[VenueCount]:
@@ -75,10 +77,19 @@ async def top_venues(limit: int = 50) -> list[VenueCount]:
             )
             return [VenueCount(vid, name, n) for vid, name, n in await cur.fetchall()]
     except _NOT_READY:
-        meta = _sample_meta()
-        counts = Counter(m["venue_id"] for m in meta.values() if m.get("venue_id") is not None)
-        names = {m["venue_id"]: m["venue_name"] for m in meta.values() if m.get("venue_id")}
-        return [VenueCount(vid, names[vid], n) for vid, n in counts.most_common(limit)]
+        pass
+    pipeline = [
+        {"$match": {"venue_id": {"$ne": None}}},
+        {"$group": {"_id": "$venue_id", "name": {"$first": "$venue_name"}, "n": {"$sum": 1}}},
+        {"$sort": {"n": -1, "_id": 1}},
+        {"$limit": limit},
+    ]
+    try:
+        cursor = await _sample_meta().aggregate(pipeline)
+        return [VenueCount(d["_id"], d["name"], d["n"]) async for d in cursor]
+    except PyMongoError as exc:
+        log.warning("sample_paper_meta unavailable: %s", exc)
+        return []
 
 
 async def institution_names(ids: list[int]) -> dict[int, str]:
@@ -94,26 +105,21 @@ async def institution_names(ids: list[int]) -> dict[int, str]:
             )
             return dict(await cur.fetchall())
     except _NOT_READY:
-        wanted = set(ids)
-        return {
-            a["institution_id"]: a["institution_name"]
-            for m in _sample_meta().values()
-            for a in m["authors"]
-            if a.get("institution_id") in wanted and a.get("institution_name")
-        }
-
-
-def _sample_meta() -> dict[int, dict]:
-    path = Path(settings.sample_meta_path)
-    mtime = path.stat().st_mtime if path.exists() else 0.0
-    return _load_sample_meta(str(path), mtime)
-
-
-@lru_cache(maxsize=1)
-def _load_sample_meta(path: str, mtime: float) -> dict[int, dict]:
-    """Cached per file version (mtime), so re-running the sample job is picked up."""
-    if not mtime:
-        log.warning("No sample metadata at %s; search results will lack titles", path)
+        pass
+    pipeline = [
+        {"$match": {"institutions.institution_id": {"$in": ids}}},
+        {"$unwind": "$institutions"},
+        {"$match": {"institutions.institution_id": {"$in": ids}}},
+        {
+            "$group": {
+                "_id": "$institutions.institution_id",
+                "name": {"$first": "$institutions.name"},
+            }
+        },
+    ]
+    try:
+        cursor = await _sample_meta().aggregate(pipeline)
+        return {d["_id"]: d["name"] async for d in cursor}
+    except PyMongoError as exc:
+        log.warning("sample_paper_meta unavailable: %s", exc)
         return {}
-    with open(path, encoding="utf-8") as f:
-        return {m["paper_id"]: m for m in map(json.loads, f) if m}

@@ -5,6 +5,11 @@
 | `init/01-collections.js` | Creates `paper_content`, `author_profiles`, `query_logs` with `$jsonSchema` validation, plus regular indexes. Runs automatically on the first start of the `mongodb` container. |
 | `vector-indexes.json` | Atlas Vector Search index definitions (384-dim cosine). Created by the embedding job (task 7), locally and on Atlas. |
 
+A fourth, **temporary** collection, `sample_paper_meta` (titles, venues, institutions of the
+sample papers), is filled by `jobs/embed/embed_papers.py` so the API can show titles before
+A's PostgreSQL tables exist. It has no validator and isn't part of contract 4; drop it once
+A's data is loaded (TODO(A)).
+
 Atlas M0 allows 3 search indexes in total: `paper_embedding`, `author_embedding`, and one
 left for B's examples collection.
 

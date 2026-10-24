@@ -17,7 +17,7 @@ import sys
 import time
 from pathlib import Path
 
-from pymongo import UpdateOne
+from pymongo import ReplaceOne, UpdateOne
 
 from common import (
     EMBEDDING_DIM,
@@ -98,6 +98,36 @@ def main() -> None:
 
     ensure_vector_index(db, "paper_content")
     print(f"paper_content: {db.paper_content.count_documents({})} documents")
+    upload_sample_meta(db, meta)
+
+
+def upload_sample_meta(db, meta: dict[int, dict]) -> None:
+    """TEMPORARY (TODO(A)): copy titles, venues and institutions into a scratch collection.
+
+    The API reads paper titles from A's PostgreSQL tables. Until those exist, it falls back to
+    `sample_paper_meta` so search and reviewer results show real titles, locally and when
+    deployed. Drop the collection once A's data is loaded:  db.sample_paper_meta.drop()
+    """
+    ops = []
+    for pid, m in meta.items():
+        institutions = {
+            a["institution_id"]: a["institution_name"]
+            for a in m.get("authors", [])
+            if a.get("institution_id") is not None and a.get("institution_name")
+        }
+        doc = {
+            "_id": pid,
+            "title": m["title"],
+            "year": m.get("year"),
+            "venue_id": m.get("venue_id"),
+            "venue_name": m.get("venue_name"),
+            "institutions": [{"institution_id": i, "name": n} for i, n in institutions.items()],
+        }
+        ops.append(ReplaceOne({"_id": pid}, doc, upsert=True))
+    for batch in batched(ops, 500):
+        db.sample_paper_meta.bulk_write(batch, ordered=False)
+    db.sample_paper_meta.create_index("institutions.institution_id")
+    print(f"sample_paper_meta: {db.sample_paper_meta.count_documents({})} documents (temporary)")
 
 
 if __name__ == "__main__":

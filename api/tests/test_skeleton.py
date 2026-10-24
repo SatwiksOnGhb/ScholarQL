@@ -23,7 +23,7 @@ def test_health(client):
 
 @pytest.mark.parametrize(
     "path",
-    ["/papers/1001", "/papers/1001/citations?depth=2", "/trends", "/search?q=bert", "/admin/stats"],
+    ["/papers/1001", "/papers/1001/citations?depth=2", "/trends", "/admin/stats"],
 )
 def test_get_routes(client, path):
     assert client.get(path).status_code == 200

@@ -16,6 +16,11 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
+# Bake the embedding model into the image (~65 MB) so the first search doesn't download it
+ENV FASTEMBED_CACHE=/opt/fastembed \
+    HF_HUB_DISABLE_SYMLINKS_WARNING=1
+RUN python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-small-en-v1.5', cache_dir='/opt/fastembed')"
+
 COPY app ./app
 
 EXPOSE 8000

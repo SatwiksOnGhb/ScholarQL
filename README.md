@@ -56,6 +56,14 @@ Start just the databases with `docker compose up postgres mongodb`, then:
 - Every error response has the same body: `{"error": {"code", "message", "details"}}`.
   Raise `ApiError(404, "not_found", "...")` from `app/errors.py` in a route.
 - Rate limits per IP: 60/min by default, 10/min on `/ask` and `/reviewers`.
+- Semantic search for other code (e.g. B's hybrid router), contract 4:
+  ```python
+  from app.services.vector_search import vector_search
+
+  hits = await vector_search("graph neural networks", k=50, filters={"year_from": 2021})
+  # -> [(paper_id, score), ...] best first; filters: year_from, year_to, venue_id
+  ```
+  Needs embeddings in MongoDB: run the jobs in [`jobs/`](jobs/README.md) first.
 - Placeholder routes read `api/app/fake_data.py` (fake IDs). Search for `TODO(A)` and
   `TODO(B)` to find what each teammate swaps in.
 

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { PageHeader } from "@/components/page-header";
-import { PlaceholderNotice } from "@/components/placeholder-notice";
+import { LoadingState } from "@/components/query-state";
 
-import { SearchPreview } from "./search-preview";
+import { SearchView } from "./search-view";
 
 export const metadata: Metadata = { title: "Search" };
 
@@ -12,12 +13,12 @@ export default function SearchPage() {
     <>
       <PageHeader
         title="Search"
-        description="Find papers by meaning, then filter by year and venue."
+        description="Find papers by meaning, not just keywords. Narrow by year and venue."
       />
-      <PlaceholderNotice owner="C">
-        Keyword matching over the placeholder catalog. Vector search and filters arrive in task 8.
-      </PlaceholderNotice>
-      <SearchPreview />
+      {/* SearchView reads the query from the URL, which is only known at request time */}
+      <Suspense fallback={<LoadingState rows={2} />}>
+        <SearchView />
+      </Suspense>
     </>
   );
 }

@@ -777,12 +777,24 @@
       },
       "SearchHit": {
         "properties": {
+          "abstract": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Start of the abstract (about 400 chars)",
+            "title": "Abstract"
+          },
           "paper_id": {
             "title": "Paper Id",
             "type": "integer"
           },
           "score": {
-            "description": "Cosine similarity, higher is closer",
+            "description": "Vector search score (cosine-based, 0..1), higher is closer",
             "title": "Score",
             "type": "number"
           },
@@ -940,6 +952,29 @@
         "title": "TrendsResponse",
         "type": "object"
       },
+      "VenueOption": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "paper_count": {
+            "title": "Paper Count",
+            "type": "integer"
+          },
+          "venue_id": {
+            "title": "Venue Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "venue_id",
+          "name",
+          "paper_count"
+        ],
+        "title": "VenueOption",
+        "type": "object"
+      },
       "VenueRef": {
         "properties": {
           "name": {
@@ -968,6 +1003,22 @@
           "name"
         ],
         "title": "VenueRef",
+        "type": "object"
+      },
+      "VenuesResponse": {
+        "properties": {
+          "venues": {
+            "items": {
+              "$ref": "#/components/schemas/VenueOption"
+            },
+            "title": "Venues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "venues"
+        ],
+        "title": "VenuesResponse",
         "type": "object"
       },
       "YearCount": {
@@ -1442,10 +1493,12 @@
         "operationId": "search_search_get",
         "parameters": [
           {
+            "description": "What the papers should be about",
             "in": "query",
             "name": "q",
             "required": true,
             "schema": {
+              "description": "What the papers should be about",
               "maxLength": 500,
               "minLength": 1,
               "title": "Q",
@@ -1539,9 +1592,85 @@
               }
             },
             "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "MongoDB unavailable"
           }
         },
         "summary": "Search",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/venues": {
+      "get": {
+        "description": "Venues with the most papers, for the search page's venue filter.",
+        "operationId": "venues_search_venues_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VenuesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "summary": "Venues",
         "tags": [
           "search"
         ]

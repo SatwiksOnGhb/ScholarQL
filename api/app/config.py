@@ -10,7 +10,8 @@ from typing import Literal
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # api/app/config.py -> repo root. In the container this resolves to / (no .env there; fine).
-_ROOT_ENV = Path(__file__).resolve().parents[2] / ".env"
+_ROOT = Path(__file__).resolve().parents[2]
+_ROOT_ENV = _ROOT / ".env"
 
 
 class Settings(BaseSettings):
@@ -30,6 +31,15 @@ class Settings(BaseSettings):
     rate_limit_default: str = "60/minute"
     rate_limit_heavy: str = "10/minute"  # LLM and embedding endpoints
     rate_limit_enabled: bool = True
+
+    # Must match the model the embedding job used (jobs/common.py), or vectors won't compare
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+    # Shared with the jobs locally; the Docker image sets FASTEMBED_CACHE=/opt/fastembed
+    fastembed_cache: str = str(Path.home() / ".cache" / "fastembed")
+
+    # Titles/venues until A's PostgreSQL is loaded (TODO(A)): written by jobs/sample.
+    # Locally <repo>/data/sample/...; in the container /data/sample/... (bind mount).
+    sample_meta_path: str = str(_ROOT / "data" / "sample" / "papers_meta.jsonl")
 
     @cached_property
     def cors_origin_list(self) -> list[str]:

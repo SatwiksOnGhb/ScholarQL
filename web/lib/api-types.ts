@@ -140,6 +140,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/search/venues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Venues
+         * @description Venues with the most papers, for the search page's venue filter.
+         */
+        get: operations["venues_search_venues_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/trends": {
         parameters: {
             query?: never;
@@ -461,11 +481,16 @@ export interface components {
         };
         /** SearchHit */
         SearchHit: {
+            /**
+             * Abstract
+             * @description Start of the abstract (about 400 chars)
+             */
+            abstract?: string | null;
             /** Paper Id */
             paper_id: number;
             /**
              * Score
-             * @description Cosine similarity, higher is closer
+             * @description Vector search score (cosine-based, 0..1), higher is closer
              */
             score: number;
             /** Title */
@@ -516,6 +541,15 @@ export interface components {
             /** Topics */
             topics: components["schemas"]["TopicTrend"][];
         };
+        /** VenueOption */
+        VenueOption: {
+            /** Name */
+            name: string;
+            /** Paper Count */
+            paper_count: number;
+            /** Venue Id */
+            venue_id: number;
+        };
         /** VenueRef */
         VenueRef: {
             /** Name */
@@ -527,6 +561,11 @@ export interface components {
             type?: string | null;
             /** Venue Id */
             venue_id: number;
+        };
+        /** VenuesResponse */
+        VenuesResponse: {
+            /** Venues */
+            venues: components["schemas"]["VenueOption"][];
         };
         /** YearCount */
         YearCount: {
@@ -912,6 +951,7 @@ export interface operations {
     search_search_get: {
         parameters: {
             query: {
+                /** @description What the papers should be about */
                 q: string;
                 k?: number;
                 year_from?: number | null;
@@ -930,6 +970,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description MongoDB unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    venues_search_venues_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VenuesResponse"];
                 };
             };
             /** @description Invalid request */

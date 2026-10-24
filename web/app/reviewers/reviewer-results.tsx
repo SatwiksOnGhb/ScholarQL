@@ -62,10 +62,20 @@ function ReviewerCard({ reviewer, rank }: { reviewer: Schemas["Reviewer"]; rank:
             <span className="mr-2 text-muted-foreground tabular-nums">{rank}.</span>
             {reviewer.name}
           </h3>
-          <p className="truncate text-sm text-muted-foreground">
-            {[reviewer.institution_name, `${reviewer.paper_count} papers in the dataset`]
-              .filter(Boolean)
-              .join(" · ")}
+          {/* Only the institution shrinks, so the paper count is always readable */}
+          <p className="flex min-w-0 gap-1 text-sm text-muted-foreground">
+            {reviewer.institution_name && (
+              <>
+                <span className="truncate" title={reviewer.institution_name}>
+                  {reviewer.institution_name}
+                </span>
+                <span aria-hidden="true">·</span>
+              </>
+            )}
+            <span className="shrink-0">
+              {reviewer.paper_count} {reviewer.paper_count === 1 ? "paper" : "papers"} in the
+              dataset
+            </span>
           </p>
         </div>
         <Badge variant="secondary" className="shrink-0 tabular-nums" title="Profile similarity">

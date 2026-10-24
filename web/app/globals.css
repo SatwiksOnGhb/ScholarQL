@@ -81,6 +81,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Data viz (validated with the dataviz palette checker). Route colors follow the route on
+     every chart: categorical slots 1-3, which pass all-pairs CVD checks in both modes. */
+  --route-sql: #2a78d6;
+  --route-semantic: #eb6834;
+  --route-hybrid: #1baf7a;
+  /* Ordinal pair for p50 / p95 latency: one hue, light -> dark */
+  --latency-p50: #86b6ef;
+  --latency-p95: #256abf;
+  --bar-single: #2a78d6; /* single-series bars */
 }
 
 .dark {
@@ -115,6 +125,14 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Same hues, stepped for the dark surface */
+  --route-sql: #3987e5;
+  --route-semantic: #d95926;
+  --route-hybrid: #199e70;
+  --latency-p50: #184f95;
+  --latency-p95: #5598e7;
+  --bar-single: #3987e5;
 }
 
 @layer base {

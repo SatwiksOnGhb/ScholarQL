@@ -11,8 +11,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Stats */
-        get: operations["get_stats_admin_stats_get"];
+        /**
+         * Stats
+         * @description Accuracy by route and week, latency percentiles, top questions, failure reasons.
+         */
+        get: operations["stats_admin_stats_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -206,20 +209,37 @@ export interface components {
     schemas: {
         /** AdminStats */
         AdminStats: {
-            /** Accuracy */
+            /**
+             * Accuracy
+             * @description Share of rated answers marked correct
+             */
             accuracy: number | null;
             /** Accuracy By Route Week */
             accuracy_by_route_week: components["schemas"]["RouteWeekAccuracy"][];
+            /** Failed Queries */
+            failed_queries: number;
+            /** Failure Rate */
+            failure_rate: number | null;
             /** Failure Reasons */
             failure_reasons: components["schemas"]["FailureReason"][];
             /** Latency By Route */
             latency_by_route: components["schemas"]["RouteLatency"][];
             /** P95 Latency Ms */
-            p95_latency_ms: number;
+            p95_latency_ms: number | null;
+            /**
+             * Since
+             * Format: date-time
+             * @description Start of the window (UTC)
+             */
+            since: string;
             /** Top Questions */
             top_questions: components["schemas"]["QuestionCount"][];
             /** Total Queries */
             total_queries: number;
+            /** Weeks */
+            weeks: number;
+            /** With Feedback */
+            with_feedback: number;
         };
         /** AskRequest */
         AskRequest: {
@@ -347,7 +367,10 @@ export interface components {
         FailureReason: {
             /** Count */
             count: number;
-            /** Reason */
+            /**
+             * Reason
+             * @description Error type, e.g. TimeoutError
+             */
             reason: string;
         };
         /** FeedbackRequest */
@@ -531,7 +554,7 @@ export interface components {
         RouteWeekAccuracy: {
             /**
              * Accuracy
-             * @description correct / answers with feedback; null if none
+             * @description correct / with_feedback; null if no feedback
              */
             accuracy: number | null;
             /** Correct */
@@ -548,6 +571,8 @@ export interface components {
              * @description ISO week, e.g. 2026-W43
              */
             week: string;
+            /** With Feedback */
+            with_feedback: number;
         };
         /** SearchHit */
         SearchHit: {
@@ -653,9 +678,12 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    get_stats_admin_stats_get: {
+    stats_admin_stats_get: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Window: last N weeks */
+                weeks?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -691,6 +719,15 @@ export interface operations {
             };
             /** @description Server error */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description MongoDB unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

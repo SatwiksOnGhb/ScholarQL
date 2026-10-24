@@ -45,3 +45,14 @@ uv run python -m embed.build_authors   # author_profiles (mean of their papers) 
 - Both create or update their vector index from `mongo/vector-indexes.json` and wait until
   it's queryable.
 - Point them at A's real file with `--content` / `--meta`.
+
+## 3. Demo analytics data (until B's engine has real traffic)
+
+```bash
+uv run python -m seed.query_logs            # 2000 fake query_logs over the last 8 weeks
+uv run python -m seed.query_logs --clear    # remove them
+```
+
+Fake logs tell a plausible story (usage grows, accuracy improves, realistic failure types)
+so the analytics page has something to show. They're tagged `seed: true`; re-running or
+`--clear` removes only seeded logs, never real ones. Same `--seed` = same data.

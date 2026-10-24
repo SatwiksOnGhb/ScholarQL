@@ -1,0 +1,135 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+
+import { NativeSelect } from "@/components/native-select";
+import { EmptyState, ErrorState, LoadingState } from "@/components/query-state";
+import { api, type Schemas, unwrap } from "@/lib/api";
+
+import { AccuracyChart } from "./accuracy-chart";
+import { BarList } from "./bar-list";
+import { compact, ms, pct } from "./format";
+import { LatencyChart } from "./latency-chart";
+
+const WINDOWS = [4, 8, 12];
+
+export function AnalyticsDashboard() {
+  const [weeks, setWeeks] = useState(8);
+  const stats = useQuery({
+    queryKey: ["admin-stats", weeks],
+    queryFn: () => unwrap(api.GET("/admin/stats", { params: { query: { weeks } } })),
+    placeholderData: (previous) => previous, // keep the old charts while a new window loads
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* One filter row, above everything it scopes */}
+      <label className="flex items-center gap-2 text-sm">
+        <span className="text-muted-foreground">Window</span>
+        <NativeSelect value={weeks} onChange={(e) => setWeeks(Number(e.target.value))}>
+          {WINDOWS.map((w) => (
+            <option key={w} value={w}>
+              Last {w} weeks
+            </option>
+          ))}
+        </NativeSelect>
+        {stats.isFetching && !stats.isPending && (
+          <span className="text-muted-foreground">Updating…</span>
+        )}
+      </label>
+
+      {stats.isPending ? (
+        <LoadingState rows={4} />
+      ) : stats.isError ? (
+        <ErrorState error={stats.error} />
+      ) : stats.data.total_queries === 0 ? (
+        <EmptyState>
+          No questions logged in this window yet. For demo data, run{" "}
+          <code className="font-mono text-xs">cd jobs &amp;&amp; uv run python -m seed.query_logs</code>
+        </EmptyState>
+      ) : (
+        <Dashboard data={stats.data} />
+      )}
+    </div>
+  );
+}
+
+function Dashboard({ data }: { data: Schemas["AdminStats"] }) {
+  return (
+    <div className="space-y-6">
+      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4" aria-label="Key numbers">
+        <StatTile label="Questions asked" value={compact(data.total_queries)} />
+        <StatTile
+          label="Accuracy"
+          value={pct(data.accuracy)}
+          detail={`from ${compact(data.with_feedback)} rated answers`}
+        />
+        <StatTile
+          label="Failure rate"
+          value={pct(data.failure_rate)}
+          detail={`${compact(data.failed_queries)} failed`}
+        />
+        <StatTile label="p95 latency" value={ms(data.p95_latency_ms)} detail="95% answered faster" />
+      </section>
+
+      <Card
+        title="Accuracy by route"
+        description="Share of rated answers marked correct, per week."
+      >
+        <AccuracyChart rows={data.accuracy_by_route_week} />
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card title="Latency by route" description="Median (p50) and 95th percentile (p95).">
+          <LatencyChart rows={data.latency_by_route} />
+        </Card>
+        <Card title="Failure reasons" description="Questions the engine couldn't answer, by error.">
+          {data.failure_reasons.length ? (
+            <BarList
+              items={data.failure_reasons.map((f) => ({ label: f.reason, value: f.count }))}
+              ariaLabel="Failure reasons"
+            />
+          ) : (
+            <p className="text-sm text-muted-foreground">No failures in this window.</p>
+          )}
+        </Card>
+      </div>
+
+      <Card title="Top questions" description="Most frequently asked in this window.">
+        <BarList
+          items={data.top_questions.map((q) => ({ label: q.question, value: q.count }))}
+          ariaLabel="Top questions"
+        />
+      </Card>
+    </div>
+  );
+}
+
+function StatTile({ label, value, detail }: { label: string; value: string; detail?: string }) {
+  return (
+    <div className="rounded-lg border p-4">
+      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="mt-1 text-3xl font-semibold tracking-tight">{value}</p>
+      {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
+    </div>
+  );
+}
+
+function Card({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-lg border p-4 sm:p-5">
+      <h2 className="font-medium">{title}</h2>
+      <p className="mb-4 text-sm text-muted-foreground">{description}</p>
+      {children}
+    </section>
+  );
+}

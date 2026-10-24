@@ -12,6 +12,7 @@
                 "type": "null"
               }
             ],
+            "description": "Share of rated answers marked correct",
             "title": "Accuracy"
           },
           "accuracy_by_route_week": {
@@ -20,6 +21,21 @@
             },
             "title": "Accuracy By Route Week",
             "type": "array"
+          },
+          "failed_queries": {
+            "title": "Failed Queries",
+            "type": "integer"
+          },
+          "failure_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Failure Rate"
           },
           "failure_reasons": {
             "items": {
@@ -36,8 +52,21 @@
             "type": "array"
           },
           "p95_latency_ms": {
-            "title": "P95 Latency Ms",
-            "type": "number"
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95 Latency Ms"
+          },
+          "since": {
+            "description": "Start of the window (UTC)",
+            "format": "date-time",
+            "title": "Since",
+            "type": "string"
           },
           "top_questions": {
             "items": {
@@ -49,10 +78,23 @@
           "total_queries": {
             "title": "Total Queries",
             "type": "integer"
+          },
+          "weeks": {
+            "title": "Weeks",
+            "type": "integer"
+          },
+          "with_feedback": {
+            "title": "With Feedback",
+            "type": "integer"
           }
         },
         "required": [
+          "since",
+          "weeks",
           "total_queries",
+          "failed_queries",
+          "failure_rate",
+          "with_feedback",
           "accuracy",
           "p95_latency_ms",
           "accuracy_by_route_week",
@@ -390,6 +432,7 @@
             "type": "integer"
           },
           "reason": {
+            "description": "Error type, e.g. TimeoutError",
             "title": "Reason",
             "type": "string"
           }
@@ -874,7 +917,7 @@
                 "type": "null"
               }
             ],
-            "description": "correct / answers with feedback; null if none",
+            "description": "correct / with_feedback; null if no feedback",
             "title": "Accuracy"
           },
           "correct": {
@@ -898,12 +941,17 @@
             "description": "ISO week, e.g. 2026-W43",
             "title": "Week",
             "type": "string"
+          },
+          "with_feedback": {
+            "title": "With Feedback",
+            "type": "integer"
           }
         },
         "required": [
           "week",
           "route",
           "total",
+          "with_feedback",
           "correct",
           "accuracy"
         ],
@@ -1184,7 +1232,24 @@
   "paths": {
     "/admin/stats": {
       "get": {
-        "operationId": "get_stats_admin_stats_get",
+        "description": "Accuracy by route and week, latency percentiles, top questions, failure reasons.",
+        "operationId": "stats_admin_stats_get",
+        "parameters": [
+          {
+            "description": "Window: last N weeks",
+            "in": "query",
+            "name": "weeks",
+            "required": false,
+            "schema": {
+              "default": 8,
+              "description": "Window: last N weeks",
+              "maximum": 52,
+              "minimum": 1,
+              "title": "Weeks",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -1225,9 +1290,19 @@
               }
             },
             "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "MongoDB unavailable"
           }
         },
-        "summary": "Get Stats",
+        "summary": "Stats",
         "tags": [
           "admin"
         ]

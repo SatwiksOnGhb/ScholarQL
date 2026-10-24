@@ -36,9 +36,10 @@ jobs:
         run: uvx ruff@${{ env.RUFF_VERSION }} format --check .
 
       # Fails if someone edited pyproject.toml without re-running `uv lock`
-      - name: API lockfile is up to date
-        working-directory: api
-        run: uv lock --check
+      - name: Lockfiles are up to date
+        run: |
+          (cd api && uv lock --check)
+          (cd jobs && uv lock --check)
 
       # No databases in this job; the tests don't need them
       - name: API tests

@@ -11,10 +11,20 @@ export function ApiStatus() {
     queryKey: ["health"],
     queryFn: () => unwrap(api.GET("/health")),
     refetchInterval: 30_000,
+    // Keep trying until it answers: Render's free plan takes about a minute to wake up
+    retry: true,
+    retryDelay: 5_000,
   });
 
-  if (health.isPending) return <Badge variant="outline">Checking API…</Badge>;
-  if (health.isError) return <Badge variant="destructive">API unreachable</Badge>;
+  if (health.failureReason) {
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="destructive">API not responding · retrying</Badge>
+        <span className="text-xs text-muted-foreground">{health.failureReason.message}</span>
+      </div>
+    );
+  }
+  if (!health.data) return <Badge variant="outline">Checking API…</Badge>;
 
   const { status, postgres, mongodb } = health.data;
   return (

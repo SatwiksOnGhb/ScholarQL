@@ -6,7 +6,8 @@ services:
     runtime: docker
     plan: free
     region: singapore  # closest Render region to India
-    rootDir: api
+    # No rootDir: Render would resolve the two paths below inside it (api/api) and fail.
+    # Both are relative to the repo root.
     dockerfilePath: ./api/Dockerfile
     dockerContext: ./api
     healthCheckPath: /health

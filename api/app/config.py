@@ -7,6 +7,7 @@ from functools import cached_property
 from pathlib import Path
 from typing import Literal
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # api/app/config.py -> repo root. In the container this resolves to / (no .env there; fine).
@@ -38,6 +39,13 @@ class Settings(BaseSettings):
     embedding_model: str = "BAAI/bge-small-en-v1.5"
     # Shared with the jobs locally; the Docker image sets FASTEMBED_CACHE=/opt/fastembed
     fastembed_cache: str = str(Path.home() / ".cache" / "fastembed")
+
+    @field_validator("cors_origin_regex")
+    @classmethod
+    def _strip_regex(cls, v: str | None) -> str | None:
+        # Dashboard text boxes can leave a trailing newline, which breaks Starlette's fullmatch
+        v = v.strip() if v else v
+        return v or None
 
     @cached_property
     def cors_origin_list(self) -> list[str]:

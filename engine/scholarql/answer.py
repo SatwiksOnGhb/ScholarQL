@@ -23,6 +23,7 @@ from decimal import Decimal
 from typing import Any
 
 import numpy as np
+from bson.binary import Binary
 from pymongo import MongoClient
 
 from .db import Database
@@ -177,7 +178,8 @@ class ScholarEngine(SearchEngine):
                 {"embedding": 1},
             ):
                 ids.append(d["_id"])
-                vectors.append(d["embedding"])
+                emb = d["embedding"]  # packed float32 vector on Atlas, a list locally
+                vectors.append(emb.as_vector().data if isinstance(emb, Binary) else emb)
             if not ids:
                 return []
             scores = (np.asarray(vectors, dtype=np.float32) @ query + 1) / 2

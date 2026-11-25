@@ -23,12 +23,31 @@ import os
 import subprocess
 import sys
 
+from bson.binary import Binary, BinaryVectorDtype
 from pymongo import MongoClient
 
 from common import REPO_ROOT, batched, ensure_vector_index, load_env_file, mongo_db
 
 COLLECTIONS = ["paper_content", "author_profiles"]
 BATCH = 500
+QUOTA_MB = 480  # Atlas M0 blocks writes at 512 MB; keep a margin
+PACK_SAVING = 3335  # bytes saved per document: 384 doubles in an array -> packed float32
+
+
+def pack(doc: dict) -> dict:
+    """Store the vector as a packed float32 BSON vector (~1.6 KB instead of ~4.9 KB)."""
+    emb = doc.get("embedding")
+    if isinstance(emb, list):
+        doc["embedding"] = Binary.from_vector(emb, BinaryVectorDtype.FLOAT32)
+    return doc
+
+
+def allow_packed_vectors(target, name: str) -> None:
+    """Let the validator accept the packed vector (binData) as well as an array."""
+    info = next(target.list_collections(filter={"name": name}))
+    validator = info["options"]["validator"]
+    validator["$jsonSchema"]["properties"]["embedding"]["bsonType"] = ["array", "binData"]
+    target.command("collMod", name, validator=validator)
 
 
 def main() -> None:
@@ -47,6 +66,15 @@ def main() -> None:
     if not counts["paper_content"]:
         sys.exit("Local paper_content is empty. Run the harvest / embedding jobs first.")
     print("Local:", ", ".join(f"{c} {n}" for c, n in counts.items()), flush=True)
+
+    # Estimate the size on Atlas before writing anything
+    estimate = 0.0
+    for name in COLLECTIONS:
+        stats = source.command("collStats", name)
+        estimate += stats["count"] * max(stats.get("avgObjSize", 0) - PACK_SAVING, 0) / 1e6
+    print(f"Estimated size on Atlas: ~{estimate:.0f} MB (limit {QUOTA_MB} MB)", flush=True)
+    if estimate > QUOTA_MB:
+        sys.exit("Too big for the free tier; nothing was written.")
 
     target_client = MongoClient(uri, serverSelectionTimeoutMS=10_000)
     target_client.admin.command("ping")
@@ -67,12 +95,14 @@ def main() -> None:
     )  # fmt: skip
     if result.returncode != 0:
         sys.exit("Couldn't create the collections on Atlas (see the error above).")
+    for name in COLLECTIONS:
+        allow_packed_vectors(target, name)
 
     for name in copy:
         total = source[name].count_documents({})
         done = 0
         for batch in batched(source[name].find({}), BATCH):
-            target[name].insert_many(batch, ordered=False)
+            target[name].insert_many([pack(d) for d in batch], ordered=False)
             done += len(batch)
             print(f"  {name}: {done}/{total}", end="\r", flush=True)
         print(f"  {name}: {done}/{total} copied      ", flush=True)

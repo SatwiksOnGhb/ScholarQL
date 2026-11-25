@@ -4,6 +4,8 @@ The client connects lazily on first use and manages its own connection pool.
 Routes get the database with `db: AsyncDatabase = Depends(get_db)`.
 """
 
+from bson.binary import Binary
+from bson.codec_options import TypeDecoder, TypeRegistry
 from pymongo import AsyncMongoClient
 from pymongo.asynchronous.database import AsyncDatabase
 
@@ -12,9 +14,27 @@ from app.config import settings
 _client: AsyncMongoClient | None = None
 
 
+class _PackedVectorDecoder(TypeDecoder):
+    """Atlas stores embeddings as packed float32 BSON vectors (binData subtype 9) to fit the
+    free tier; decode them to plain lists so the code sees the same shape as locally."""
+
+    bson_type = Binary
+
+    def transform_bson(self, value: Binary):
+        return value.as_vector().data if value.subtype == 9 else value
+
+
+TYPE_REGISTRY = TypeRegistry([_PackedVectorDecoder()])
+
+
 def connect() -> None:
     global _client
-    _client = AsyncMongoClient(settings.mongodb_uri, serverSelectionTimeoutMS=3000, tz_aware=True)
+    _client = AsyncMongoClient(
+        settings.mongodb_uri,
+        serverSelectionTimeoutMS=3000,
+        tz_aware=True,
+        type_registry=TYPE_REGISTRY,
+    )
 
 
 async def close() -> None:

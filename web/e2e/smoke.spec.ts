@@ -82,11 +82,15 @@ test("search: a query returns results, an empty state or a handled error", async
   ]);
   await expect(page).toHaveURL(/[?&]q=graph/);
   expect([200, 503]).toContain(response.status());
+  // Scoped to <main>: Next.js adds its own role="alert" route announcer outside it, and
+  // first() because an empty-state and a list can't both be required at once
+  const main = page.getByRole("main");
   await expect(
-    page
+    main
       .getByRole("list", { name: "Search results" })
-      .or(page.getByText("No papers matched."))
-      .or(page.getByRole("alert")),
+      .or(main.getByText("No papers matched."))
+      .or(main.getByRole("alert"))
+      .first(),
   ).toBeVisible();
   check();
 });

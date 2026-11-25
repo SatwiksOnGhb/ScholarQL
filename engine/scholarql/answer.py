@@ -16,6 +16,7 @@ worker thread.
 from __future__ import annotations
 
 import os
+import re
 import threading
 from collections.abc import Callable, Sequence
 from datetime import date, datetime
@@ -29,7 +30,13 @@ from pymongo import MongoClient
 from .db import Database
 from .documents import DocumentStore
 from .engine import FILTER_CAP, SearchEngine
-from .intents import compile_question, unresolved_constraints, unsupported_filter_logic
+from .intents import (
+    compile_question,
+    extract_filters,
+    route_question,
+    unresolved_constraints,
+    unsupported_filter_logic,
+)
 from .retrieval import TextIndex
 from .safety import QueryError
 
@@ -226,20 +233,44 @@ def close() -> None:
             _engine = None
 
 
+LLM_ORDER = ("groq", "gemini")  # Groq (GPT-OSS-120B) is the benchmarked model
+
+# Words that ask for an exact, structured answer (counts, rankings, lookups, citations...)
+EXACT_WORDS = re.compile(
+    r"\b(?:how many|number of|count|average|avg|mean|median|total|top|most|least|highest|"
+    r"lowest|rank(?:ed|ing)?|which|who|when|list|show|arxiv|doi|cites?|cited|citations?|"
+    r"authors?|venues?|institutions?|universit(?:y|ies)|per year|by year|h-index|pagerank)\b",
+    re.I,
+)
+
+
+def _llms(engine: ScholarEngine) -> list[str]:
+    return [g for g in LLM_ORDER if g in engine.providers]
+
+
 def _generator(engine: ScholarEngine, question: str = "") -> str:
     """SCHOLARQL_GENERATOR = auto (default) | local | gemini | groq.
 
-    auto = B's rule-based compiler when it recognises the question, otherwise an LLM (Gemini
-    if configured, else Groq). On the 100-question benchmark the compiler is exact on wording
-    it knows (80/80) but can't parse paraphrases (0/20), while GPT-OSS-120B got 83-84/100
-    overall; compiler first, LLM as fallback scores 97-98/100 and keeps known questions fast.
+    auto = B's rule-based compiler when it recognises the question, otherwise an LLM (Groq,
+    else Gemini). On the 100-question benchmark the compiler is exact on wording it knows
+    (80/80) but can't parse paraphrases (0/20), while GPT-OSS-120B got 83-84/100 overall;
+    compiler first, LLM as fallback scores 97-98/100 and keeps known questions fast.
     """
     choice = os.getenv("SCHOLARQL_GENERATOR", "auto").lower()
     if choice != "auto":
         return choice
     if question and compile_question(question):
         return "local"
-    return next((g for g in ("gemini", "groq") if g in engine.providers), "local")
+    return next(iter(_llms(engine)), "local")
+
+
+def _is_topic(question: str) -> bool:
+    """A bare topic such as "diffusion models image generation": no structural request,
+    so rank papers by meaning instead of asking an LLM for SQL."""
+    if compile_question(question) or EXACT_WORDS.search(question):
+        return False
+    filters = extract_filters(question)
+    return route_question(question, filters, None) == "sql" and len(question.split()) <= 12
 
 
 def _jsonable(value: Any) -> Any:
@@ -278,12 +309,25 @@ def answer(question: str, k: int = TOP_K) -> dict:
         raise RuntimeError("engine not configured; call configure() first")
     generator = _generator(engine, question)
     strategy = os.getenv("SCHOLARQL_STRATEGY", "few_shot_correction")
-    out = engine.search(question, "auto", generator, strategy, k)
+    if _is_topic(question):
+        out = engine.search(question, "semantic", "local", strategy, k)
+    else:
+        out = engine.search(question, "auto", generator, strategy, k)
 
-    # An LLM failure on a question the local compiler understands: use the compiler
-    if out["status"] in ("error", "unsupported") and generator != "local" and out["route"] == "sql":
-        if compile_question(question):
+    def failed(o: dict) -> bool:
+        return o["status"] in ("error", "unsupported") and o["route"] == "sql"
+
+    if failed(out) and generator != "local":
+        # The LLM failed (quota, timeout, bad SQL): try the other LLM, then the compiler
+        for other in [g for g in _llms(engine) if g != generator]:
+            out = engine.search(question, "auto", other, strategy, k)
+            if not failed(out):
+                break
+        if failed(out) and compile_question(question):
             out = engine.search(question, "auto", "local", strategy, k)
+    if failed(out) and not EXACT_WORDS.search(question):
+        # Not a structural question after all: answer it by meaning
+        out = engine.search(question, "semantic", "local", strategy, k)
 
     if out["status"] == "unsupported":
         raise UnsupportedQuestion(out["diagnostic"] or "The engine can't answer this question.")

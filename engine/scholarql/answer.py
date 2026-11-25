@@ -224,12 +224,19 @@ def close() -> None:
             _engine = None
 
 
-def _generator(engine: ScholarEngine) -> str:
+def _generator(engine: ScholarEngine, question: str = "") -> str:
     """SCHOLARQL_GENERATOR = auto (default) | local | gemini | groq.
-    auto = Gemini if configured, else Groq, else B's local rule-based compiler."""
+
+    auto = B's rule-based compiler when it recognises the question, otherwise an LLM (Gemini
+    if configured, else Groq). On the 100-question benchmark the compiler is exact on wording
+    it knows (80/80) but can't parse paraphrases (0/20), while GPT-OSS-120B got 83-84/100
+    overall; compiler first, LLM as fallback scores 97-98/100 and keeps known questions fast.
+    """
     choice = os.getenv("SCHOLARQL_GENERATOR", "auto").lower()
     if choice != "auto":
         return choice
+    if question and compile_question(question):
+        return "local"
     return next((g for g in ("gemini", "groq") if g in engine.providers), "local")
 
 
@@ -267,7 +274,7 @@ def answer(question: str, k: int = TOP_K) -> dict:
     engine = _engine
     if engine is None:
         raise RuntimeError("engine not configured; call configure() first")
-    generator = _generator(engine)
+    generator = _generator(engine, question)
     strategy = os.getenv("SCHOLARQL_STRATEGY", "few_shot_correction")
     out = engine.search(question, "auto", generator, strategy, k)
 

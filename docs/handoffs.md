@@ -41,7 +41,7 @@ left needs a free API key or account, so it runs on a teammate's (or C's) own ma
 | Load Neon | `db/load_neon.py` copies the local database (pilot or 50K) to Neon and creates the read-only role; tested against a non-superuser owner, as on Neon | Create the Neon project, put `NEON_DATABASE_URL` and `NEON_READER_PASSWORD` in `.env`, run `uv run --project pipeline python db/load_neon.py` |
 | Index-benchmark numbers | **Done**: B already ran A's benchmark on 50,000 synthetic papers (40 runs per query, both conditions); results and analysis are now in `docs/team/person-a-report.md` | Optional: re-run on the real harvest with `engine/scripts/index_study.py --dsn ...` |
 | LLM keys | B's engine picks them up automatically (`.env` locally, Render in production) | Free keys from Google AI Studio and/or Groq: set `GEMINI_API_KEY` + `GEMINI_MODEL` and/or `GROQ_API_KEY` + `GROQ_MODEL` |
-| LLM benchmark scores | B's runner works from the repo (re-run here: rule-based compiler 80/100, same as B's result) | With a key set: `cd engine` then `uv run --project ../api python -m scripts.sql_study --provider gemini --out results/llm` (add `--provider groq` for both). Up to 400 requests per provider. Results land in `engine/results/llm/` |
+| LLM benchmark scores | **Done** (Groq, GPT-OSS-120B): 83–84/100 alone, 97–98/100 with the compiler first. See `docs/team/llm-benchmark-results.md` | With a key set: `cd engine` then `uv run --project ../api python -m scripts.sql_study --provider gemini --out results/llm` (add `--provider groq` for both). Up to 400 requests per provider. Results land in `engine/results/llm/` |
 
 Before the final demo: `cd jobs && uv run python -m seed.query_logs --clear` removes the fake
 analytics logs once real questions are coming in.

@@ -167,7 +167,56 @@ def deduplicate_works(works: list[dict[str, Any]]) -> tuple[list[dict[str, Any]]
     return winners, len(works) - len(winners)
 
 
+RETRYABLE = {429, 500, 502, 503, 504}
+ATTEMPTS = 8
+
+
+async def get_with_retry(client: httpx.AsyncClient, params: dict) -> httpx.Response:
+    """GET with backoff on rate limits, server errors and timeouts (OpenAlex returns
+    occasional 502/504s on long DOI filters)."""
+    for attempt in range(ATTEMPTS):
+        try:
+            response = await client.get(API, params=params)
+        except (httpx.TimeoutException, httpx.TransportError) as error:
+            if attempt == ATTEMPTS - 1:
+                raise
+            print(f"  network error ({type(error).__name__}); retrying", flush=True)
+        else:
+            if response.status_code not in RETRYABLE or attempt == ATTEMPTS - 1:
+                response.raise_for_status()
+                return response
+            retry_after = response.headers.get("Retry-After", "")
+            if retry_after.isdigit():
+                await asyncio.sleep(float(retry_after))
+                continue
+            print(f"  HTTP {response.status_code}; retrying", flush=True)
+        await asyncio.sleep(min(60, 2**attempt))
+    raise RuntimeError("unreachable")
+
+
 async def fetch_batch(
+    client: httpx.AsyncClient, ids: list[str], api_key: str | None
+) -> list[dict[str, Any]]:
+    """Works for a batch of arXiv IDs. If OpenAlex keeps failing on the whole batch, split
+    it in half and try again; a single ID that still fails is skipped and reported."""
+    try:
+        return await _fetch_batch(client, ids, api_key)
+    except (httpx.HTTPStatusError, httpx.TransportError) as error:
+        status = getattr(getattr(error, "response", None), "status_code", None)
+        if status is not None and status < 500 and status != 429:
+            raise  # a real client error (bad key, bad filter): stop
+        if len(ids) == 1:
+            reason = f"HTTP {status}" if status else type(error).__name__  # no URL: it has the key
+            print(f"  skipping arXiv {ids[0]}: OpenAlex kept failing ({reason})", flush=True)
+            return []
+        half = len(ids) // 2
+        print(f"  batch of {len(ids)} keeps failing; splitting it", flush=True)
+        return await fetch_batch(client, ids[:half], api_key) + await fetch_batch(
+            client, ids[half:], api_key
+        )
+
+
+async def _fetch_batch(
     client: httpx.AsyncClient, ids: list[str], api_key: str | None
 ) -> list[dict[str, Any]]:
     params: dict[str, str | int] = {
@@ -181,15 +230,7 @@ async def fetch_batch(
 
     results: list[dict[str, Any]] = []
     while True:
-        for attempt in range(6):
-            response = await client.get(API, params=params)
-            if response.status_code == 429 and attempt < 5:
-                retry_after = response.headers.get("Retry-After", "")
-                delay = float(retry_after) if retry_after.isdigit() else min(60, 2**attempt)
-                await asyncio.sleep(delay)
-                continue
-            response.raise_for_status()
-            break
+        response = await get_with_retry(client, params)
         payload = response.json()
         results.extend(payload.get("results", []))
         cursor = payload.get("meta", {}).get("next_cursor")
@@ -253,12 +294,31 @@ async def main() -> None:
         }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     fetched: dict[str, dict[str, Any]] = {}
+    # Checkpoint: every finished batch is appended here, so a rerun resumes where it stopped
+    checkpoint = args.out.with_suffix(args.out.suffix + ".partial")
+    done_batches: set[int] = set()
+    if checkpoint.exists():
+        with checkpoint.open(encoding="utf-8") as source:
+            for line in source:
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    break  # a half-written last line from a crash
+                if record.get("batch_done") is not None:
+                    done_batches.add(record["batch_done"])
+                else:
+                    fetched[record["id"]] = record
+        print(f"Resuming: {len(done_batches)} batches ({len(fetched)} works) already fetched")
+    progress = checkpoint.open("a", encoding="utf-8", newline="\n")
     async with httpx.AsyncClient(
-        timeout=45, headers={"User-Agent": "ScholarQL/0.1 (academic DBMS project)"}
+        timeout=60, headers={"User-Agent": "ScholarQL/0.1 (academic DBMS project)"}
     ) as client:
         for start in range(0, len(ids), args.batch_size):
+            if start in done_batches:
+                continue
             batch = ids[start : start + args.batch_size]
             works = await fetch_batch(client, batch, api_key)
+            batch_works = []
             for work in works:
                 matches = matched_arxiv_ids(work, manifest)
                 if not matches:
@@ -274,16 +334,23 @@ async def main() -> None:
                     work["publication_date"] = scoped["first_submission_date"]
                 work["abstract"] = reconstruct_abstract(work.pop("abstract_inverted_index", None))
                 fetched[work["id"]] = work
+                batch_works.append(work)
+            for work in batch_works:
+                progress.write(json.dumps(work, ensure_ascii=False) + "\n")
+            progress.write(json.dumps({"batch_done": start}) + "\n")
+            progress.flush()
             print(
                 f"Fetched {min(start + len(batch), len(ids))}/{len(ids)} arXiv IDs; matched {len(fetched)} OpenAlex works"
             )
 
+    progress.close()
     unique_works, duplicate_count = deduplicate_works(list(fetched.values()))
     temp_path = args.out.with_suffix(args.out.suffix + ".tmp")
     with temp_path.open("w", encoding="utf-8", newline="\n") as output:
         for work in unique_works:
             output.write(json.dumps(work, ensure_ascii=False) + "\n")
     temp_path.replace(args.out)
+    checkpoint.unlink(missing_ok=True)
     coverage = {
         key: work["id"]
         for work in unique_works

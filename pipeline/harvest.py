@@ -50,7 +50,9 @@ def local_database_url() -> str:
 
 def run(step: str, cmd: list[str], *, cwd: Path = ROOT, env: dict | None = None) -> None:
     print(f"\n=== {step}\n$ {' '.join(cmd)}", flush=True)
-    result = subprocess.run(cmd, cwd=cwd, env={**os.environ, **(env or {})})
+    # The jobs/ steps use their own uv project; don't let this one's venv leak into them
+    child_env = {k: v for k, v in os.environ.items() if k != "VIRTUAL_ENV"}
+    result = subprocess.run(cmd, cwd=cwd, env={**child_env, **(env or {})})
     if result.returncode != 0:
         sys.exit(f"Step failed: {step}. Fix the problem above and run the same command again.")
 
@@ -80,8 +82,8 @@ def main() -> None:
         # Empty databases: no pilot seed, so the corpus is exactly what this run harvests
         run("Reset databases", ["docker", "compose", "down", "-v"])
         run(
-            "Start databases",
-            ["docker", "compose", "up", "-d", "--wait", "postgres", "mongodb"],
+            "Start the stack",
+            ["docker", "compose", "up", "-d", "--wait"],
             env={"SCHOLARQL_SEED": "none"},
         )
 

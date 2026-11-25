@@ -46,7 +46,7 @@ export function TrendsChart() {
           ) : (
             <div className="h-72" role="img" aria-label="Papers per year for the largest topics">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={toRows(t)} margin={{ top: 8, right: 16, bottom: 0, left: -16 }}>
+                <LineChart data={toRows(t)} margin={{ top: 8, right: 16, bottom: 0, left: 8 }}>
                   <CartesianGrid stroke="var(--border)" vertical={false} />
                   <XAxis dataKey="year" tickLine={false} axisLine={{ stroke: "var(--border)" }} />
                   <YAxis allowDecimals={false} tickLine={false} axisLine={false} />

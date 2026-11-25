@@ -1,0 +1,2892 @@
+id,tier,form,wording,strategy,question,executed,pilot_match,counterfactual_match,joint_match,gold_rows,counterfactual_gold_rows,counterfactual_changed_answer,latency_ms,repair_attempted,repair_matched,error,predicted_sql
+LOOKUP-01,lookup,id,canonical,local,Find arXiv paper 1904.10509,1,1,1,1,1,1,0,1.5973,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE arxiv_id = '1904.10509' ORDER BY paper_id"
+LOOKUP-02,lookup,id,canonical,local,Find arXiv paper 2001.08361,1,1,1,1,1,1,0,1.4928,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE arxiv_id = '2001.08361' ORDER BY paper_id"
+LOOKUP-03,lookup,id,canonical,local,Find arXiv paper 2106.09685,1,1,1,1,1,1,0,1.3285,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE arxiv_id = '2106.09685' ORDER BY paper_id"
+LOOKUP-04,lookup,id,canonical,local,Find arXiv paper 2201.11903,1,1,1,1,1,1,0,1.2391,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE arxiv_id = '2201.11903' ORDER BY paper_id"
+LOOKUP-05,lookup,id,paraphrase,local,Return the record for arXiv identifier 2305.14314.,0,0,0,0,1,1,0,1.9812,0,0,Local wording unsupported.,
+LOOKUP-06,lookup,title,canonical,local,"Find paper ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,1,1,1,1.5371,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE lower(title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models') ORDER BY paper_id"
+LOOKUP-07,lookup,title,canonical,local,"Find paper ""Mistral 7B""",1,1,1,1,1,1,0,1.5162,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE lower(title) = lower('Mistral 7B') ORDER BY paper_id"
+LOOKUP-08,lookup,title,canonical,local,"Find paper ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models""",1,1,1,1,1,1,0,1.6712,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE lower(title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models') ORDER BY paper_id"
+LOOKUP-09,lookup,title,canonical,local,"Find paper ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone""",1,1,1,1,1,1,0,1.5896,0,0,,"SELECT paper_id, title, publication_year, arxiv_id FROM paper WHERE lower(title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone') ORDER BY paper_id"
+LOOKUP-10,lookup,title,paraphrase,local,"Which record has the exact title ""The Llama 3 Herd of Models""?",0,0,0,0,1,1,0,0.052,0,0,Local wording unsupported.,
+LOOKUP-11,lookup,year,canonical,local,List papers published in 2019,1,1,1,1,45,46,1,1.474,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2019
+ORDER BY p.paper_id"
+LOOKUP-12,lookup,year,canonical,local,List papers published in 2020,1,1,1,1,51,48,1,1.9752,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2020
+ORDER BY p.paper_id"
+LOOKUP-13,lookup,year,canonical,local,List papers published in 2021,1,1,1,1,50,53,1,1.3857,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2021
+ORDER BY p.paper_id"
+LOOKUP-14,lookup,year,canonical,local,List papers published in 2022,1,1,1,1,51,51,1,1.4284,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2022
+ORDER BY p.paper_id"
+LOOKUP-15,lookup,year,paraphrase,local,Which records have an arXiv submission year of 2023?,0,0,0,0,58,55,1,0.0484,0,0,Local wording unsupported.,
+LOOKUP-16,lookup,range,canonical,local,List papers between 2018 and 2019,1,1,1,1,91,95,1,1.376,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year BETWEEN 2018 AND 2019
+ORDER BY p.paper_id"
+LOOKUP-17,lookup,range,canonical,local,List papers between 2019 and 2020,1,1,1,1,96,94,1,1.3938,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year BETWEEN 2019 AND 2020
+ORDER BY p.paper_id"
+LOOKUP-18,lookup,range,canonical,local,List papers between 2020 and 2021,1,1,1,1,101,101,1,1.555,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year BETWEEN 2020 AND 2021
+ORDER BY p.paper_id"
+LOOKUP-19,lookup,range,canonical,local,List papers between 2021 and 2024,1,1,1,1,211,210,1,1.4911,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year BETWEEN 2021 AND 2024
+ORDER BY p.paper_id"
+LOOKUP-20,lookup,range,paraphrase,local,"Return publications spanning 2022 through 2023, inclusive.",0,0,0,0,109,106,1,0.0596,0,0,Local wording unsupported.,
+LOOKUP-21,lookup,substring,canonical,local,"Find papers with ""diffusion"" in the title",1,1,1,1,10,10,1,1.5593,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE strpos(lower(p.title), lower('diffusion')) > 0
+ORDER BY p.paper_id"
+LOOKUP-22,lookup,substring,canonical,local,"Find papers with ""transformer"" in the title",1,1,1,1,13,13,0,1.5769,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE strpos(lower(p.title), lower('transformer')) > 0
+ORDER BY p.paper_id"
+LOOKUP-23,lookup,substring,canonical,local,"Find papers with ""reinforcement"" in the title",1,1,1,1,14,14,1,1.9758,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE strpos(lower(p.title), lower('reinforcement')) > 0
+ORDER BY p.paper_id"
+LOOKUP-24,lookup,substring,canonical,local,"Find papers with ""quantiz"" in the title",1,1,1,1,3,3,0,2.1376,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE strpos(lower(p.title), lower('quantiz')) > 0
+ORDER BY p.paper_id"
+LOOKUP-25,lookup,substring,paraphrase,local,"Which titles contain ""attention"" anywhere?",0,0,0,0,10,10,0,0.0387,0,0,Local wording unsupported.,
+JOINS-01,joins,author,canonical,local,"List papers by ""Rewon Child""",1,1,1,1,2,2,0,5.1016,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM authorship au JOIN author a USING (author_id)
+        WHERE au.paper_id = p.paper_id AND lower(a.name) = lower('Rewon Child'))
+ORDER BY p.paper_id"
+JOINS-02,joins,author,canonical,local,"List papers by ""Jared Kaplan""",1,1,1,1,3,3,0,5.1947,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM authorship au JOIN author a USING (author_id)
+        WHERE au.paper_id = p.paper_id AND lower(a.name) = lower('Jared Kaplan'))
+ORDER BY p.paper_id"
+JOINS-03,joins,author,canonical,local,"List papers by ""Alex Nichol""",1,1,1,1,3,3,0,5.7889,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM authorship au JOIN author a USING (author_id)
+        WHERE au.paper_id = p.paper_id AND lower(a.name) = lower('Alex Nichol'))
+ORDER BY p.paper_id"
+JOINS-04,joins,author,canonical,local,"List papers by ""J. Edward Hu""",1,1,1,1,1,1,0,4.4216,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM authorship au JOIN author a USING (author_id)
+        WHERE au.paper_id = p.paper_id AND lower(a.name) = lower('J. Edward Hu'))
+ORDER BY p.paper_id"
+JOINS-05,joins,author,paraphrase,local,"Show the papers whose author list contains ""Hugo Touvron"".",0,0,0,0,1,1,1,0.0462,0,0,Local wording unsupported.,
+JOINS-06,joins,topic,canonical,local,"List papers tagged ""cs.LG""",1,1,1,1,341,341,1,1.9777,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+        WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.LG'))
+ORDER BY p.paper_id"
+JOINS-07,joins,topic,canonical,local,"List papers tagged ""cs.AI""",1,1,1,1,108,108,1,2.0619,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+        WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.AI'))
+ORDER BY p.paper_id"
+JOINS-08,joins,topic,canonical,local,"List papers tagged ""cs.CL""",1,1,1,1,55,55,1,2.0628,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+        WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.CL'))
+ORDER BY p.paper_id"
+JOINS-09,joins,topic,canonical,local,"List papers tagged ""cs.CV""",1,1,1,1,66,66,1,1.7921,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+        WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.CV'))
+ORDER BY p.paper_id"
+JOINS-10,joins,topic,paraphrase,local,"Which works are classified under ""stat.ML""?",0,0,0,0,116,116,1,0.0403,0,0,Local wording unsupported.,
+JOINS-11,joins,venue,canonical,local,"List papers at ""arXiv"" since 2019",1,1,1,1,120,120,1,1.6615,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM venue v WHERE v.venue_id = p.venue_id
+        AND lower(v.name) = lower('arXiv')) AND p.publication_year >= 2019
+ORDER BY p.paper_id"
+JOINS-12,joins,venue,canonical,local,"List papers at ""neural information processing systems"" since 2019",1,1,1,1,25,23,1,1.7356,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM venue v WHERE v.venue_id = p.venue_id
+        AND lower(v.name) = lower('neural information processing systems')) AND p.publication_year >= 2019
+ORDER BY p.paper_id"
+JOINS-13,joins,venue,canonical,local,"List papers at ""International Conference on Machine Learning"" since 2019",1,1,1,1,6,6,1,1.4489,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM venue v WHERE v.venue_id = p.venue_id
+        AND lower(v.name) = lower('International Conference on Machine Learning')) AND p.publication_year >= 2019
+ORDER BY p.paper_id"
+JOINS-14,joins,venue,canonical,local,"List papers at ""International Conference on Artificial Intelligence and Statistics"" since 2019",1,1,1,1,9,9,1,1.693,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+EXISTS (SELECT 1 FROM venue v WHERE v.venue_id = p.venue_id
+        AND lower(v.name) = lower('International Conference on Artificial Intelligence and Statistics')) AND p.publication_year >= 2019
+ORDER BY p.paper_id"
+JOINS-15,joins,venue,paraphrase,local,"Find records associated with ""IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings"" from 2019 onward.",0,0,0,0,10,10,1,0.0449,0,0,Local wording unsupported.,
+JOINS-16,joins,affiliation,canonical,local,"List authors affiliated with ""Google (United States)"" since 2018",1,1,1,1,111,111,0,2.8533,0,0,,"SELECT DISTINCT a.author_id, a.name FROM author a
+JOIN author_affiliation aa USING (author_id) JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id) WHERE lower(i.name) = lower('Google (United States)') AND p.publication_year >= 2018
+ORDER BY a.author_id"
+JOINS-17,joins,affiliation,canonical,local,"List authors affiliated with ""OpenAI (United States)"" since 2019",1,1,1,1,62,62,0,2.7326,0,0,,"SELECT DISTINCT a.author_id, a.name FROM author a
+JOIN author_affiliation aa USING (author_id) JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id) WHERE lower(i.name) = lower('OpenAI (United States)') AND p.publication_year >= 2019
+ORDER BY a.author_id"
+JOINS-18,joins,affiliation,canonical,local,"List authors affiliated with ""Tsinghua University"" since 2020",1,1,1,1,30,33,1,2.3496,0,0,,"SELECT DISTINCT a.author_id, a.name FROM author a
+JOIN author_affiliation aa USING (author_id) JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id) WHERE lower(i.name) = lower('Tsinghua University') AND p.publication_year >= 2020
+ORDER BY a.author_id"
+JOINS-19,joins,affiliation,canonical,local,"List authors affiliated with ""Meta (United States)"" since 2021",1,1,1,1,5,5,0,1.9155,0,0,,"SELECT DISTINCT a.author_id, a.name FROM author a
+JOIN author_affiliation aa USING (author_id) JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id) WHERE lower(i.name) = lower('Meta (United States)') AND p.publication_year >= 2021
+ORDER BY a.author_id"
+JOINS-20,joins,affiliation,paraphrase,local,"Who has a paper dated 2022 or later with a ""Stanford University"" affiliation?",0,0,0,0,15,18,1,0.0362,0,0,Local wording unsupported.,
+JOINS-21,joins,author_order,canonical,local,"List authors of ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,4,4,0,1.4642,0,0,,"SELECT a.author_id, a.name FROM author a
+JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE lower(p.title) = lower('Generating Long Sequences with Sparse Transformers') ORDER BY p.paper_id, au.author_order"
+JOINS-22,joins,author_order,canonical,local,"List authors of ""Scaling Laws for Neural Language Models""",1,1,1,1,10,10,0,1.2465,0,0,,"SELECT a.author_id, a.name FROM author a
+JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE lower(p.title) = lower('Scaling Laws for Neural Language Models') ORDER BY p.paper_id, au.author_order"
+JOINS-23,joins,author_order,canonical,local,"List authors of ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,8,8,0,1.3485,0,0,,"SELECT a.author_id, a.name FROM author a
+JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE lower(p.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models') ORDER BY p.paper_id, au.author_order"
+JOINS-24,joins,author_order,canonical,local,"List authors of ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,9,9,0,1.526,0,0,,"SELECT a.author_id, a.name FROM author a
+JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE lower(p.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models') ORDER BY p.paper_id, au.author_order"
+JOINS-25,joins,author_order,paraphrase,local,"Give the byline for ""QLoRA: Efficient Finetuning of Quantized LLMs"" in the listed author order.",0,0,0,0,4,4,0,0.042,0,0,Local wording unsupported.,
+AGGREGATION-01,aggregation,count_topic_year,canonical,local,"Count papers tagged ""cs.LG"" by year",1,1,1,1,7,7,1,1.5044,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL 
+AND EXISTS (SELECT 1 FROM topic t JOIN paper_topic pt USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.LG'))
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-02,aggregation,count_topic_year,canonical,local,"Count papers tagged ""cs.AI"" by year",1,1,1,1,7,7,1,1.9371,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL 
+AND EXISTS (SELECT 1 FROM topic t JOIN paper_topic pt USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.AI'))
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-03,aggregation,count_topic_year,canonical,local,"Count papers tagged ""cs.CL"" by year",1,1,1,1,7,7,1,1.7399,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL 
+AND EXISTS (SELECT 1 FROM topic t JOIN paper_topic pt USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.CL'))
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-04,aggregation,count_topic_year,canonical,local,"Count papers tagged ""cs.CV"" by year",1,1,1,1,7,7,1,1.9087,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL 
+AND EXISTS (SELECT 1 FROM topic t JOIN paper_topic pt USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.CV'))
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-05,aggregation,count_topic_year,paraphrase,local,"For each year, how many articles carry the ""stat.ML"" category?",0,0,0,0,7,7,1,0.0388,0,0,Local wording unsupported.,
+AGGREGATION-06,aggregation,count_incoming,canonical,local,"Count citations received by ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,1,1,1,1.357,0,0,,"SELECT p.paper_id, count(c.citing_id) AS citation_count
+FROM paper p LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Generating Long Sequences with Sparse Transformers')
+GROUP BY p.paper_id ORDER BY p.paper_id"
+AGGREGATION-07,aggregation,count_incoming,canonical,local,"Count citations received by ""Scaling Laws for Neural Language Models""",1,1,1,1,1,1,1,1.2326,0,0,,"SELECT p.paper_id, count(c.citing_id) AS citation_count
+FROM paper p LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Scaling Laws for Neural Language Models')
+GROUP BY p.paper_id ORDER BY p.paper_id"
+AGGREGATION-08,aggregation,count_incoming,canonical,local,"Count citations received by ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,1,1,1,1.296,0,0,,"SELECT p.paper_id, count(c.citing_id) AS citation_count
+FROM paper p LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models')
+GROUP BY p.paper_id ORDER BY p.paper_id"
+AGGREGATION-09,aggregation,count_incoming,canonical,local,"Count citations received by ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,1,1,1,1.3409,0,0,,"SELECT p.paper_id, count(c.citing_id) AS citation_count
+FROM paper p LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+GROUP BY p.paper_id ORDER BY p.paper_id"
+AGGREGATION-10,aggregation,count_incoming,paraphrase,local,"How many in-corpus references point to ""QLoRA: Efficient Finetuning of Quantized LLMs""?",0,0,0,0,1,1,1,0.0343,0,0,Local wording unsupported.,
+AGGREGATION-11,aggregation,rank_authors,canonical,local,Top 3 authors by paper count since 2018,1,1,1,1,3,3,0,6.5588,0,0,,"SELECT a.author_id, a.name, count(*) AS paper_count
+FROM author a JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE 1 = 1  AND p.publication_year >= 2018
+GROUP BY a.author_id, a.name ORDER BY paper_count DESC, a.author_id LIMIT 3"
+AGGREGATION-12,aggregation,rank_authors,canonical,local,Top 4 authors by paper count since 2019,1,1,1,1,4,4,0,4.9023,0,0,,"SELECT a.author_id, a.name, count(*) AS paper_count
+FROM author a JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE 1 = 1  AND p.publication_year >= 2019
+GROUP BY a.author_id, a.name ORDER BY paper_count DESC, a.author_id LIMIT 4"
+AGGREGATION-13,aggregation,rank_authors,canonical,local,Top 5 authors by paper count since 2020,1,1,1,1,5,5,1,4.9167,0,0,,"SELECT a.author_id, a.name, count(*) AS paper_count
+FROM author a JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE 1 = 1  AND p.publication_year >= 2020
+GROUP BY a.author_id, a.name ORDER BY paper_count DESC, a.author_id LIMIT 5"
+AGGREGATION-14,aggregation,rank_authors,canonical,local,Top 7 authors by paper count since 2021,1,1,1,1,7,7,1,5.2298,0,0,,"SELECT a.author_id, a.name, count(*) AS paper_count
+FROM author a JOIN authorship au USING (author_id) JOIN paper p USING (paper_id)
+WHERE 1 = 1  AND p.publication_year >= 2021
+GROUP BY a.author_id, a.name ORDER BY paper_count DESC, a.author_id LIMIT 7"
+AGGREGATION-15,aggregation,rank_authors,paraphrase,local,Rank the 10 most prolific authors from 2022 onward by paper count.,0,0,0,0,10,10,1,0.0499,0,0,Local wording unsupported.,
+AGGREGATION-16,aggregation,rank_venues,canonical,local,Top 3 venues by average citations since 2018,1,1,1,1,3,3,1,1.5989,0,0,,"SELECT v.venue_id, v.name, round(cast(avg(p.cited_by_count) AS numeric), 3) AS avg_citations
+FROM venue v JOIN paper p USING (venue_id) WHERE 1 = 1  AND p.publication_year >= 2018
+GROUP BY v.venue_id, v.name ORDER BY avg_citations DESC, v.venue_id LIMIT 3"
+AGGREGATION-17,aggregation,rank_venues,canonical,local,Top 4 venues by average citations since 2019,1,1,1,1,4,4,1,1.5524,0,0,,"SELECT v.venue_id, v.name, round(cast(avg(p.cited_by_count) AS numeric), 3) AS avg_citations
+FROM venue v JOIN paper p USING (venue_id) WHERE 1 = 1  AND p.publication_year >= 2019
+GROUP BY v.venue_id, v.name ORDER BY avg_citations DESC, v.venue_id LIMIT 4"
+AGGREGATION-18,aggregation,rank_venues,canonical,local,Top 5 venues by average citations since 2020,1,1,1,1,5,5,1,1.6518,0,0,,"SELECT v.venue_id, v.name, round(cast(avg(p.cited_by_count) AS numeric), 3) AS avg_citations
+FROM venue v JOIN paper p USING (venue_id) WHERE 1 = 1  AND p.publication_year >= 2020
+GROUP BY v.venue_id, v.name ORDER BY avg_citations DESC, v.venue_id LIMIT 5"
+AGGREGATION-19,aggregation,rank_venues,canonical,local,Top 7 venues by average citations since 2021,1,1,1,1,7,7,1,1.896,0,0,,"SELECT v.venue_id, v.name, round(cast(avg(p.cited_by_count) AS numeric), 3) AS avg_citations
+FROM venue v JOIN paper p USING (venue_id) WHERE 1 = 1  AND p.publication_year >= 2021
+GROUP BY v.venue_id, v.name ORDER BY avg_citations DESC, v.venue_id LIMIT 7"
+AGGREGATION-20,aggregation,rank_venues,paraphrase,local,"From 2022 onward, which 10 venues have the highest mean incoming citation counts?",0,0,0,0,10,10,1,0.0422,0,0,Local wording unsupported.,
+AGGREGATION-21,aggregation,author_threshold,canonical,local,Count papers with at least 2 authors by year,1,1,1,1,7,7,1,1.8452,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL AND
+      (SELECT count(*) FROM authorship au WHERE au.paper_id = p.paper_id) >= 2
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-22,aggregation,author_threshold,canonical,local,Count papers with at least 3 authors by year,1,1,1,1,7,7,1,1.6899,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL AND
+      (SELECT count(*) FROM authorship au WHERE au.paper_id = p.paper_id) >= 3
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-23,aggregation,author_threshold,canonical,local,Count papers with at least 4 authors by year,1,1,1,1,7,7,1,1.9127,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL AND
+      (SELECT count(*) FROM authorship au WHERE au.paper_id = p.paper_id) >= 4
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-24,aggregation,author_threshold,canonical,local,Count papers with at least 5 authors by year,1,1,1,1,7,7,1,1.9729,0,0,,"SELECT p.publication_year, count(*) AS paper_count FROM paper p
+WHERE p.publication_year IS NOT NULL AND
+      (SELECT count(*) FROM authorship au WHERE au.paper_id = p.paper_id) >= 5
+GROUP BY p.publication_year ORDER BY p.publication_year"
+AGGREGATION-25,aggregation,author_threshold,paraphrase,local,"For every year, count papers whose byline has 6 or more authors.",0,0,0,0,7,7,1,0.2019,0,0,Local wording unsupported.,
+NESTED-01,nested,recursive,canonical,local,"Show the citation chain from ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models"" up to depth 1",1,1,1,1,9,7,1,2.5169,0,0,,"WITH RECURSIVE walk(paper_id, depth, path) AS (
+    SELECT p.paper_id, 0, '|' || p.paper_id || '|' FROM paper p WHERE lower(p.title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+    UNION ALL
+    SELECT c.cited_id, w.depth + 1, w.path || c.cited_id || '|'
+    FROM walk w JOIN citation c ON c.citing_id = w.paper_id
+    WHERE w.depth < 1 AND w.path NOT LIKE '%|' || c.cited_id || '|%'
+)
+SELECT p.paper_id, p.title, min(w.depth) AS depth
+FROM walk w JOIN paper p USING (paper_id)
+WHERE w.depth > 0 GROUP BY p.paper_id, p.title ORDER BY depth, p.paper_id"
+NESTED-02,nested,recursive,canonical,local,"Show the citation chain from ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone"" up to depth 2",1,1,1,1,16,12,1,2.3344,0,0,,"WITH RECURSIVE walk(paper_id, depth, path) AS (
+    SELECT p.paper_id, 0, '|' || p.paper_id || '|' FROM paper p WHERE lower(p.title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone')
+    UNION ALL
+    SELECT c.cited_id, w.depth + 1, w.path || c.cited_id || '|'
+    FROM walk w JOIN citation c ON c.citing_id = w.paper_id
+    WHERE w.depth < 2 AND w.path NOT LIKE '%|' || c.cited_id || '|%'
+)
+SELECT p.paper_id, p.title, min(w.depth) AS depth
+FROM walk w JOIN paper p USING (paper_id)
+WHERE w.depth > 0 GROUP BY p.paper_id, p.title ORDER BY depth, p.paper_id"
+NESTED-03,nested,recursive,canonical,local,"Show the citation chain from ""The Llama 3 Herd of Models"" up to depth 3",1,1,1,1,37,35,1,3.0718,0,0,,"WITH RECURSIVE walk(paper_id, depth, path) AS (
+    SELECT p.paper_id, 0, '|' || p.paper_id || '|' FROM paper p WHERE lower(p.title) = lower('The Llama 3 Herd of Models')
+    UNION ALL
+    SELECT c.cited_id, w.depth + 1, w.path || c.cited_id || '|'
+    FROM walk w JOIN citation c ON c.citing_id = w.paper_id
+    WHERE w.depth < 3 AND w.path NOT LIKE '%|' || c.cited_id || '|%'
+)
+SELECT p.paper_id, p.title, min(w.depth) AS depth
+FROM walk w JOIN paper p USING (paper_id)
+WHERE w.depth > 0 GROUP BY p.paper_id, p.title ORDER BY depth, p.paper_id"
+NESTED-04,nested,recursive,canonical,local,"Show the citation chain from ""DeepSeek-V3 Technical Report"" up to depth 1",1,1,1,1,6,5,1,2.777,0,0,,"WITH RECURSIVE walk(paper_id, depth, path) AS (
+    SELECT p.paper_id, 0, '|' || p.paper_id || '|' FROM paper p WHERE lower(p.title) = lower('DeepSeek-V3 Technical Report')
+    UNION ALL
+    SELECT c.cited_id, w.depth + 1, w.path || c.cited_id || '|'
+    FROM walk w JOIN citation c ON c.citing_id = w.paper_id
+    WHERE w.depth < 1 AND w.path NOT LIKE '%|' || c.cited_id || '|%'
+)
+SELECT p.paper_id, p.title, min(w.depth) AS depth
+FROM walk w JOIN paper p USING (paper_id)
+WHERE w.depth > 0 GROUP BY p.paper_id, p.title ORDER BY depth, p.paper_id"
+NESTED-05,nested,recursive,paraphrase,local,"Which references can I reach from ""Improved Denoising Diffusion Probabilistic Models"" within 2 outgoing citation hops?",0,0,0,0,4,4,0,0.0447,0,0,Local wording unsupported.,
+NESTED-06,nested,exclude_citation,canonical,local,"Papers that cite ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"" but not ""Scaling Laws for Neural Language Models""",1,1,1,1,14,11,1,2.5165,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')) AND NOT EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Scaling Laws for Neural Language Models'))
+ORDER BY p.paper_id"
+NESTED-07,nested,exclude_citation,canonical,local,"Papers that cite ""Scaling Laws for Neural Language Models"" but not ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,11,10,1,2.6324,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Scaling Laws for Neural Language Models')) AND NOT EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Generating Long Sequences with Sparse Transformers'))
+ORDER BY p.paper_id"
+NESTED-08,nested,exclude_citation,canonical,local,"Papers that cite ""Generating Long Sequences with Sparse Transformers"" but not ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,11,9,1,3.205,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Generating Long Sequences with Sparse Transformers')) AND NOT EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models'))
+ORDER BY p.paper_id"
+NESTED-09,nested,exclude_citation,canonical,local,"Papers that cite ""Llama 2: Open Foundation and Fine-Tuned Chat Models"" but not ""Mistral 7B""",1,1,1,1,6,7,1,2.6581,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')) AND NOT EXISTS
+  (SELECT 1 FROM citation c JOIN paper target ON target.paper_id = c.cited_id
+   WHERE c.citing_id = p.paper_id AND lower(target.title) = lower('Mistral 7B'))
+ORDER BY p.paper_id"
+NESTED-10,nested,exclude_citation,paraphrase,local,"Find articles referencing ""Mistral 7B"" while excluding articles referencing ""Improved Denoising Diffusion Probabilistic Models"".",0,0,0,0,8,5,1,0.0533,0,0,Local wording unsupported.,
+NESTED-11,nested,zero_citation,canonical,local,Papers with no incoming citations in 2020,1,1,1,1,39,35,1,1.9692,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2020
+AND NOT EXISTS (SELECT 1 FROM citation c WHERE c.cited_id = p.paper_id)
+ORDER BY p.paper_id"
+NESTED-12,nested,zero_citation,canonical,local,Papers with no incoming citations in 2021,1,1,1,1,40,39,1,2.0823,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2021
+AND NOT EXISTS (SELECT 1 FROM citation c WHERE c.cited_id = p.paper_id)
+ORDER BY p.paper_id"
+NESTED-13,nested,zero_citation,canonical,local,Papers with no incoming citations in 2022,1,1,1,1,40,36,1,1.7593,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2022
+AND NOT EXISTS (SELECT 1 FROM citation c WHERE c.cited_id = p.paper_id)
+ORDER BY p.paper_id"
+NESTED-14,nested,zero_citation,canonical,local,Papers with no incoming citations in 2023,1,1,1,1,44,43,1,1.7706,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2023
+AND NOT EXISTS (SELECT 1 FROM citation c WHERE c.cited_id = p.paper_id)
+ORDER BY p.paper_id"
+NESTED-15,nested,zero_citation,paraphrase,local,Which 2024 works are absent from the cited side of every edge?,0,0,0,0,48,43,1,0.0511,0,0,Local wording unsupported.,
+NESTED-16,nested,above_year_mean,canonical,local,Papers above the average citations in 2020,1,1,1,1,12,13,1,1.6873,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2020 AND p.cited_by_count >
+    (SELECT avg(cited_by_count) FROM paper WHERE publication_year = 2020)
+ORDER BY p.paper_id"
+NESTED-17,nested,above_year_mean,canonical,local,Papers above the average citations in 2021,1,1,1,1,9,14,1,1.8578,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2021 AND p.cited_by_count >
+    (SELECT avg(cited_by_count) FROM paper WHERE publication_year = 2021)
+ORDER BY p.paper_id"
+NESTED-18,nested,above_year_mean,canonical,local,Papers above the average citations in 2022,1,1,1,1,10,9,1,1.6797,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2022 AND p.cited_by_count >
+    (SELECT avg(cited_by_count) FROM paper WHERE publication_year = 2022)
+ORDER BY p.paper_id"
+NESTED-19,nested,above_year_mean,canonical,local,Papers above the average citations in 2023,1,1,1,1,8,12,1,1.5969,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2023 AND p.cited_by_count >
+    (SELECT avg(cited_by_count) FROM paper WHERE publication_year = 2023)
+ORDER BY p.paper_id"
+NESTED-20,nested,above_year_mean,paraphrase,local,List 2024 papers whose citation count exceeds the mean for their submission year.,0,0,0,0,4,8,1,0.043,0,0,Local wording unsupported.,
+NESTED-21,nested,topic_intersection,canonical,local,"List papers tagged both ""cs.LG"" and ""cs.AI"" since 2018",1,1,1,1,96,96,1,2.847,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+p.publication_year >= 2018
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.LG'))
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.AI'))
+ORDER BY p.paper_id"
+NESTED-22,nested,topic_intersection,canonical,local,"List papers tagged both ""cs.LG"" and ""cs.CL"" since 2019",1,1,1,1,42,42,1,2.7036,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+p.publication_year >= 2019
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.LG'))
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.CL'))
+ORDER BY p.paper_id"
+NESTED-23,nested,topic_intersection,canonical,local,"List papers tagged both ""cs.LG"" and ""stat.ML"" since 2020",1,1,1,1,62,69,1,2.559,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+p.publication_year >= 2020
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.LG'))
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('stat.ML'))
+ORDER BY p.paper_id"
+NESTED-24,nested,topic_intersection,canonical,local,"List papers tagged both ""cs.AI"" and ""cs.CL"" since 2021",1,1,1,1,30,25,1,2.1024,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE 
+p.publication_year >= 2021
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.AI'))
+AND EXISTS (SELECT 1 FROM paper_topic pt JOIN topic t USING (topic_id)
+            WHERE pt.paper_id = p.paper_id AND lower(t.name) = lower('cs.CL'))
+ORDER BY p.paper_id"
+NESTED-25,nested,topic_intersection,paraphrase,local,"Which works from 2022 onward belong to the intersection of ""cs.LG"" and ""cs.CV""?",0,0,0,0,32,34,1,0.0437,0,0,Local wording unsupported.,
+LOOKUP-01,lookup,id,canonical,zero_shot,Find arXiv paper 1904.10509,1,1,1,1,1,1,0,1160.5913,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('1904.10509')
+ORDER BY paper_id
+LIMIT 1;"
+LOOKUP-02,lookup,id,canonical,zero_shot,Find arXiv paper 2001.08361,1,1,1,1,1,1,0,3780.444,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('2001.08361');"
+LOOKUP-03,lookup,id,canonical,zero_shot,Find arXiv paper 2106.09685,1,1,1,1,1,1,0,2006.6803,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('2106.09685')
+ORDER BY paper_id
+LIMIT 1;"
+LOOKUP-04,lookup,id,canonical,zero_shot,Find arXiv paper 2201.11903,1,1,1,1,1,1,0,3131.8296,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('2201.11903')
+ORDER BY paper_id
+LIMIT 1"
+LOOKUP-05,lookup,id,paraphrase,zero_shot,Return the record for arXiv identifier 2305.14314.,1,1,1,1,1,1,0,3280.4436,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('2305.14314');"
+LOOKUP-06,lookup,title,canonical,zero_shot,"Find paper ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,1,1,1,4206.7701,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+ORDER BY paper_id
+LIMIT 1;"
+LOOKUP-07,lookup,title,canonical,zero_shot,"Find paper ""Mistral 7B""",1,1,1,1,1,1,0,1326.015,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('Mistral 7B')
+ORDER BY paper_id ASC
+LIMIT 1;"
+LOOKUP-08,lookup,title,canonical,zero_shot,"Find paper ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models""",1,1,1,1,1,1,0,3751.6122,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+ORDER BY paper_id
+LIMIT 1;"
+LOOKUP-09,lookup,title,canonical,zero_shot,"Find paper ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone""",1,1,1,1,1,1,0,2611.2306,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone')
+ORDER BY paper_id
+LIMIT 1;"
+LOOKUP-10,lookup,title,paraphrase,zero_shot,"Which record has the exact title ""The Llama 3 Herd of Models""?",1,1,1,1,1,1,0,3925.7674,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('The Llama 3 Herd of Models')
+ORDER BY paper_id
+LIMIT 1;"
+LOOKUP-11,lookup,year,canonical,zero_shot,List papers published in 2019,1,1,1,1,45,46,1,1818.9707,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2019
+ORDER BY paper_id;"
+LOOKUP-12,lookup,year,canonical,zero_shot,List papers published in 2020,1,1,1,1,51,48,1,3133.1371,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2020
+ORDER BY paper_id;"
+LOOKUP-13,lookup,year,canonical,zero_shot,List papers published in 2021,1,1,1,1,50,53,1,3256.5319,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2021
+ORDER BY paper_id;"
+LOOKUP-14,lookup,year,canonical,zero_shot,List papers published in 2022,1,1,1,1,51,51,1,2774.2327,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2022
+ORDER BY paper_id;"
+LOOKUP-15,lookup,year,paraphrase,zero_shot,Which records have an arXiv submission year of 2023?,1,1,1,1,58,55,1,2723.3665,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2023;"
+LOOKUP-16,lookup,range,canonical,zero_shot,List papers between 2018 and 2019,1,1,1,1,91,95,1,3179.2779,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2018 AND 2019
+ORDER BY paper_id;"
+LOOKUP-17,lookup,range,canonical,zero_shot,List papers between 2019 and 2020,1,1,1,1,96,94,1,3247.5594,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2019 AND 2020
+ORDER BY paper_id;"
+LOOKUP-18,lookup,range,canonical,zero_shot,List papers between 2020 and 2021,1,1,1,1,101,101,1,3676.012,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2020 AND 2021
+ORDER BY paper_id;"
+LOOKUP-19,lookup,range,canonical,zero_shot,List papers between 2021 and 2024,1,1,1,1,211,210,1,1796.3321,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2021 AND 2024
+ORDER BY publication_year ASC, paper_id ASC;"
+LOOKUP-20,lookup,range,paraphrase,zero_shot,"Return publications spanning 2022 through 2023, inclusive.",1,1,1,1,109,106,1,3411.5755,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2022 AND 2023
+ORDER BY paper_id;"
+LOOKUP-21,lookup,substring,canonical,zero_shot,"Find papers with ""diffusion"" in the title",1,1,1,1,10,10,1,3354.3022,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE lower(title) LIKE '%diffusion%';"
+LOOKUP-22,lookup,substring,canonical,zero_shot,"Find papers with ""transformer"" in the title",1,1,1,1,13,13,0,2647.3069,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE lower(title) LIKE '%transformer%';"
+LOOKUP-23,lookup,substring,canonical,zero_shot,"Find papers with ""reinforcement"" in the title",1,1,1,1,14,14,1,4113.3931,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE lower(title) LIKE '%reinforcement%';"
+LOOKUP-24,lookup,substring,canonical,zero_shot,"Find papers with ""quantiz"" in the title",1,1,1,1,3,3,0,1790.6464,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE lower(title) LIKE '%quantiz%';"
+LOOKUP-25,lookup,substring,paraphrase,zero_shot,"Which titles contain ""attention"" anywhere?",1,1,1,1,10,10,0,3217.3688,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE lower(title) LIKE '%attention%';"
+JOINS-01,joins,author,canonical,zero_shot,"List papers by ""Rewon Child""",1,1,1,1,2,2,0,3745.3619,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+JOIN authorship ON paper.paper_id = authorship.paper_id
+JOIN author ON authorship.author_id = author.author_id
+WHERE lower(author.name) = lower('Rewon Child')
+ORDER BY paper.publication_year DESC, paper.paper_id;"
+JOINS-02,joins,author,canonical,zero_shot,"List papers by ""Jared Kaplan""",1,1,1,1,3,3,0,2733.8623,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+JOIN authorship ON paper.paper_id = authorship.paper_id
+JOIN author ON authorship.author_id = author.author_id
+WHERE lower(author.name) = lower('Jared Kaplan')
+ORDER BY paper.publication_year DESC, paper.paper_id;"
+JOINS-03,joins,author,canonical,zero_shot,"List papers by ""Alex Nichol""",1,1,1,1,3,3,0,2913.1788,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+JOIN authorship ON paper.paper_id = authorship.paper_id
+JOIN author ON authorship.author_id = author.author_id
+WHERE lower(author.name) = lower('Alex Nichol')
+ORDER BY paper.publication_year DESC, paper.paper_id;"
+JOINS-04,joins,author,canonical,zero_shot,"List papers by ""J. Edward Hu""",1,1,1,1,1,1,0,2359.6518,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN authorship a ON p.paper_id = a.paper_id
+JOIN author au ON a.author_id = au.author_id
+WHERE lower(au.name) = lower('J. Edward Hu')
+ORDER BY p.publication_year DESC, p.paper_id ASC;"
+JOINS-05,joins,author,paraphrase,zero_shot,"Show the papers whose author list contains ""Hugo Touvron"".",1,1,1,1,1,1,1,2953.6847,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN authorship a ON p.paper_id = a.paper_id
+JOIN author au ON a.author_id = au.author_id
+WHERE lower(au.name) = lower('Hugo Touvron');"
+JOINS-06,joins,topic,canonical,zero_shot,"List papers tagged ""cs.LG""",1,1,1,1,341,341,1,3559.1223,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+JOIN paper_topic USING (paper_id)
+JOIN topic USING (topic_id)
+WHERE lower(name) = lower('cs.LG');"
+JOINS-07,joins,topic,canonical,zero_shot,"List papers tagged ""cs.AI""",1,1,1,1,108,108,1,2976.0384,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+JOIN paper_topic USING (paper_id)
+JOIN topic USING (topic_id)
+WHERE lower(name) = lower('cs.AI');"
+JOINS-08,joins,topic,canonical,zero_shot,"List papers tagged ""cs.CL""",1,1,1,1,55,55,1,2409.0256,0,0,,"SELECT DISTINCT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt ON p.paper_id = pt.paper_id
+JOIN topic t ON pt.topic_id = t.topic_id
+WHERE lower(t.name) = lower('cs.CL');"
+JOINS-09,joins,topic,canonical,zero_shot,"List papers tagged ""cs.CV""",1,1,1,1,66,66,1,3167.7006,0,0,,"SELECT DISTINCT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt ON p.paper_id = pt.paper_id
+JOIN topic t ON pt.topic_id = t.topic_id
+WHERE lower(t.name) = lower('cs.CV');"
+JOINS-10,joins,topic,paraphrase,zero_shot,"Which works are classified under ""stat.ML""?",1,1,1,1,116,116,1,3004.7976,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt ON p.paper_id = pt.paper_id
+JOIN topic t ON pt.topic_id = t.topic_id
+WHERE lower(t.name) = lower('stat.ML');"
+JOINS-11,joins,venue,canonical,zero_shot,"List papers at ""arXiv"" since 2019",1,1,1,1,120,120,1,2782.5744,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v ON p.venue_id = v.venue_id
+WHERE lower(v.name) = lower('arXiv')
+  AND p.publication_year >= 2019
+ORDER BY p.paper_id;"
+JOINS-12,joins,venue,canonical,zero_shot,"List papers at ""neural information processing systems"" since 2019",1,1,1,1,25,23,1,3246.0288,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+JOIN venue USING (venue_id)
+WHERE lower(venue.name) = lower('neural information processing systems')
+  AND publication_year >= 2019
+ORDER BY paper_id;"
+JOINS-13,joins,venue,canonical,zero_shot,"List papers at ""International Conference on Machine Learning"" since 2019",1,1,1,1,6,6,1,3609.5905,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+JOIN venue USING (venue_id)
+WHERE lower(name) = lower('International Conference on Machine Learning')
+  AND publication_year >= 2019
+ORDER BY publication_year, paper_id;"
+JOINS-14,joins,venue,canonical,zero_shot,"List papers at ""International Conference on Artificial Intelligence and Statistics"" since 2019",1,1,1,1,9,9,1,3007.2933,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+JOIN venue ON paper.venue_id = venue.venue_id
+WHERE venue.name = 'International Conference on Artificial Intelligence and Statistics'
+  AND paper.publication_year >= 2019;"
+JOINS-15,joins,venue,paraphrase,zero_shot,"Find records associated with ""IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings"" from 2019 onward.",1,1,1,1,10,10,1,2880.535,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+JOIN venue USING (venue_id)
+WHERE lower(venue.name) = lower('IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings')
+  AND publication_year >= 2019;"
+JOINS-16,joins,affiliation,canonical,zero_shot,"List authors affiliated with ""Google (United States)"" since 2018",1,1,1,1,111,111,0,3800.7334,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa ON a.author_id = aa.author_id
+JOIN institution i ON aa.institution_id = i.institution_id
+JOIN paper p ON aa.paper_id = p.paper_id
+WHERE lower(i.name) = lower('Google (United States)')
+  AND p.publication_year >= 2018;"
+JOINS-17,joins,affiliation,canonical,zero_shot,"List authors affiliated with ""OpenAI (United States)"" since 2019",1,0,0,0,62,62,0,1941.5831,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa ON a.author_id = aa.author_id
+JOIN institution i ON aa.institution_id = i.institution_id
+JOIN paper p ON aa.paper_id = p.paper_id
+WHERE lower(i.name) = lower('OpenAI')
+  AND lower(i.country_code) = lower('US')
+  AND p.publication_year >= 2019
+ORDER BY a.author_id;"
+JOINS-18,joins,affiliation,canonical,zero_shot,"List authors affiliated with ""Tsinghua University"" since 2020",1,1,1,1,30,33,1,3442.3859,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa ON a.author_id = aa.author_id
+JOIN institution i ON aa.institution_id = i.institution_id
+JOIN paper p ON aa.paper_id = p.paper_id
+WHERE lower(i.name) = lower('Tsinghua University')
+  AND p.publication_year >= 2020
+ORDER BY a.author_id;"
+JOINS-19,joins,affiliation,canonical,zero_shot,"List authors affiliated with ""Meta (United States)"" since 2021",1,1,1,1,5,5,0,2706.6969,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author_affiliation aa
+JOIN institution i ON aa.institution_id = i.institution_id
+JOIN paper p ON aa.paper_id = p.paper_id
+JOIN author a ON aa.author_id = a.author_id
+WHERE i.name = 'Meta (United States)'
+  AND p.publication_year >= 2021
+ORDER BY a.author_id;"
+JOINS-20,joins,affiliation,paraphrase,zero_shot,"Who has a paper dated 2022 or later with a ""Stanford University"" affiliation?",1,1,1,1,15,18,1,2436.5588,0,0,,"SELECT DISTINCT author.author_id, author.name
+FROM author
+JOIN author_affiliation ON author.author_id = author_affiliation.author_id
+JOIN institution ON author_affiliation.institution_id = institution.institution_id
+JOIN paper ON author_affiliation.paper_id = paper.paper_id
+WHERE lower(institution.name) = lower('Stanford University')
+  AND paper.publication_year >= 2022;"
+JOINS-21,joins,author_order,canonical,zero_shot,"List authors of ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,4,4,0,3065.1114,0,0,,"SELECT author_id, name
+FROM paper
+JOIN authorship USING (paper_id)
+JOIN author USING (author_id)
+WHERE lower(title) = lower('Generating Long Sequences with Sparse Transformers')
+ORDER BY author_order;"
+JOINS-22,joins,author_order,canonical,zero_shot,"List authors of ""Scaling Laws for Neural Language Models""",1,1,1,1,10,10,0,3740.2795,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au ON p.paper_id = au.paper_id
+JOIN author a ON au.author_id = a.author_id
+WHERE lower(p.title) = lower('Scaling Laws for Neural Language Models')
+ORDER BY au.author_order, a.author_id;"
+JOINS-23,joins,author_order,canonical,zero_shot,"List authors of ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,8,8,0,2123.1807,0,0,,"SELECT author.author_id, author.name
+FROM paper
+JOIN authorship ON paper.paper_id = authorship.paper_id
+JOIN author ON authorship.author_id = author.author_id
+WHERE lower(paper.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models')
+ORDER BY authorship.author_order;"
+JOINS-24,joins,author_order,canonical,zero_shot,"List authors of ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,9,9,0,3000.5765,0,0,,"SELECT author.author_id, author.name
+FROM paper
+JOIN authorship ON paper.paper_id = authorship.paper_id
+JOIN author ON authorship.author_id = author.author_id
+WHERE lower(paper.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+ORDER BY authorship.author_order;"
+JOINS-25,joins,author_order,paraphrase,zero_shot,"Give the byline for ""QLoRA: Efficient Finetuning of Quantized LLMs"" in the listed author order.",1,1,1,1,4,4,0,4122.7701,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au ON p.paper_id = au.paper_id
+JOIN author a ON au.author_id = a.author_id
+WHERE lower(p.title) = lower('QLoRA: Efficient Finetuning of Quantized LLMs')
+ORDER BY au.author_order, a.author_id;"
+AGGREGATION-01,aggregation,count_topic_year,canonical,zero_shot,"Count papers tagged ""cs.LG"" by year",1,1,1,1,7,7,1,2021.5888,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS paper_count
+FROM paper p
+JOIN paper_topic pt ON p.paper_id = pt.paper_id
+JOIN topic t ON pt.topic_id = t.topic_id
+WHERE lower(t.name) = lower('cs.LG')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-02,aggregation,count_topic_year,canonical,zero_shot,"Count papers tagged ""cs.AI"" by year",1,1,1,1,7,7,1,3044.244,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS paper_count
+FROM paper p
+JOIN paper_topic pt ON p.paper_id = pt.paper_id
+JOIN topic t ON pt.topic_id = t.topic_id
+WHERE lower(t.name) = 'cs.ai'
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-03,aggregation,count_topic_year,canonical,zero_shot,"Count papers tagged ""cs.CL"" by year",1,1,1,1,7,7,1,2996.4437,0,0,,"SELECT
+    paper.publication_year,
+    COUNT(DISTINCT paper.paper_id) AS paper_count
+FROM
+    paper
+JOIN
+    paper_topic USING (paper_id)
+JOIN
+    topic USING (topic_id)
+WHERE
+    lower(topic.name) = lower('cs.CL')
+GROUP BY
+    paper.publication_year
+ORDER BY
+    paper.publication_year;"
+AGGREGATION-04,aggregation,count_topic_year,canonical,zero_shot,"Count papers tagged ""cs.CV"" by year",1,1,1,1,7,7,1,2985.3559,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS paper_count
+FROM paper p
+JOIN paper_topic pt ON p.paper_id = pt.paper_id
+JOIN topic t ON pt.topic_id = t.topic_id
+WHERE lower(t.name) = lower('cs.CV')
+GROUP BY p.publication_year
+ORDER BY p.publication_year ASC;"
+AGGREGATION-05,aggregation,count_topic_year,paraphrase,zero_shot,"For each year, how many articles carry the ""stat.ML"" category?",1,1,1,1,7,7,1,3266.4214,0,0,,"SELECT
+    publication_year,
+    COUNT(DISTINCT paper_id) AS paper_count
+FROM
+    paper
+JOIN
+    paper_topic USING (paper_id)
+JOIN
+    topic USING (topic_id)
+WHERE
+    LOWER(name) = LOWER('stat.ML')
+GROUP BY
+    publication_year
+ORDER BY
+    publication_year;"
+AGGREGATION-06,aggregation,count_incoming,canonical,zero_shot,"Count citations received by ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,1,1,1,2437.485,0,0,,"SELECT p.paper_id, COUNT(c.citing_id) AS citation_count
+FROM paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Generating Long Sequences with Sparse Transformers')
+GROUP BY p.paper_id;"
+AGGREGATION-07,aggregation,count_incoming,canonical,zero_shot,"Count citations received by ""Scaling Laws for Neural Language Models""",1,1,1,1,1,1,1,2794.4872,0,0,,"SELECT p.paper_id,
+       COUNT(c.citing_id) AS citation_count
+FROM   paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE  lower(p.title) = lower('Scaling Laws for Neural Language Models')
+GROUP BY p.paper_id;"
+AGGREGATION-08,aggregation,count_incoming,canonical,zero_shot,"Count citations received by ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,1,1,1,3161.8371,0,0,,"SELECT p.paper_id,
+       COUNT(c.citing_id) AS citation_count
+FROM   paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE  lower(p.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models')
+GROUP BY p.paper_id
+ORDER BY p.paper_id;"
+AGGREGATION-09,aggregation,count_incoming,canonical,zero_shot,"Count citations received by ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,1,1,1,3282.7127,0,0,,"SELECT
+    p.paper_id,
+    COUNT(c.citing_id) AS citation_count
+FROM
+    paper p
+LEFT JOIN
+    citation c ON c.cited_id = p.paper_id
+WHERE
+    LOWER(p.title) = LOWER('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+GROUP BY
+    p.paper_id;"
+AGGREGATION-10,aggregation,count_incoming,paraphrase,zero_shot,"How many in-corpus references point to ""QLoRA: Efficient Finetuning of Quantized LLMs""?",1,1,1,1,1,1,1,2929.7506,0,0,,"SELECT p.paper_id,
+       COUNT(c.citing_id) AS citation_count
+FROM   paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE  lower(p.title) = lower('QLoRA: Efficient Finetuning of Quantized LLMs')
+GROUP BY p.paper_id;"
+AGGREGATION-11,aggregation,rank_authors,canonical,zero_shot,Top 3 authors by paper count since 2018,1,1,1,1,3,3,0,3846.3758,0,0,,"SELECT author.author_id,
+       author.name,
+       COUNT(DISTINCT authorship.paper_id) AS paper_count
+FROM author
+JOIN authorship ON author.author_id = authorship.author_id
+JOIN paper ON authorship.paper_id = paper.paper_id
+WHERE paper.publication_year >= 2018
+GROUP BY author.author_id, author.name
+ORDER BY paper_count DESC, author.author_id ASC
+LIMIT 3;"
+AGGREGATION-12,aggregation,rank_authors,canonical,zero_shot,Top 4 authors by paper count since 2019,1,1,1,1,4,4,0,2437.6443,0,0,,"SELECT
+    a.author_id,
+    a.name,
+    COUNT(p.paper_id) AS paper_count
+FROM
+    author a
+JOIN
+    authorship au ON a.author_id = au.author_id
+JOIN
+    paper p ON au.paper_id = p.paper_id
+WHERE
+    p.publication_year >= 2019
+GROUP BY
+    a.author_id,
+    a.name
+ORDER BY
+    paper_count DESC,
+    a.author_id ASC
+LIMIT 4;"
+AGGREGATION-13,aggregation,rank_authors,canonical,zero_shot,Top 5 authors by paper count since 2020,1,1,1,1,5,5,1,2631.7281,0,0,,"SELECT
+    author_id,
+    name,
+    COUNT(DISTINCT paper_id) AS paper_count
+FROM
+    authorship
+JOIN
+    paper USING (paper_id)
+JOIN
+    author USING (author_id)
+WHERE
+    publication_year >= 2020
+GROUP BY
+    author_id,
+    name
+ORDER BY
+    paper_count DESC,
+    author_id ASC
+LIMIT 5;"
+AGGREGATION-14,aggregation,rank_authors,canonical,zero_shot,Top 7 authors by paper count since 2021,1,1,1,1,7,7,1,3675.2479,0,0,,"SELECT a.author_id,
+       a.name,
+       COUNT(DISTINCT p.paper_id) AS paper_count
+FROM author a
+JOIN authorship au ON a.author_id = au.author_id
+JOIN paper p ON au.paper_id = p.paper_id
+WHERE p.publication_year >= 2021
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 7;"
+AGGREGATION-15,aggregation,rank_authors,paraphrase,zero_shot,Rank the 10 most prolific authors from 2022 onward by paper count.,1,1,1,1,10,10,1,2093.9149,0,0,,"SELECT author_id, name, COUNT(*) AS paper_count
+FROM authorship
+JOIN paper USING (paper_id)
+JOIN author USING (author_id)
+WHERE publication_year >= 2022
+GROUP BY author_id, name
+ORDER BY paper_count DESC, author_id ASC
+LIMIT 10;"
+AGGREGATION-16,aggregation,rank_venues,canonical,zero_shot,Top 3 venues by average citations since 2018,1,1,1,1,3,3,1,3115.6578,0,0,,"SELECT
+    venue_id,
+    name,
+    AVG(cited_by_count) AS avg_citations
+FROM
+    paper
+JOIN
+    venue USING (venue_id)
+WHERE
+    publication_year >= 2018
+GROUP BY
+    venue_id,
+    name
+ORDER BY
+    avg_citations DESC,
+    venue_id ASC
+LIMIT 3;"
+AGGREGATION-17,aggregation,rank_venues,canonical,zero_shot,Top 4 venues by average citations since 2019,1,1,0,0,4,4,1,3600.2893,0,0,,"SELECT
+    venue_id,
+    name,
+    AVG(cited_by_count) AS avg_citations
+FROM
+    paper
+JOIN
+    venue USING (venue_id)
+WHERE
+    publication_year >= 2019
+GROUP BY
+    venue_id,
+    name
+ORDER BY
+    avg_citations DESC,
+    venue_id ASC
+LIMIT 4;"
+AGGREGATION-18,aggregation,rank_venues,canonical,zero_shot,Top 5 venues by average citations since 2020,1,0,0,0,5,5,1,3034.1841,0,0,,"SELECT venue_id, name, AVG(cited_by_count) AS avg_citations
+FROM paper
+JOIN venue USING (venue_id)
+WHERE publication_year >= 2020
+GROUP BY venue_id, name
+ORDER BY avg_citations DESC, venue_id ASC
+LIMIT 5;"
+AGGREGATION-19,aggregation,rank_venues,canonical,zero_shot,Top 7 venues by average citations since 2021,1,0,0,0,7,7,1,4417.0461,0,0,,"SELECT venue_id, name, AVG(cited_by_count) AS avg_citations
+FROM paper
+JOIN venue USING (venue_id)
+WHERE publication_year >= 2021
+GROUP BY venue_id, name
+ORDER BY avg_citations DESC, venue_id
+LIMIT 7;"
+AGGREGATION-20,aggregation,rank_venues,paraphrase,zero_shot,"From 2022 onward, which 10 venues have the highest mean incoming citation counts?",1,0,0,0,10,10,1,1353.0253,0,0,,"SELECT
+    venue_id,
+    name,
+    AVG(cited_by_count) AS avg_citations
+FROM
+    paper
+JOIN
+    venue USING (venue_id)
+WHERE
+    publication_year >= 2022
+GROUP BY
+    venue_id,
+    name
+ORDER BY
+    avg_citations DESC,
+    venue_id ASC
+LIMIT 10;"
+AGGREGATION-21,aggregation,author_threshold,canonical,zero_shot,Count papers with at least 2 authors by year,1,1,1,1,7,7,1,5465.9631,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM paper p
+JOIN (
+    SELECT paper_id
+    FROM authorship
+    GROUP BY paper_id
+    HAVING COUNT(DISTINCT author_id) >= 2
+) a ON p.paper_id = a.paper_id
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-22,aggregation,author_threshold,canonical,zero_shot,Count papers with at least 3 authors by year,1,1,1,1,7,7,1,1303.5764,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM paper p
+JOIN (
+    SELECT paper_id
+    FROM authorship
+    GROUP BY paper_id
+    HAVING COUNT(DISTINCT author_id) >= 3
+) a ON p.paper_id = a.paper_id
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-23,aggregation,author_threshold,canonical,zero_shot,Count papers with at least 4 authors by year,1,1,1,1,7,7,1,3107.115,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM paper p
+JOIN (
+    SELECT paper_id
+    FROM authorship
+    GROUP BY paper_id
+    HAVING COUNT(DISTINCT author_id) >= 4
+) a ON p.paper_id = a.paper_id
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-24,aggregation,author_threshold,canonical,zero_shot,Count papers with at least 5 authors by year,1,1,1,1,7,7,1,4523.6036,0,0,,"SELECT
+    p.publication_year,
+    COUNT(*) AS paper_count
+FROM
+    paper p
+JOIN (
+    SELECT
+        paper_id
+    FROM
+        authorship
+    GROUP BY
+        paper_id
+    HAVING
+        COUNT(DISTINCT author_id) >= 5
+) AS a ON p.paper_id = a.paper_id
+GROUP BY
+    p.publication_year
+ORDER BY
+    p.publication_year;"
+AGGREGATION-25,aggregation,author_threshold,paraphrase,zero_shot,"For every year, count papers whose byline has 6 or more authors.",1,1,1,1,7,7,1,3161.8585,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM paper p
+JOIN (
+    SELECT paper_id
+    FROM authorship
+    GROUP BY paper_id
+    HAVING COUNT(*) >= 6
+) a6 ON p.paper_id = a6.paper_id
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+NESTED-01,nested,recursive,canonical,zero_shot,"Show the citation chain from ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models"" up to depth 1",1,1,1,1,9,7,1,3657.7707,0,0,,"SELECT
+    cited.paper_id,
+    cited.title,
+    1 AS depth
+FROM
+    paper AS source
+JOIN
+    citation ON citation.citing_id = source.paper_id
+JOIN
+    paper AS cited ON cited.paper_id = citation.cited_id
+WHERE
+    lower(source.title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models');"
+NESTED-02,nested,recursive,canonical,zero_shot,"Show the citation chain from ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone"" up to depth 2",1,0,0,0,16,12,1,2430.1677,0,0,,"WITH target AS (
+  SELECT paper_id, title
+  FROM paper
+  WHERE lower(title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone')
+),
+depth1 AS (
+  SELECT c.citing_id AS paper_id, p.title, 1 AS depth
+  FROM citation c
+  JOIN target t ON c.cited_id = t.paper_id
+  JOIN paper p ON p.paper_id = c.citing_id
+),
+depth2 AS (
+  SELECT c.citing_id AS paper_id, p.title, 2 AS depth
+  FROM citation c
+  JOIN depth1 d1 ON c.cited_id = d1.paper_id
+  JOIN paper p ON p.paper_id = c.citing_id
+)
+SELECT t.paper_id, t.title, 0 AS depth FROM target t
+UNION ALL
+SELECT paper_id, title, depth FROM depth1
+UNION ALL
+SELECT paper_id, title, depth FROM depth2
+ORDER BY depth, paper_id;"
+NESTED-03,nested,recursive,canonical,zero_shot,"Show the citation chain from ""The Llama 3 Herd of Models"" up to depth 3",1,0,0,0,37,35,1,2993.2963,0,0,,"WITH RECURSIVE chain AS (
+    SELECT p.paper_id, p.title, 0 AS depth
+    FROM paper p
+    WHERE lower(p.title) = lower('The Llama 3 Herd of Models')
+    UNION ALL
+    SELECT p2.paper_id, p2.title, c.depth + 1
+    FROM chain c
+    JOIN citation cit ON cit.cited_id = c.paper_id
+    JOIN paper p2 ON p2.paper_id = cit.citing_id
+    WHERE c.depth < 3
+)
+SELECT paper_id, title, depth
+FROM chain
+ORDER BY depth, paper_id;"
+NESTED-04,nested,recursive,canonical,zero_shot,"Show the citation chain from ""DeepSeek-V3 Technical Report"" up to depth 1",1,0,0,0,6,5,1,3042.0684,0,0,,"SELECT p.paper_id, p.title, 0 AS depth
+FROM paper p
+WHERE lower(p.title) = lower('DeepSeek-V3 Technical Report')
+UNION ALL
+SELECT cp.paper_id, cp.title, 1 AS depth
+FROM paper p
+JOIN citation c ON c.citing_id = p.paper_id
+JOIN paper cp ON cp.paper_id = c.cited_id
+WHERE lower(p.title) = lower('DeepSeek-V3 Technical Report')
+ORDER BY depth, paper_id;"
+NESTED-05,nested,recursive,paraphrase,zero_shot,"Which references can I reach from ""Improved Denoising Diffusion Probabilistic Models"" within 2 outgoing citation hops?",1,0,1,0,4,4,0,5686.5153,0,0,,"WITH src AS (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('Improved Denoising Diffusion Probabilistic Models')
+),
+first_hop AS (
+    SELECT c.cited_id AS paper_id, 1 AS depth
+    FROM citation c
+    JOIN src s ON c.citing_id = s.paper_id
+),
+second_hop AS (
+    SELECT c2.cited_id AS paper_id, 2 AS depth
+    FROM citation c2
+    JOIN first_hop fh ON c2.citing_id = fh.paper_id
+    WHERE c2.cited_id <> (SELECT paper_id FROM src)
+),
+combined AS (
+    SELECT * FROM first_hop
+    UNION
+    SELECT * FROM second_hop
+)
+SELECT combined.paper_id,
+       p.title,
+       combined.depth
+FROM combined
+JOIN paper p ON p.paper_id = combined.paper_id
+ORDER BY combined.depth, combined.paper_id;"
+NESTED-06,nested,exclude_citation,canonical,zero_shot,"Papers that cite ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"" but not ""Scaling Laws for Neural Language Models""",1,1,1,1,14,11,1,2640.0707,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN citation c1 ON c1.citing_id = p.paper_id
+WHERE c1.cited_id = (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    WHERE c2.citing_id = p.paper_id
+      AND c2.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Scaling Laws for Neural Language Models')
+      )
+);"
+NESTED-07,nested,exclude_citation,canonical,zero_shot,"Papers that cite ""Scaling Laws for Neural Language Models"" but not ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,11,10,1,4429.7973,0,0,,"WITH target1 AS (
+    SELECT paper_id FROM paper WHERE lower(title) = lower('Scaling Laws for Neural Language Models')
+),
+target2 AS (
+    SELECT paper_id FROM paper WHERE lower(title) = lower('Generating Long Sequences with Sparse Transformers')
+)
+SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN citation c1 ON c1.citing_id = p.paper_id
+WHERE c1.cited_id = (SELECT paper_id FROM target1)
+  AND NOT EXISTS (
+      SELECT 1
+      FROM citation c2
+      WHERE c2.citing_id = p.paper_id
+        AND c2.cited_id = (SELECT paper_id FROM target2)
+  );"
+NESTED-08,nested,exclude_citation,canonical,zero_shot,"Papers that cite ""Generating Long Sequences with Sparse Transformers"" but not ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,11,9,1,4039.3231,0,0,,"SELECT c.citing_id AS paper_id, p.title, p.publication_year
+FROM citation c
+JOIN paper p ON p.paper_id = c.citing_id
+WHERE c.cited_id = (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('Generating Long Sequences with Sparse Transformers')
+)
+AND c.citing_id NOT IN (
+    SELECT citing_id
+    FROM citation
+    WHERE cited_id = (
+        SELECT paper_id
+        FROM paper
+        WHERE lower(title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+    )
+);"
+NESTED-09,nested,exclude_citation,canonical,zero_shot,"Papers that cite ""Llama 2: Open Foundation and Fine-Tuned Chat Models"" but not ""Mistral 7B""",1,1,1,1,6,7,1,3418.2287,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.paper_id IN (
+    SELECT citing_id
+    FROM citation
+    WHERE cited_id = (
+        SELECT paper_id
+        FROM paper
+        WHERE lower(title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+    )
+)
+AND p.paper_id NOT IN (
+    SELECT citing_id
+    FROM citation
+    WHERE cited_id = (
+        SELECT paper_id
+        FROM paper
+        WHERE lower(title) = lower('Mistral 7B')
+    )
+);"
+NESTED-10,nested,exclude_citation,paraphrase,zero_shot,"Find articles referencing ""Mistral 7B"" while excluding articles referencing ""Improved Denoising Diffusion Probabilistic Models"".",1,1,1,1,8,5,1,3430.398,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper pc ON c.cited_id = pc.paper_id
+    WHERE c.citing_id = p.paper_id
+      AND lower(pc.title) = 'mistral 7b'
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper pc ON c.cited_id = pc.paper_id
+    WHERE c.citing_id = p.paper_id
+      AND lower(pc.title) = 'improved denoising diffusion probabilistic models'
+);"
+NESTED-11,nested,zero_citation,canonical,zero_shot,Papers with no incoming citations in 2020,1,0,0,0,39,35,1,2049.6887,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON c.citing_id = cp.paper_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2020
+);"
+NESTED-12,nested,zero_citation,canonical,zero_shot,Papers with no incoming citations in 2021,1,0,0,0,40,39,1,6262.2109,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON c.citing_id = cp.paper_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2021
+);"
+NESTED-13,nested,zero_citation,canonical,zero_shot,Papers with no incoming citations in 2022,1,0,0,0,40,36,1,2305.0503,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation
+    JOIN paper AS citing ON citation.citing_id = citing.paper_id
+    WHERE citation.cited_id = paper.paper_id
+      AND citing.publication_year = 2022
+);"
+NESTED-14,nested,zero_citation,canonical,zero_shot,Papers with no incoming citations in 2023,1,0,0,0,44,43,1,2868.2993,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON c.citing_id = cp.paper_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2023
+);"
+NESTED-15,nested,zero_citation,paraphrase,zero_shot,Which 2024 works are absent from the cited side of every edge?,1,1,1,1,48,43,1,3669.025,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2024
+  AND NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    WHERE c.cited_id = p.paper_id
+  );"
+NESTED-16,nested,above_year_mean,canonical,zero_shot,Papers above the average citations in 2020,1,0,0,0,12,13,1,3269.4017,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.cited_by_count > (
+    SELECT AVG(p2.cited_by_count)
+    FROM paper p2
+    WHERE p2.publication_year = 2020
+)
+ORDER BY p.paper_id;"
+NESTED-17,nested,above_year_mean,canonical,zero_shot,Papers above the average citations in 2021,1,0,0,0,9,14,1,3808.6655,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper
+    WHERE publication_year = 2021
+)
+ORDER BY cited_by_count DESC, paper_id ASC;"
+NESTED-18,nested,above_year_mean,canonical,zero_shot,Papers above the average citations in 2022,1,0,0,0,10,9,1,2311.0082,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper
+    WHERE publication_year = 2022
+);"
+NESTED-19,nested,above_year_mean,canonical,zero_shot,Papers above the average citations in 2023,1,0,0,0,8,12,1,1960.6036,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper
+    WHERE publication_year = 2023
+);"
+NESTED-20,nested,above_year_mean,paraphrase,zero_shot,List 2024 papers whose citation count exceeds the mean for their submission year.,1,1,1,1,4,8,1,2790.6113,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2024
+  AND p.cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper
+    WHERE publication_year = 2024
+);"
+NESTED-21,nested,topic_intersection,canonical,zero_shot,"List papers tagged both ""cs.LG"" and ""cs.AI"" since 2018",1,1,1,1,96,96,1,4496.6095,0,0,,"SELECT DISTINCT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON p.paper_id = pt1.paper_id
+JOIN topic t1 ON pt1.topic_id = t1.topic_id
+JOIN paper_topic pt2 ON p.paper_id = pt2.paper_id
+JOIN topic t2 ON pt2.topic_id = t2.topic_id
+WHERE lower(t1.name) = 'cs.lg'
+  AND lower(t2.name) = 'cs.ai'
+  AND p.publication_year >= 2018;"
+NESTED-22,nested,topic_intersection,canonical,zero_shot,"List papers tagged both ""cs.LG"" and ""cs.CL"" since 2019",1,1,1,1,42,42,1,6418.3234,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON p.paper_id = pt1.paper_id
+JOIN topic t1 ON pt1.topic_id = t1.topic_id
+JOIN paper_topic pt2 ON p.paper_id = pt2.paper_id
+JOIN topic t2 ON pt2.topic_id = t2.topic_id
+WHERE lower(t1.name) = 'cs.lg'
+  AND lower(t2.name) = 'cs.cl'
+  AND p.publication_year >= 2019
+ORDER BY p.paper_id;"
+NESTED-23,nested,topic_intersection,canonical,zero_shot,"List papers tagged both ""cs.LG"" and ""stat.ML"" since 2020",1,1,1,1,62,69,1,2420.628,0,0,,"SELECT DISTINCT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON p.paper_id = pt1.paper_id
+JOIN topic t1 ON pt1.topic_id = t1.topic_id
+JOIN paper_topic pt2 ON p.paper_id = pt2.paper_id
+JOIN topic t2 ON pt2.topic_id = t2.topic_id
+WHERE lower(t1.name) = 'cs.lg'
+  AND lower(t2.name) = 'stat.ml'
+  AND p.publication_year >= 2020;"
+NESTED-24,nested,topic_intersection,canonical,zero_shot,"List papers tagged both ""cs.AI"" and ""cs.CL"" since 2021",1,1,1,1,30,25,1,6530.1054,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON p.paper_id = pt1.paper_id
+JOIN topic t1 ON pt1.topic_id = t1.topic_id
+JOIN paper_topic pt2 ON p.paper_id = pt2.paper_id
+JOIN topic t2 ON pt2.topic_id = t2.topic_id
+WHERE lower(t1.name) = 'cs.ai'
+  AND lower(t2.name) = 'cs.cl'
+  AND p.publication_year >= 2021
+GROUP BY p.paper_id, p.title, p.publication_year
+ORDER BY p.paper_id;"
+NESTED-25,nested,topic_intersection,paraphrase,zero_shot,"Which works from 2022 onward belong to the intersection of ""cs.LG"" and ""cs.CV""?",1,1,1,1,32,34,1,2852.5063,0,0,,"SELECT DISTINCT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON p.paper_id = pt1.paper_id
+JOIN topic t1 ON pt1.topic_id = t1.topic_id
+JOIN paper_topic pt2 ON p.paper_id = pt2.paper_id
+JOIN topic t2 ON pt2.topic_id = t2.topic_id
+WHERE p.publication_year >= 2022
+  AND lower(t1.name) = 'cs.lg'
+  AND lower(t2.name) = 'cs.cv'
+ORDER BY p.paper_id;"
+LOOKUP-01,lookup,id,canonical,few_shot,Find arXiv paper 1904.10509,1,1,1,1,1,1,0,6394.5943,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.arxiv_id) = lower('1904.10509')
+ORDER BY p.paper_id;"
+LOOKUP-02,lookup,id,canonical,few_shot,Find arXiv paper 2001.08361,1,1,1,1,1,1,0,3097.6629,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.arxiv_id) = lower('2001.08361')
+ORDER BY p.paper_id;"
+LOOKUP-03,lookup,id,canonical,few_shot,Find arXiv paper 2106.09685,1,1,1,1,1,1,0,3163.5206,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.arxiv_id) = lower('2106.09685')
+ORDER BY p.paper_id;"
+LOOKUP-04,lookup,id,canonical,few_shot,Find arXiv paper 2201.11903,1,1,1,1,1,1,0,2688.9741,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE arxiv_id = '2201.11903'
+ORDER BY paper_id;"
+LOOKUP-05,lookup,id,paraphrase,few_shot,Return the record for arXiv identifier 2305.14314.,1,1,1,1,1,1,0,2922.8187,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('2305.14314');"
+LOOKUP-06,lookup,title,canonical,few_shot,"Find paper ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,1,1,1,5987.4464,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models');"
+LOOKUP-07,lookup,title,canonical,few_shot,"Find paper ""Mistral 7B""",1,1,1,1,1,1,0,3280.4241,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.title) = lower('Mistral 7B')
+ORDER BY p.paper_id;"
+LOOKUP-08,lookup,title,canonical,few_shot,"Find paper ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models""",1,1,1,1,1,1,0,4149.9515,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+ORDER BY paper_id;"
+LOOKUP-09,lookup,title,canonical,few_shot,"Find paper ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone""",1,1,1,1,1,1,0,2068.8858,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone')
+ORDER BY p.paper_id;"
+LOOKUP-10,lookup,title,paraphrase,few_shot,"Which record has the exact title ""The Llama 3 Herd of Models""?",1,1,1,1,1,1,0,6369.7504,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.title) = lower('The Llama 3 Herd of Models')
+ORDER BY p.paper_id;"
+LOOKUP-11,lookup,year,canonical,few_shot,List papers published in 2019,1,1,1,1,45,46,1,2169.7851,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2019
+ORDER BY paper_id;"
+LOOKUP-12,lookup,year,canonical,few_shot,List papers published in 2020,1,1,1,1,51,48,1,4358.5253,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2020
+ORDER BY p.paper_id;"
+LOOKUP-13,lookup,year,canonical,few_shot,List papers published in 2021,1,1,1,1,50,53,1,1927.3416,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2021
+ORDER BY paper_id;"
+LOOKUP-14,lookup,year,canonical,few_shot,List papers published in 2022,1,1,1,1,51,51,1,5855.9046,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2022
+ORDER BY paper_id;"
+LOOKUP-15,lookup,year,paraphrase,few_shot,Which records have an arXiv submission year of 2023?,1,1,1,1,58,55,1,3471.2827,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2023
+ORDER BY p.paper_id;"
+LOOKUP-16,lookup,range,canonical,few_shot,List papers between 2018 and 2019,1,1,1,1,91,95,1,5391.2505,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2018 AND 2019
+ORDER BY paper_id;"
+LOOKUP-17,lookup,range,canonical,few_shot,List papers between 2019 and 2020,1,1,1,1,96,94,1,3124.9296,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2019 AND 2020
+ORDER BY paper_id;"
+LOOKUP-18,lookup,range,canonical,few_shot,List papers between 2020 and 2021,1,1,1,1,101,101,1,3415.0818,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2020 AND 2021
+ORDER BY paper_id;"
+LOOKUP-19,lookup,range,canonical,few_shot,List papers between 2021 and 2024,1,1,1,1,211,210,1,2923.0552,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2021 AND 2024
+ORDER BY paper_id;"
+LOOKUP-20,lookup,range,paraphrase,few_shot,"Return publications spanning 2022 through 2023, inclusive.",1,1,1,1,109,106,1,3006.5731,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year BETWEEN 2022 AND 2023
+ORDER BY p.paper_id;"
+LOOKUP-21,lookup,substring,canonical,few_shot,"Find papers with ""diffusion"" in the title",1,1,1,1,10,10,1,2785.0526,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE lower(title) LIKE '%diffusion%';"
+LOOKUP-22,lookup,substring,canonical,few_shot,"Find papers with ""transformer"" in the title",1,1,1,1,13,13,0,3043.5417,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE lower(title) LIKE '%transformer%'
+ORDER BY paper_id;"
+LOOKUP-23,lookup,substring,canonical,few_shot,"Find papers with ""reinforcement"" in the title",1,1,1,1,14,14,1,2463.078,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%' || lower('reinforcement') || '%'
+ORDER BY p.paper_id;"
+LOOKUP-24,lookup,substring,canonical,few_shot,"Find papers with ""quantiz"" in the title",1,1,1,1,3,3,0,3723.902,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%quantiz%'
+ORDER BY p.paper_id;"
+LOOKUP-25,lookup,substring,paraphrase,few_shot,"Which titles contain ""attention"" anywhere?",1,1,1,1,10,10,0,3573.8333,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%' || lower('attention') || '%'
+ORDER BY p.paper_id;"
+JOINS-01,joins,author,canonical,few_shot,"List papers by ""Rewon Child""",1,1,1,1,2,2,0,2544.6829,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE EXISTS (
+    SELECT 1
+    FROM authorship
+    JOIN author USING (author_id)
+    WHERE authorship.paper_id = paper.paper_id
+      AND lower(author.name) = lower('Rewon Child')
+)
+ORDER BY paper_id;"
+JOINS-02,joins,author,canonical,few_shot,"List papers by ""Jared Kaplan""",1,1,1,1,3,3,0,3789.092,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN authorship a ON a.paper_id = p.paper_id
+JOIN author au ON au.author_id = a.author_id
+WHERE lower(au.name) = lower('Jared Kaplan')
+ORDER BY p.paper_id;"
+JOINS-03,joins,author,canonical,few_shot,"List papers by ""Alex Nichol""",1,1,1,1,3,3,0,5277.7139,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+JOIN authorship USING (paper_id)
+JOIN author USING (author_id)
+WHERE lower(name) = lower('Alex Nichol')
+ORDER BY paper_id;"
+JOINS-04,joins,author,canonical,few_shot,"List papers by ""J. Edward Hu""",1,1,1,1,1,1,0,6275.6981,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE EXISTS (
+    SELECT 1
+    FROM authorship
+    JOIN author USING (author_id)
+    WHERE authorship.paper_id = paper.paper_id
+      AND lower(author.name) = lower('J. Edward Hu')
+)
+ORDER BY paper_id;"
+JOINS-05,joins,author,paraphrase,few_shot,"Show the papers whose author list contains ""Hugo Touvron"".",1,1,1,1,1,1,1,4379.2718,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM authorship a
+    JOIN author au USING (author_id)
+    WHERE a.paper_id = p.paper_id
+      AND lower(au.name) = lower('Hugo Touvron')
+)
+ORDER BY p.paper_id;"
+JOINS-06,joins,topic,canonical,few_shot,"List papers tagged ""cs.LG""",1,1,1,1,341,341,1,2440.4362,0,0,,"SELECT DISTINCT paper_id, title, publication_year
+FROM paper
+JOIN paper_topic USING (paper_id)
+JOIN topic USING (topic_id)
+WHERE lower(name) = lower('cs.LG')
+ORDER BY paper_id;"
+JOINS-07,joins,topic,canonical,few_shot,"List papers tagged ""cs.AI""",1,1,1,1,108,108,1,2058.2936,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.AI')
+ORDER BY p.paper_id;"
+JOINS-08,joins,topic,canonical,few_shot,"List papers tagged ""cs.CL""",1,1,1,1,55,55,1,3461.7983,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.CL')
+ORDER BY p.paper_id;"
+JOINS-09,joins,topic,canonical,few_shot,"List papers tagged ""cs.CV""",1,1,1,1,66,66,1,2640.7609,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+JOIN paper_topic USING (paper_id)
+JOIN topic USING (topic_id)
+WHERE lower(topic.name) = lower('cs.CV')
+ORDER BY paper.paper_id;"
+JOINS-10,joins,topic,paraphrase,few_shot,"Which works are classified under ""stat.ML""?",1,1,1,1,116,116,1,5513.179,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('stat.ML')
+ORDER BY p.paper_id;"
+JOINS-11,joins,venue,canonical,few_shot,"List papers at ""arXiv"" since 2019",1,1,1,1,120,120,1,4449.6513,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('arXiv')
+ORDER BY p.paper_id;"
+JOINS-12,joins,venue,canonical,few_shot,"List papers at ""neural information processing systems"" since 2019",1,1,1,1,25,23,1,2236.1607,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('neural information processing systems')
+ORDER BY p.paper_id;"
+JOINS-13,joins,venue,canonical,few_shot,"List papers at ""International Conference on Machine Learning"" since 2019",1,1,1,1,6,6,1,7877.0436,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('International Conference on Machine Learning')
+ORDER BY p.paper_id;"
+JOINS-14,joins,venue,canonical,few_shot,"List papers at ""International Conference on Artificial Intelligence and Statistics"" since 2019",1,1,1,1,9,9,1,4870.1372,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE lower(v.name) = lower('International Conference on Artificial Intelligence and Statistics')
+  AND p.publication_year >= 2019
+ORDER BY p.paper_id;"
+JOINS-15,joins,venue,paraphrase,few_shot,"Find records associated with ""IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings"" from 2019 onward.",1,1,1,1,10,10,1,2971.1099,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings')
+ORDER BY p.paper_id"
+JOINS-16,joins,affiliation,canonical,few_shot,"List authors affiliated with ""Google (United States)"" since 2018",1,0,0,0,111,111,0,3880.5815,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i ON i.institution_id = aa.institution_id
+JOIN paper p ON p.paper_id = aa.paper_id
+WHERE lower(i.name) = lower('Google')
+  AND i.country_code = 'US'
+  AND p.publication_year >= 2018
+ORDER BY a.author_id;"
+JOINS-17,joins,affiliation,canonical,few_shot,"List authors affiliated with ""OpenAI (United States)"" since 2019",1,1,1,1,62,62,0,6807.6447,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id)
+WHERE lower(i.name) = lower('OpenAI (United States)') 
+  AND p.publication_year >= 2019
+ORDER BY a.author_id;"
+JOINS-18,joins,affiliation,canonical,few_shot,"List authors affiliated with ""Tsinghua University"" since 2020",1,1,1,1,30,33,1,6171.4732,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id)
+WHERE lower(i.name) = lower('Tsinghua University')
+  AND p.publication_year >= 2020
+ORDER BY a.author_id;"
+JOINS-19,joins,affiliation,canonical,few_shot,"List authors affiliated with ""Meta (United States)"" since 2021",1,1,1,1,5,5,0,2237.5881,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id)
+WHERE lower(i.name) = lower('Meta (United States)') AND p.publication_year >= 2021
+ORDER BY a.author_id"
+JOINS-20,joins,affiliation,paraphrase,few_shot,"Who has a paper dated 2022 or later with a ""Stanford University"" affiliation?",1,1,1,1,15,18,1,4059.1998,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa ON aa.author_id = a.author_id
+JOIN institution i ON i.institution_id = aa.institution_id
+JOIN paper p ON p.paper_id = aa.paper_id
+WHERE lower(i.name) = lower('Stanford University')
+  AND (p.publication_year >= 2022 OR p.publication_date >= '2022-01-01')
+ORDER BY a.author_id;"
+JOINS-21,joins,author_order,canonical,few_shot,"List authors of ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,4,4,0,8397.787,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au USING (paper_id)
+JOIN author a USING (author_id)
+WHERE lower(p.title) = lower('Generating Long Sequences with Sparse Transformers')
+ORDER BY au.author_order, a.author_id;"
+JOINS-22,joins,author_order,canonical,few_shot,"List authors of ""Scaling Laws for Neural Language Models""",1,1,1,1,10,10,0,2411.2949,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au USING (paper_id)
+JOIN author a USING (author_id)
+WHERE lower(p.title) = lower('Scaling Laws for Neural Language Models')
+ORDER BY au.author_order, a.author_id;"
+JOINS-23,joins,author_order,canonical,few_shot,"List authors of ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,8,8,0,6050.3022,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au USING (paper_id)
+JOIN author a USING (author_id)
+WHERE lower(p.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models')
+ORDER BY au.author_order, a.author_id;"
+JOINS-24,joins,author_order,canonical,few_shot,"List authors of ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,9,9,0,2951.1321,0,0,,"SELECT a.author_id, a.name
+FROM author a
+JOIN authorship au USING (author_id)
+JOIN paper p USING (paper_id)
+WHERE lower(p.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+ORDER BY au.author_order, a.author_id;"
+JOINS-25,joins,author_order,paraphrase,few_shot,"Give the byline for ""QLoRA: Efficient Finetuning of Quantized LLMs"" in the listed author order.",1,0,0,0,4,4,0,3221.3353,0,0,,"SELECT p.paper_id, a.author_order, au.name
+FROM paper p
+JOIN authorship a USING (paper_id)
+JOIN author au USING (author_id)
+WHERE lower(p.title) = lower('QLoRA: Efficient Finetuning of Quantized LLMs')
+ORDER BY a.author_order, au.author_id;"
+AGGREGATION-01,aggregation,count_topic_year,canonical,few_shot,"Count papers tagged ""cs.LG"" by year",1,1,1,1,7,7,1,3086.0154,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS paper_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.LG')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-02,aggregation,count_topic_year,canonical,few_shot,"Count papers tagged ""cs.AI"" by year",1,1,1,1,7,7,1,2941.3124,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.AI')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-03,aggregation,count_topic_year,canonical,few_shot,"Count papers tagged ""cs.CL"" by year",1,1,1,1,7,7,1,2800.7358,0,0,,"SELECT p.publication_year, COUNT(*) AS paper_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.CL')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-04,aggregation,count_topic_year,canonical,few_shot,"Count papers tagged ""cs.CV"" by year",1,1,1,1,7,7,1,2990.2083,0,0,,"SELECT p.publication_year, COUNT(*) AS paper_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.CV')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-05,aggregation,count_topic_year,paraphrase,few_shot,"For each year, how many articles carry the ""stat.ML"" category?",1,1,1,1,7,7,1,3059.6268,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS article_count
+FROM paper p
+JOIN paper_topic pt ON pt.paper_id = p.paper_id
+JOIN topic t ON t.topic_id = pt.topic_id
+WHERE lower(t.name) = lower('stat.ML')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-06,aggregation,count_incoming,canonical,few_shot,"Count citations received by ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,1,1,1,2973.2503,0,0,,"SELECT p.paper_id,
+       COUNT(c.citing_id) AS citation_count
+FROM   paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE  lower(p.title) = lower('Generating Long Sequences with Sparse Transformers')
+GROUP BY p.paper_id;"
+AGGREGATION-07,aggregation,count_incoming,canonical,few_shot,"Count citations received by ""Scaling Laws for Neural Language Models""",1,1,1,1,1,1,1,2795.0196,0,0,,"SELECT p.paper_id, COUNT(c.citing_id) AS citation_count
+FROM paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Scaling Laws for Neural Language Models')
+GROUP BY p.paper_id;"
+AGGREGATION-08,aggregation,count_incoming,canonical,few_shot,"Count citations received by ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,1,1,1,4208.4679,0,0,,"SELECT p.paper_id, COUNT(c.citing_id) AS citation_count
+FROM paper p
+JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models')
+GROUP BY p.paper_id
+ORDER BY p.paper_id;"
+AGGREGATION-09,aggregation,count_incoming,canonical,few_shot,"Count citations received by ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,1,1,1,5598.1237,0,0,,"SELECT p.paper_id,
+       COUNT(c.citing_id) AS citation_count
+FROM   paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE  lower(p.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+GROUP BY p.paper_id
+ORDER BY p.paper_id;"
+AGGREGATION-10,aggregation,count_incoming,paraphrase,few_shot,"How many in-corpus references point to ""QLoRA: Efficient Finetuning of Quantized LLMs""?",1,0,0,0,1,1,1,5519.3179,0,0,,"SELECT COUNT(*) AS citation_count
+FROM citation c
+JOIN paper p ON p.paper_id = c.cited_id
+WHERE lower(p.title) = lower('QLoRA: Efficient Finetuning of Quantized LLMs');"
+AGGREGATION-11,aggregation,rank_authors,canonical,few_shot,Top 3 authors by paper count since 2018,1,1,1,1,3,3,0,5913.3588,0,0,,"SELECT a.author_id, a.name, COUNT(*) AS paper_count
+FROM author a
+JOIN authorship au USING (author_id)
+JOIN paper p USING (paper_id)
+WHERE p.publication_year >= 2018
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 3;"
+AGGREGATION-12,aggregation,rank_authors,canonical,few_shot,Top 4 authors by paper count since 2019,1,1,1,1,4,4,0,3729.4956,0,0,,"SELECT author.author_id,
+       author.name,
+       COUNT(*) AS paper_count
+FROM author
+JOIN authorship USING (author_id)
+JOIN paper USING (paper_id)
+WHERE paper.publication_year >= 2019
+GROUP BY author.author_id, author.name
+ORDER BY paper_count DESC, author.author_id ASC
+LIMIT 4;"
+AGGREGATION-13,aggregation,rank_authors,canonical,few_shot,Top 5 authors by paper count since 2020,1,1,1,1,5,5,1,6309.8977,0,0,,"SELECT a.author_id, a.name, COUNT(*) AS paper_count
+FROM author a
+JOIN authorship au USING (author_id)
+JOIN paper p USING (paper_id)
+WHERE p.publication_year >= 2020
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 5;"
+AGGREGATION-14,aggregation,rank_authors,canonical,few_shot,Top 7 authors by paper count since 2021,1,1,1,1,7,7,1,6799.9587,0,0,,"SELECT a.author_id, a.name, COUNT(*) AS paper_count
+FROM author a
+JOIN authorship au ON au.author_id = a.author_id
+JOIN paper p ON p.paper_id = au.paper_id
+WHERE p.publication_year >= 2021
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 7;"
+AGGREGATION-15,aggregation,rank_authors,paraphrase,few_shot,Rank the 10 most prolific authors from 2022 onward by paper count.,1,1,1,1,10,10,1,2680.9944,0,0,,"SELECT author.author_id, author.name, COUNT(*) AS paper_count
+FROM author
+JOIN authorship USING (author_id)
+JOIN paper USING (paper_id)
+WHERE paper.publication_year >= 2022
+GROUP BY author.author_id, author.name
+ORDER BY paper_count DESC, author.author_id ASC
+LIMIT 10;"
+AGGREGATION-16,aggregation,rank_venues,canonical,few_shot,Top 3 venues by average citations since 2018,1,1,1,1,3,3,1,4859.1118,0,0,,"SELECT
+    v.venue_id,
+    v.name,
+    AVG(COALESCE(pc.cnt, 0)) AS avg_citations
+FROM venue v
+JOIN paper p USING (venue_id)
+LEFT JOIN (
+    SELECT cited_id AS paper_id, COUNT(*) AS cnt
+    FROM citation
+    GROUP BY cited_id
+) pc ON pc.paper_id = p.paper_id
+WHERE p.publication_year >= 2018
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 3;"
+AGGREGATION-17,aggregation,rank_venues,canonical,few_shot,Top 4 venues by average citations since 2019,1,1,0,0,4,4,1,3036.6109,0,0,,"SELECT v.venue_id,
+       v.name,
+       AVG(p.cited_by_count) AS avg_citations
+FROM venue v
+JOIN paper p USING (venue_id)
+WHERE p.publication_year >= 2019
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 4;"
+AGGREGATION-18,aggregation,rank_venues,canonical,few_shot,Top 5 venues by average citations since 2020,1,0,0,0,5,5,1,3203.2037,0,0,,"SELECT v.venue_id, v.name, AVG(p.cited_by_count) AS avg_citations
+FROM venue v JOIN paper p USING (venue_id)
+WHERE p.publication_year >= 2020
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 5;"
+AGGREGATION-19,aggregation,rank_venues,canonical,few_shot,Top 7 venues by average citations since 2021,1,0,0,0,7,7,1,6127.2381,0,0,,"SELECT v.venue_id, v.name, AVG(p.cited_by_count) AS avg_citations
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2021
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 7"
+AGGREGATION-20,aggregation,rank_venues,paraphrase,few_shot,"From 2022 onward, which 10 venues have the highest mean incoming citation counts?",1,0,0,0,10,10,1,3570.3199,0,0,,"SELECT v.venue_id, v.name, AVG(COALESCE(c.cnt, 0)) AS avg_citations
+FROM venue v
+JOIN paper p USING (venue_id)
+LEFT JOIN (
+    SELECT cited_id, COUNT(*) AS cnt
+    FROM citation
+    GROUP BY cited_id
+) c ON c.cited_id = p.paper_id
+WHERE p.publication_year >= 2022
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 10;"
+AGGREGATION-21,aggregation,author_threshold,canonical,few_shot,Count papers with at least 2 authors by year,1,1,1,1,7,7,1,7296.1818,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM paper p
+JOIN (
+    SELECT paper_id
+    FROM authorship
+    GROUP BY paper_id
+    HAVING COUNT(*) >= 2
+) a ON p.paper_id = a.paper_id
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-22,aggregation,author_threshold,canonical,few_shot,Count papers with at least 3 authors by year,1,1,1,1,7,7,1,3076.8301,0,0,,"SELECT publication_year, COUNT(*) AS paper_count
+FROM (
+  SELECT p.paper_id, p.publication_year
+  FROM paper p
+  JOIN authorship a ON a.paper_id = p.paper_id
+  GROUP BY p.paper_id, p.publication_year
+  HAVING COUNT(a.author_id) >= 3
+) sub
+GROUP BY publication_year
+ORDER BY publication_year;"
+AGGREGATION-23,aggregation,author_threshold,canonical,few_shot,Count papers with at least 4 authors by year,1,1,1,1,7,7,1,5570.1931,0,0,,"SELECT p.publication_year, COUNT(*) AS paper_count
+FROM (
+  SELECT paper.paper_id, paper.publication_year
+  FROM paper
+  JOIN authorship USING (paper_id)
+  GROUP BY paper.paper_id, paper.publication_year
+  HAVING COUNT(author_id) >= 4
+) p
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-24,aggregation,author_threshold,canonical,few_shot,Count papers with at least 5 authors by year,1,1,1,1,7,7,1,3467.489,0,0,,"SELECT p.publication_year, COUNT(*) AS paper_count
+FROM paper p
+JOIN (
+  SELECT paper_id
+  FROM authorship
+  GROUP BY paper_id
+  HAVING COUNT(*) >= 5
+) a5 ON a5.paper_id = p.paper_id
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-25,aggregation,author_threshold,paraphrase,few_shot,"For every year, count papers whose byline has 6 or more authors.",1,1,1,1,7,7,1,3169.3017,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM paper p
+JOIN (
+    SELECT paper_id
+    FROM authorship
+    GROUP BY paper_id
+    HAVING COUNT(*) >= 6
+) AS multi_auth ON multi_auth.paper_id = p.paper_id
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+NESTED-01,nested,recursive,canonical,few_shot,"Show the citation chain from ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models"" up to depth 1",1,0,0,0,9,7,1,6309.0682,0,0,,"SELECT paper_id, title, depth FROM (
+  SELECT p.paper_id, p.title, 1 AS depth
+  FROM paper p
+  JOIN citation c ON c.citing_id = p.paper_id
+  WHERE c.cited_id = (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+  )
+  UNION ALL
+  SELECT t.paper_id, t.title, 0 AS depth
+  FROM paper t
+  WHERE lower(t.title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+) ORDER BY depth, paper_id;"
+NESTED-02,nested,recursive,canonical,few_shot,"Show the citation chain from ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone"" up to depth 2",1,0,0,0,16,12,1,6163.6293,0,0,,"WITH target AS (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone')
+),
+depth1 AS (
+    SELECT c.citing_id AS paper_id, 1 AS depth
+    FROM citation c
+    JOIN target t ON c.cited_id = t.paper_id
+),
+depth2 AS (
+    SELECT c.citing_id AS paper_id, 2 AS depth
+    FROM citation c
+    JOIN depth1 d1 ON c.cited_id = d1.paper_id
+),
+chain AS (
+    SELECT paper_id, depth FROM depth1
+    UNION ALL
+    SELECT paper_id, depth FROM depth2
+)
+SELECT p.paper_id, p.title, c.depth
+FROM chain c
+JOIN paper p ON p.paper_id = c.paper_id
+ORDER BY c.depth, p.paper_id;"
+NESTED-03,nested,recursive,canonical,few_shot,"Show the citation chain from ""The Llama 3 Herd of Models"" up to depth 3",1,0,0,0,37,35,1,5886.6088,0,0,,"WITH RECURSIVE chain AS (
+    SELECT c.citing_id AS paper_id, 1 AS depth
+    FROM citation c
+    JOIN paper target ON target.paper_id = c.cited_id
+    WHERE lower(target.title) = lower('The Llama 3 Herd of Models')
+    UNION ALL
+    SELECT c.citing_id, chain.depth + 1
+    FROM citation c
+    JOIN chain ON c.cited_id = chain.paper_id
+    WHERE chain.depth < 3
+)
+SELECT p.paper_id, p.title, chain.depth
+FROM chain
+JOIN paper p ON p.paper_id = chain.paper_id
+ORDER BY chain.depth, p.paper_id;"
+NESTED-04,nested,recursive,canonical,few_shot,"Show the citation chain from ""DeepSeek-V3 Technical Report"" up to depth 1",1,0,0,0,6,5,1,6250.6315,0,0,,"SELECT p.paper_id, p.title, 0 AS depth
+FROM paper p
+WHERE lower(p.title) = lower('DeepSeek-V3 Technical Report')
+UNION ALL
+SELECT cp.paper_id, cp.title, 1 AS depth
+FROM citation c
+JOIN paper cp ON cp.paper_id = c.citing_id
+WHERE c.cited_id = (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('DeepSeek-V3 Technical Report')
+    LIMIT 1
+)
+ORDER BY depth ASC, paper_id ASC;"
+NESTED-05,nested,recursive,paraphrase,few_shot,"Which references can I reach from ""Improved Denoising Diffusion Probabilistic Models"" within 2 outgoing citation hops?",1,1,1,1,4,4,0,3029.4012,0,0,,"WITH src AS (
+  SELECT paper_id
+  FROM paper
+  WHERE lower(title) = lower('Improved Denoising Diffusion Probabilistic Models')
+),
+first_hop AS (
+  SELECT c.cited_id AS paper_id
+  FROM citation c
+  JOIN src s ON c.citing_id = s.paper_id
+)
+SELECT p.paper_id, p.title, 1 AS depth
+FROM paper p
+JOIN first_hop fh ON p.paper_id = fh.paper_id
+
+UNION ALL
+
+SELECT p.paper_id, p.title, 2 AS depth
+FROM paper p
+JOIN citation c2 ON c2.cited_id = p.paper_id
+WHERE c2.citing_id IN (SELECT paper_id FROM first_hop)
+  AND p.paper_id NOT IN (SELECT paper_id FROM first_hop)
+
+ORDER BY depth, paper_id;"
+NESTED-06,nested,exclude_citation,canonical,few_shot,"Papers that cite ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"" but not ""Scaling Laws for Neural Language Models""",1,1,1,1,14,11,1,6364.8208,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM citation c
+    WHERE c.citing_id = p.paper_id
+      AND c.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+      )
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    WHERE c.citing_id = p.paper_id
+      AND c.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Scaling Laws for Neural Language Models')
+      )
+)
+ORDER BY p.paper_id;"
+NESTED-07,nested,exclude_citation,canonical,few_shot,"Papers that cite ""Scaling Laws for Neural Language Models"" but not ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,11,10,1,7573.1065,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+JOIN citation ON citation.citing_id = paper.paper_id
+JOIN paper AS target1 ON target1.paper_id = citation.cited_id
+WHERE lower(target1.title) = lower('Scaling Laws for Neural Language Models')
+  AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    JOIN paper AS target2 ON target2.paper_id = c2.cited_id
+    WHERE c2.citing_id = paper.paper_id
+      AND lower(target2.title) = lower('Generating Long Sequences with Sparse Transformers')
+  )
+ORDER BY paper.paper_id;"
+NESTED-08,nested,exclude_citation,canonical,few_shot,"Papers that cite ""Generating Long Sequences with Sparse Transformers"" but not ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,11,9,1,7958.3168,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM citation c
+    WHERE c.citing_id = p.paper_id
+      AND c.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Generating Long Sequences with Sparse Transformers')
+          LIMIT 1
+      )
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    WHERE c2.citing_id = p.paper_id
+      AND c2.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+          LIMIT 1
+      )
+)
+ORDER BY p.paper_id;"
+NESTED-09,nested,exclude_citation,canonical,few_shot,"Papers that cite ""Llama 2: Open Foundation and Fine-Tuned Chat Models"" but not ""Mistral 7B""",1,1,1,1,6,7,1,6823.3301,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM citation c
+    WHERE c.citing_id = p.paper_id
+      AND c.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+          LIMIT 1
+      )
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    WHERE c2.citing_id = p.paper_id
+      AND c2.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Mistral 7B')
+          LIMIT 1
+      )
+)
+ORDER BY p.paper_id;"
+NESTED-10,nested,exclude_citation,paraphrase,few_shot,"Find articles referencing ""Mistral 7B"" while excluding articles referencing ""Improved Denoising Diffusion Probabilistic Models"".",1,1,1,1,8,5,1,2970.498,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper tp ON tp.paper_id = c.cited_id
+    WHERE c.citing_id = p.paper_id
+      AND lower(tp.title) = lower('Mistral 7B')
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    JOIN paper tp2 ON tp2.paper_id = c2.cited_id
+    WHERE c2.citing_id = p.paper_id
+      AND lower(tp2.title) = lower('Improved Denoising Diffusion Probabilistic Models')
+)
+ORDER BY p.paper_id;"
+NESTED-11,nested,zero_citation,canonical,few_shot,Papers with no incoming citations in 2020,1,0,0,0,39,35,1,6168.0193,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON cp.paper_id = c.citing_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2020
+)
+ORDER BY p.paper_id;"
+NESTED-12,nested,zero_citation,canonical,few_shot,Papers with no incoming citations in 2021,1,0,0,0,40,39,1,5904.3512,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON c.citing_id = cp.paper_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2021
+)
+ORDER BY p.paper_id;"
+NESTED-13,nested,zero_citation,canonical,few_shot,Papers with no incoming citations in 2022,1,0,0,0,40,36,1,2847.3001,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON cp.paper_id = c.citing_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2022
+)
+ORDER BY p.paper_id;"
+NESTED-14,nested,zero_citation,canonical,few_shot,Papers with no incoming citations in 2023,1,0,0,0,44,43,1,7000.594,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON cp.paper_id = c.citing_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2023
+)
+ORDER BY p.paper_id;"
+NESTED-15,nested,zero_citation,paraphrase,few_shot,Which 2024 works are absent from the cited side of every edge?,1,1,1,1,48,43,1,1672.9478,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2024
+  AND NOT EXISTS (
+    SELECT 1 FROM citation c WHERE c.cited_id = p.paper_id
+  )
+ORDER BY p.paper_id;"
+NESTED-16,nested,above_year_mean,canonical,few_shot,Papers above the average citations in 2020,1,1,1,1,12,13,1,4780.3397,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2020
+  AND cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper
+    WHERE publication_year = 2020
+  )
+ORDER BY paper_id;"
+NESTED-17,nested,above_year_mean,canonical,few_shot,Papers above the average citations in 2021,1,0,0,0,9,14,1,1422.7393,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.cited_by_count > (
+    SELECT AVG(p2.cited_by_count)
+    FROM paper p2
+    WHERE p2.publication_year = 2021
+)
+ORDER BY p.paper_id;"
+NESTED-18,nested,above_year_mean,canonical,few_shot,Papers above the average citations in 2022,1,0,0,0,10,9,1,6185.9036,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.cited_by_count > (
+    SELECT AVG(p2.cited_by_count)
+    FROM paper p2
+    WHERE p2.publication_year = 2022
+)
+ORDER BY p.paper_id"
+NESTED-19,nested,above_year_mean,canonical,few_shot,Papers above the average citations in 2023,1,1,1,1,8,12,1,3254.953,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2023
+  AND p.cited_by_count > (
+    SELECT AVG(cited_by_count) FROM paper WHERE publication_year = 2023
+  )
+ORDER BY p.paper_id;"
+NESTED-20,nested,above_year_mean,paraphrase,few_shot,List 2024 papers whose citation count exceeds the mean for their submission year.,1,1,1,1,4,8,1,3838.5358,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2024
+  AND cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper p2
+    WHERE p2.publication_year = paper.publication_year
+  )
+ORDER BY paper_id;"
+NESTED-21,nested,topic_intersection,canonical,few_shot,"List papers tagged both ""cs.LG"" and ""cs.AI"" since 2018",1,1,1,1,96,96,1,2561.7387,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year >= 2018
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt
+    JOIN topic t ON t.topic_id = pt.topic_id
+    WHERE pt.paper_id = p.paper_id
+      AND lower(t.name) = lower('cs.LG')
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt
+    JOIN topic t ON t.topic_id = pt.topic_id
+    WHERE pt.paper_id = p.paper_id
+      AND lower(t.name) = lower('cs.AI')
+  )
+ORDER BY p.paper_id;"
+NESTED-22,nested,topic_intersection,canonical,few_shot,"List papers tagged both ""cs.LG"" and ""cs.CL"" since 2019",1,1,1,1,42,42,1,5916.7913,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON pt1.paper_id = p.paper_id
+JOIN topic t1 ON t1.topic_id = pt1.topic_id
+WHERE lower(t1.name) = lower('cs.LG')
+  AND p.publication_year >= 2019
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt2
+    JOIN topic t2 ON t2.topic_id = pt2.topic_id
+    WHERE pt2.paper_id = p.paper_id
+      AND lower(t2.name) = lower('cs.CL')
+  )
+ORDER BY p.paper_id;"
+NESTED-23,nested,topic_intersection,canonical,few_shot,"List papers tagged both ""cs.LG"" and ""stat.ML"" since 2020",1,1,1,1,62,69,1,6899.1541,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year >= 2020
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt
+    JOIN topic t ON t.topic_id = pt.topic_id
+    WHERE pt.paper_id = p.paper_id
+      AND lower(t.name) = lower('cs.LG')
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt
+    JOIN topic t ON t.topic_id = pt.topic_id
+    WHERE pt.paper_id = p.paper_id
+      AND lower(t.name) = lower('stat.ML')
+  )
+ORDER BY p.paper_id;"
+NESTED-24,nested,topic_intersection,canonical,few_shot,"List papers tagged both ""cs.AI"" and ""cs.CL"" since 2021",1,1,1,1,30,25,1,5113.3706,0,0,,"SELECT DISTINCT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON pt1.paper_id = p.paper_id
+JOIN topic t1 ON t1.topic_id = pt1.topic_id
+JOIN paper_topic pt2 ON pt2.paper_id = p.paper_id
+JOIN topic t2 ON t2.topic_id = pt2.topic_id
+WHERE p.publication_year >= 2021
+  AND lower(t1.name) = lower('cs.AI')
+  AND lower(t2.name) = lower('cs.CL')
+ORDER BY p.paper_id;"
+NESTED-25,nested,topic_intersection,paraphrase,few_shot,"Which works from 2022 onward belong to the intersection of ""cs.LG"" and ""cs.CV""?",1,1,1,1,32,34,1,5253.2625,0,0,,"SELECT DISTINCT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON pt1.paper_id = p.paper_id
+JOIN topic t1 ON t1.topic_id = pt1.topic_id
+JOIN paper_topic pt2 ON pt2.paper_id = p.paper_id
+JOIN topic t2 ON t2.topic_id = pt2.topic_id
+WHERE p.publication_year >= 2022
+  AND lower(t1.name) = lower('cs.LG')
+  AND lower(t2.name) = lower('cs.CV')
+ORDER BY p.paper_id;"
+LOOKUP-01,lookup,id,canonical,few_shot_correction,Find arXiv paper 1904.10509,1,1,1,1,1,1,0,9413.0172,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('1904.10509');"
+LOOKUP-02,lookup,id,canonical,few_shot_correction,Find arXiv paper 2001.08361,1,1,1,1,1,1,0,2258.941,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.arxiv_id) = lower('2001.08361')
+ORDER BY p.paper_id;"
+LOOKUP-03,lookup,id,canonical,few_shot_correction,Find arXiv paper 2106.09685,1,1,1,1,1,1,0,3181.9596,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('2106.09685')
+ORDER BY paper_id;"
+LOOKUP-04,lookup,id,canonical,few_shot_correction,Find arXiv paper 2201.11903,1,1,1,1,1,1,0,2812.8719,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.arxiv_id) = lower('2201.11903')
+ORDER BY p.paper_id;"
+LOOKUP-05,lookup,id,paraphrase,few_shot_correction,Return the record for arXiv identifier 2305.14314.,1,1,1,1,1,1,0,3765.7247,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(arxiv_id) = lower('2305.14314')
+ORDER BY paper_id;"
+LOOKUP-06,lookup,title,canonical,few_shot_correction,"Find paper ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,1,1,1,2766.8438,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+ORDER BY p.paper_id;"
+LOOKUP-07,lookup,title,canonical,few_shot_correction,"Find paper ""Mistral 7B""",1,1,1,1,1,1,0,2680.3087,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.title) = lower('Mistral 7B')
+ORDER BY p.paper_id;"
+LOOKUP-08,lookup,title,canonical,few_shot_correction,"Find paper ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models""",1,1,1,1,1,1,0,3582.5513,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+ORDER BY paper_id;"
+LOOKUP-09,lookup,title,canonical,few_shot_correction,"Find paper ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone""",1,1,1,1,1,1,0,2831.8518,0,0,,"SELECT paper_id, title, publication_year, arxiv_id
+FROM paper
+WHERE lower(title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone')
+ORDER BY paper_id;"
+LOOKUP-10,lookup,title,paraphrase,few_shot_correction,"Which record has the exact title ""The Llama 3 Herd of Models""?",1,1,1,1,1,1,0,2547.0015,0,0,,"SELECT p.paper_id, p.title, p.publication_year, p.arxiv_id
+FROM paper p
+WHERE lower(p.title) = lower('The Llama 3 Herd of Models')
+ORDER BY p.paper_id;"
+LOOKUP-11,lookup,year,canonical,few_shot_correction,List papers published in 2019,1,1,1,1,45,46,1,3591.8936,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2019
+ORDER BY paper_id;"
+LOOKUP-12,lookup,year,canonical,few_shot_correction,List papers published in 2020,1,1,1,1,51,48,1,2478.8991,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2020
+ORDER BY paper_id;"
+LOOKUP-13,lookup,year,canonical,few_shot_correction,List papers published in 2021,1,1,1,1,50,53,1,3082.7615,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2021
+ORDER BY paper_id;"
+LOOKUP-14,lookup,year,canonical,few_shot_correction,List papers published in 2022,1,1,1,1,51,51,1,3133.1593,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2022
+ORDER BY paper_id;"
+LOOKUP-15,lookup,year,paraphrase,few_shot_correction,Which records have an arXiv submission year of 2023?,1,1,1,1,58,55,1,2908.476,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2023
+ORDER BY paper_id;"
+LOOKUP-16,lookup,range,canonical,few_shot_correction,List papers between 2018 and 2019,1,1,1,1,91,95,1,4029.2647,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2018 AND 2019
+ORDER BY paper_id;"
+LOOKUP-17,lookup,range,canonical,few_shot_correction,List papers between 2019 and 2020,1,1,1,1,96,94,1,1963.4106,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2019 AND 2020
+ORDER BY paper_id;"
+LOOKUP-18,lookup,range,canonical,few_shot_correction,List papers between 2020 and 2021,1,1,1,1,101,101,1,2886.1875,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2020 AND 2021
+ORDER BY paper_id;"
+LOOKUP-19,lookup,range,canonical,few_shot_correction,List papers between 2021 and 2024,1,1,1,1,211,210,1,2967.6005,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year BETWEEN 2021 AND 2024
+ORDER BY paper_id;"
+LOOKUP-20,lookup,range,paraphrase,few_shot_correction,"Return publications spanning 2022 through 2023, inclusive.",1,1,1,1,109,106,1,2812.045,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year BETWEEN 2022 AND 2023
+ORDER BY p.paper_id;"
+LOOKUP-21,lookup,substring,canonical,few_shot_correction,"Find papers with ""diffusion"" in the title",1,1,1,1,10,10,1,3837.311,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%' || lower('diffusion') || '%'
+ORDER BY p.paper_id;"
+LOOKUP-22,lookup,substring,canonical,few_shot_correction,"Find papers with ""transformer"" in the title",1,1,1,1,13,13,0,2868.286,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%transformer%'
+ORDER BY p.paper_id;"
+LOOKUP-23,lookup,substring,canonical,few_shot_correction,"Find papers with ""reinforcement"" in the title",1,1,1,1,14,14,1,3206.2145,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%reinforcement%'
+ORDER BY p.paper_id;"
+LOOKUP-24,lookup,substring,canonical,few_shot_correction,"Find papers with ""quantiz"" in the title",1,1,1,1,3,3,0,2879.3592,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%quantiz%'
+ORDER BY p.paper_id;"
+LOOKUP-25,lookup,substring,paraphrase,few_shot_correction,"Which titles contain ""attention"" anywhere?",1,1,1,1,10,10,0,2290.9663,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE lower(p.title) LIKE '%' || lower('attention') || '%'
+ORDER BY p.paper_id;"
+JOINS-01,joins,author,canonical,few_shot_correction,"List papers by ""Rewon Child""",1,1,1,1,2,2,0,4562.5614,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE EXISTS (
+    SELECT 1
+    FROM authorship
+    JOIN author USING (author_id)
+    WHERE authorship.paper_id = paper.paper_id
+      AND lower(author.name) = lower('Rewon Child')
+)
+ORDER BY paper_id;"
+JOINS-02,joins,author,canonical,few_shot_correction,"List papers by ""Jared Kaplan""",1,1,1,1,3,3,0,2281.5048,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM authorship a
+    JOIN author au USING (author_id)
+    WHERE a.paper_id = p.paper_id
+      AND lower(au.name) = lower('Jared Kaplan')
+)
+ORDER BY p.paper_id;"
+JOINS-03,joins,author,canonical,few_shot_correction,"List papers by ""Alex Nichol""",1,1,1,1,3,3,0,2198.4107,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE EXISTS (
+    SELECT 1
+    FROM authorship
+    JOIN author USING (author_id)
+    WHERE authorship.paper_id = paper.paper_id
+      AND lower(author.name) = lower('Alex Nichol')
+)
+ORDER BY paper_id;"
+JOINS-04,joins,author,canonical,few_shot_correction,"List papers by ""J. Edward Hu""",1,1,1,1,1,1,0,3849.2386,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN authorship a ON a.paper_id = p.paper_id
+JOIN author au ON au.author_id = a.author_id
+WHERE lower(au.name) = lower('J. Edward Hu')
+ORDER BY p.paper_id;"
+JOINS-05,joins,author,paraphrase,few_shot_correction,"Show the papers whose author list contains ""Hugo Touvron"".",1,1,1,1,1,1,1,2911.3744,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM authorship a
+    JOIN author au USING (author_id)
+    WHERE a.paper_id = p.paper_id
+      AND lower(au.name) = lower('Hugo Touvron')
+)
+ORDER BY p.paper_id;"
+JOINS-06,joins,topic,canonical,few_shot_correction,"List papers tagged ""cs.LG""",1,1,1,1,341,341,1,2825.5911,0,0,,"SELECT DISTINCT paper_id, title, publication_year
+FROM paper
+JOIN paper_topic USING (paper_id)
+JOIN topic USING (topic_id)
+WHERE lower(name) = lower('cs.LG')
+ORDER BY paper_id;"
+JOINS-07,joins,topic,canonical,few_shot_correction,"List papers tagged ""cs.AI""",1,1,1,1,108,108,1,2492.3275,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.AI')
+ORDER BY p.paper_id;"
+JOINS-08,joins,topic,canonical,few_shot_correction,"List papers tagged ""cs.CL""",1,1,1,1,55,55,1,4451.4211,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+JOIN paper_topic USING (paper_id)
+JOIN topic USING (topic_id)
+WHERE lower(topic.name) = lower('cs.CL')
+ORDER BY paper.paper_id;"
+JOINS-09,joins,topic,canonical,few_shot_correction,"List papers tagged ""cs.CV""",1,1,1,1,66,66,1,2239.0736,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.CV')
+ORDER BY p.paper_id;"
+JOINS-10,joins,topic,paraphrase,few_shot_correction,"Which works are classified under ""stat.ML""?",1,1,1,1,116,116,1,2163.2721,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('stat.ML')
+ORDER BY p.paper_id;"
+JOINS-11,joins,venue,canonical,few_shot_correction,"List papers at ""arXiv"" since 2019",1,1,1,1,120,120,1,3487.8259,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('arXiv')
+ORDER BY p.paper_id;"
+JOINS-12,joins,venue,canonical,few_shot_correction,"List papers at ""neural information processing systems"" since 2019",1,1,1,1,25,23,1,2605.6573,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('neural information processing systems')
+ORDER BY p.paper_id;"
+JOINS-13,joins,venue,canonical,few_shot_correction,"List papers at ""International Conference on Machine Learning"" since 2019",1,1,1,1,6,6,1,3020.4577,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('International Conference on Machine Learning')
+ORDER BY p.paper_id;"
+JOINS-14,joins,venue,canonical,few_shot_correction,"List papers at ""International Conference on Artificial Intelligence and Statistics"" since 2019",1,1,1,1,9,9,1,3481.3996,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('International Conference on Artificial Intelligence and Statistics')
+ORDER BY p.paper_id;"
+JOINS-15,joins,venue,paraphrase,few_shot_correction,"Find records associated with ""IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings"" from 2019 onward.",1,1,1,1,10,10,1,3289.0202,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p JOIN venue v USING (venue_id)
+WHERE p.publication_year >= 2019
+  AND lower(v.name) = lower('IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings')
+ORDER BY p.paper_id"
+JOINS-16,joins,affiliation,canonical,few_shot_correction,"List authors affiliated with ""Google (United States)"" since 2018",1,1,1,1,111,111,0,3000.1249,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id)
+WHERE lower(i.name) = lower('Google (United States)') 
+  AND p.publication_year >= 2018
+ORDER BY a.author_id;"
+JOINS-17,joins,affiliation,canonical,few_shot_correction,"List authors affiliated with ""OpenAI (United States)"" since 2019",1,1,1,1,62,62,0,5805.1884,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id)
+WHERE lower(i.name) = lower('OpenAI (United States)') 
+  AND p.publication_year >= 2019
+ORDER BY a.author_id;"
+JOINS-18,joins,affiliation,canonical,few_shot_correction,"List authors affiliated with ""Tsinghua University"" since 2020",1,1,1,1,30,33,1,2049.5986,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id)
+WHERE lower(i.name) = lower('Tsinghua University')
+  AND p.publication_year >= 2020
+ORDER BY a.author_id;"
+JOINS-19,joins,affiliation,canonical,few_shot_correction,"List authors affiliated with ""Meta (United States)"" since 2021",1,1,1,1,5,5,0,3007.8282,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN author_affiliation aa USING (author_id)
+JOIN institution i USING (institution_id)
+JOIN paper p USING (paper_id)
+WHERE lower(i.name) = lower('Meta (United States)')
+  AND p.publication_year >= 2021
+ORDER BY a.author_id;"
+JOINS-20,joins,affiliation,paraphrase,few_shot_correction,"Who has a paper dated 2022 or later with a ""Stanford University"" affiliation?",1,1,1,1,15,18,1,2746.2337,0,0,,"SELECT DISTINCT a.author_id, a.name
+FROM author a
+JOIN authorship au USING (author_id)
+JOIN paper p USING (paper_id)
+JOIN author_affiliation aa USING (paper_id, author_id)
+JOIN institution i USING (institution_id)
+WHERE p.publication_year >= 2022
+  AND lower(i.name) = lower('Stanford University')
+ORDER BY a.author_id;"
+JOINS-21,joins,author_order,canonical,few_shot_correction,"List authors of ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,4,4,0,6244.0833,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au USING (paper_id)
+JOIN author a USING (author_id)
+WHERE lower(p.title) = lower('Generating Long Sequences with Sparse Transformers')
+ORDER BY au.author_order, a.author_id"
+JOINS-22,joins,author_order,canonical,few_shot_correction,"List authors of ""Scaling Laws for Neural Language Models""",1,1,1,1,10,10,0,3891.3376,0,0,,"SELECT a.author_id, a.name
+FROM author a
+JOIN authorship au ON au.author_id = a.author_id
+JOIN paper p ON p.paper_id = au.paper_id
+WHERE lower(p.title) = lower('Scaling Laws for Neural Language Models')
+ORDER BY au.author_order, a.author_id;"
+JOINS-23,joins,author_order,canonical,few_shot_correction,"List authors of ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,8,8,0,3520.8815,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au USING (paper_id)
+JOIN author a USING (author_id)
+WHERE lower(p.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models')
+ORDER BY au.author_order, a.author_id;"
+JOINS-24,joins,author_order,canonical,few_shot_correction,"List authors of ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,9,9,0,2034.2575,0,0,,"SELECT a.author_id, a.name
+FROM paper p
+JOIN authorship au USING (paper_id)
+JOIN author a USING (author_id)
+WHERE lower(p.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+ORDER BY au.author_order, a.author_id;"
+JOINS-25,joins,author_order,paraphrase,few_shot_correction,"Give the byline for ""QLoRA: Efficient Finetuning of Quantized LLMs"" in the listed author order.",1,1,1,1,4,4,0,7086.3781,0,0,,"SELECT a.author_id, a.name
+FROM author a
+JOIN authorship au USING (author_id)
+JOIN paper p USING (paper_id)
+WHERE lower(p.title) = lower('QLoRA: Efficient Finetuning of Quantized LLMs')
+ORDER BY au.author_order, a.author_id;"
+AGGREGATION-01,aggregation,count_topic_year,canonical,few_shot_correction,"Count papers tagged ""cs.LG"" by year",1,1,1,1,7,7,1,1860.4535,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS paper_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.LG')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-02,aggregation,count_topic_year,canonical,few_shot_correction,"Count papers tagged ""cs.AI"" by year",1,1,1,1,7,7,1,3534.053,0,0,,"SELECT p.publication_year, COUNT(DISTINCT p.paper_id) AS paper_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.AI')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-03,aggregation,count_topic_year,canonical,few_shot_correction,"Count papers tagged ""cs.CL"" by year",1,1,1,1,7,7,1,4092.5925,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS paper_count
+FROM paper p
+JOIN paper_topic pt ON pt.paper_id = p.paper_id
+JOIN topic t ON t.topic_id = pt.topic_id
+WHERE lower(t.name) = lower('cs.CL')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-04,aggregation,count_topic_year,canonical,few_shot_correction,"Count papers tagged ""cs.CV"" by year",1,1,1,1,7,7,1,1073.689,0,0,,"SELECT p.publication_year, COUNT(*) AS paper_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('cs.CV')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-05,aggregation,count_topic_year,paraphrase,few_shot_correction,"For each year, how many articles carry the ""stat.ML"" category?",1,1,1,1,7,7,1,3550.4201,0,0,,"SELECT p.publication_year,
+       COUNT(DISTINCT p.paper_id) AS article_count
+FROM paper p
+JOIN paper_topic pt USING (paper_id)
+JOIN topic t USING (topic_id)
+WHERE lower(t.name) = lower('stat.ML')
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-06,aggregation,count_incoming,canonical,few_shot_correction,"Count citations received by ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,1,1,1,2423.9694,0,0,,"SELECT p.paper_id, COUNT(c.citing_id) AS citation_count
+FROM paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Generating Long Sequences with Sparse Transformers')
+GROUP BY p.paper_id;"
+AGGREGATION-07,aggregation,count_incoming,canonical,few_shot_correction,"Count citations received by ""Scaling Laws for Neural Language Models""",1,1,1,1,1,1,1,3387.5113,0,0,,"SELECT p.paper_id,
+       COUNT(c.citing_id) AS citation_count
+FROM paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Scaling Laws for Neural Language Models')
+GROUP BY p.paper_id;"
+AGGREGATION-08,aggregation,count_incoming,canonical,few_shot_correction,"Count citations received by ""LoRA: Low-Rank Adaptation of Large Language Models""",1,1,1,1,1,1,1,2879.0025,0,0,,"SELECT p.paper_id, COUNT(c.citing_id) AS citation_count
+FROM paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('LoRA: Low-Rank Adaptation of Large Language Models')
+GROUP BY p.paper_id;"
+AGGREGATION-09,aggregation,count_incoming,canonical,few_shot_correction,"Count citations received by ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models""",1,1,1,1,1,1,1,3258.8247,0,0,,"SELECT p.paper_id,
+       COUNT(c.citing_id) AS citation_count
+FROM paper p
+LEFT JOIN citation c ON c.cited_id = p.paper_id
+WHERE lower(p.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+GROUP BY p.paper_id
+ORDER BY p.paper_id
+LIMIT 1;"
+AGGREGATION-10,aggregation,count_incoming,paraphrase,few_shot_correction,"How many in-corpus references point to ""QLoRA: Efficient Finetuning of Quantized LLMs""?",1,0,0,0,1,1,1,3208.6862,0,0,,"SELECT COUNT(*) AS citation_count
+FROM citation c
+JOIN paper p ON p.paper_id = c.cited_id
+WHERE lower(p.title) = lower('QLoRA: Efficient Finetuning of Quantized LLMs')
+  AND c.source = 'in-corpus';"
+AGGREGATION-11,aggregation,rank_authors,canonical,few_shot_correction,Top 3 authors by paper count since 2018,1,1,1,1,3,3,0,6088.8216,0,0,,"SELECT author_id, name, COUNT(*) AS paper_count
+FROM author
+JOIN authorship USING (author_id)
+JOIN paper USING (paper_id)
+WHERE publication_year >= 2018
+GROUP BY author_id, name
+ORDER BY paper_count DESC, author_id ASC
+LIMIT 3;"
+AGGREGATION-12,aggregation,rank_authors,canonical,few_shot_correction,Top 4 authors by paper count since 2019,1,1,1,1,4,4,0,3047.2742,0,0,,"SELECT a.author_id, a.name, COUNT(*) AS paper_count
+FROM author a
+JOIN authorship au USING (author_id)
+JOIN paper p USING (paper_id)
+WHERE p.publication_year >= 2019
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 4;"
+AGGREGATION-13,aggregation,rank_authors,canonical,few_shot_correction,Top 5 authors by paper count since 2020,1,1,1,1,5,5,1,2587.2429,0,0,,"SELECT a.author_id, a.name, COUNT(DISTINCT ap.paper_id) AS paper_count
+FROM author a
+JOIN authorship ap USING (author_id)
+JOIN paper p USING (paper_id)
+WHERE p.publication_year >= 2020
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 5;"
+AGGREGATION-14,aggregation,rank_authors,canonical,few_shot_correction,Top 7 authors by paper count since 2021,1,1,1,1,7,7,1,5616.2339,0,0,,"SELECT a.author_id, a.name, COUNT(*) AS paper_count
+FROM author a
+JOIN authorship au USING (author_id)
+JOIN paper p USING (paper_id)
+WHERE p.publication_year >= 2021
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 7;"
+AGGREGATION-15,aggregation,rank_authors,paraphrase,few_shot_correction,Rank the 10 most prolific authors from 2022 onward by paper count.,1,1,1,1,10,10,1,3683.8449,0,0,,"SELECT a.author_id,
+       a.name,
+       COUNT(*) AS paper_count
+FROM author a
+JOIN authorship au ON au.author_id = a.author_id
+JOIN paper p ON p.paper_id = au.paper_id
+WHERE p.publication_year >= 2022
+GROUP BY a.author_id, a.name
+ORDER BY paper_count DESC, a.author_id ASC
+LIMIT 10;"
+AGGREGATION-16,aggregation,rank_venues,canonical,few_shot_correction,Top 3 venues by average citations since 2018,1,1,1,1,3,3,1,3343.4223,0,0,,"SELECT v.venue_id, v.name, AVG(pc.cite_cnt) AS avg_citations
+FROM venue v
+JOIN (
+  SELECT p.paper_id, p.venue_id,
+         (SELECT COUNT(*) FROM citation c WHERE c.cited_id = p.paper_id) AS cite_cnt
+  FROM paper p
+  WHERE p.publication_year >= 2018
+) pc ON pc.venue_id = v.venue_id
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 3;"
+AGGREGATION-17,aggregation,rank_venues,canonical,few_shot_correction,Top 4 venues by average citations since 2019,1,1,0,0,4,4,1,3581.3695,0,0,,"SELECT v.venue_id,
+       v.name,
+       AVG(p.cited_by_count) AS avg_citations
+FROM venue v
+JOIN paper p USING (venue_id)
+WHERE p.publication_year >= 2019
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 4;"
+AGGREGATION-18,aggregation,rank_venues,canonical,few_shot_correction,Top 5 venues by average citations since 2020,1,0,0,0,5,5,1,5664.0871,0,0,,"SELECT v.venue_id, v.name, AVG(p.cited_by_count) AS avg_citations
+FROM venue v JOIN paper p USING (venue_id)
+WHERE p.publication_year >= 2020
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 5;"
+AGGREGATION-19,aggregation,rank_venues,canonical,few_shot_correction,Top 7 venues by average citations since 2021,1,0,0,0,7,7,1,3219.8231,0,0,,"SELECT venue.venue_id, venue.name, AVG(pc.cnt) AS avg_citations
+FROM (
+    SELECT paper.paper_id, paper.venue_id, COUNT(citation.citing_id) AS cnt
+    FROM paper
+    LEFT JOIN citation ON citation.cited_id = paper.paper_id
+    WHERE paper.publication_year >= 2021
+    GROUP BY paper.paper_id
+) pc
+JOIN venue ON venue.venue_id = pc.venue_id
+GROUP BY venue.venue_id, venue.name
+ORDER BY avg_citations DESC, venue.venue_id ASC
+LIMIT 7;"
+AGGREGATION-20,aggregation,rank_venues,paraphrase,few_shot_correction,"From 2022 onward, which 10 venues have the highest mean incoming citation counts?",1,0,0,0,10,10,1,5219.3213,0,0,,"SELECT v.venue_id,
+       v.name,
+       AVG(COALESCE(pc.cnt, 0)) AS avg_citations
+FROM venue v
+JOIN paper p ON p.venue_id = v.venue_id
+LEFT JOIN (
+    SELECT cited_id, COUNT(*) AS cnt
+    FROM citation
+    GROUP BY cited_id
+) pc ON pc.cited_id = p.paper_id
+WHERE p.publication_year >= 2022
+GROUP BY v.venue_id, v.name
+ORDER BY avg_citations DESC, v.venue_id ASC
+LIMIT 10;"
+AGGREGATION-21,aggregation,author_threshold,canonical,few_shot_correction,Count papers with at least 2 authors by year,1,1,1,1,7,7,1,2608.7995,0,0,,"SELECT publication_year, COUNT(*) AS paper_count
+FROM (
+  SELECT p.paper_id, p.publication_year
+  FROM paper p
+  JOIN authorship a ON a.paper_id = p.paper_id
+  GROUP BY p.paper_id
+  HAVING COUNT(DISTINCT a.author_id) >= 2
+) sub
+GROUP BY publication_year
+ORDER BY publication_year;"
+AGGREGATION-22,aggregation,author_threshold,canonical,few_shot_correction,Count papers with at least 3 authors by year,1,1,1,1,7,7,1,6009.5816,0,0,,"SELECT publication_year, COUNT(*) AS paper_count
+FROM (
+  SELECT p.paper_id, p.publication_year
+  FROM paper p
+  JOIN authorship a ON a.paper_id = p.paper_id
+  GROUP BY p.paper_id, p.publication_year
+  HAVING COUNT(a.author_id) >= 3
+) sub
+GROUP BY publication_year
+ORDER BY publication_year;"
+AGGREGATION-23,aggregation,author_threshold,canonical,few_shot_correction,Count papers with at least 4 authors by year,1,1,1,1,7,7,1,2964.2201,0,0,,"SELECT p.publication_year,
+       COUNT(*) AS paper_count
+FROM (
+    SELECT paper.paper_id,
+           paper.publication_year
+    FROM paper
+    JOIN authorship USING (paper_id)
+    GROUP BY paper.paper_id, paper.publication_year
+    HAVING COUNT(author_id) >= 4
+) p
+GROUP BY p.publication_year
+ORDER BY p.publication_year;"
+AGGREGATION-24,aggregation,author_threshold,canonical,few_shot_correction,Count papers with at least 5 authors by year,1,1,1,1,7,7,1,3608.9986,0,0,,"SELECT
+  publication_year,
+  COUNT(DISTINCT paper_id) AS paper_count
+FROM paper
+JOIN (
+  SELECT paper_id
+  FROM authorship
+  GROUP BY paper_id
+  HAVING COUNT(DISTINCT author_id) >= 5
+) AS a USING (paper_id)
+GROUP BY publication_year
+ORDER BY publication_year;"
+AGGREGATION-25,aggregation,author_threshold,paraphrase,few_shot_correction,"For every year, count papers whose byline has 6 or more authors.",1,1,1,1,7,7,1,6718.4947,0,0,,"SELECT publication_year,
+       COUNT(*) AS paper_count
+FROM (
+    SELECT paper_id, publication_year, COUNT(*) AS author_cnt
+    FROM paper
+    JOIN authorship USING (paper_id)
+    GROUP BY paper_id, publication_year
+    HAVING COUNT(*) >= 6
+)
+GROUP BY publication_year
+ORDER BY publication_year;"
+NESTED-01,nested,recursive,canonical,few_shot_correction,"Show the citation chain from ""DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models"" up to depth 1",1,0,0,0,9,7,1,2529.2311,0,0,,"SELECT p.paper_id,
+       p.title,
+       0 AS depth
+FROM paper p
+WHERE lower(p.title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+UNION ALL
+SELECT c.citing_id AS paper_id,
+       p2.title,
+       1 AS depth
+FROM citation c
+JOIN paper p2 ON p2.paper_id = c.citing_id
+WHERE c.cited_id = (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models')
+    LIMIT 1
+)
+ORDER BY depth, paper_id;"
+NESTED-02,nested,recursive,canonical,few_shot_correction,"Show the citation chain from ""Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone"" up to depth 2",1,0,0,0,16,12,1,6718.4051,0,0,,"WITH target AS (
+  SELECT paper_id
+  FROM paper
+  WHERE lower(title) = lower('Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone')
+),
+depth1 AS (
+  SELECT c.citing_id AS paper_id, 1 AS depth
+  FROM citation c
+  JOIN target t ON c.cited_id = t.paper_id
+),
+depth2 AS (
+  SELECT c.citing_id AS paper_id, 2 AS depth
+  FROM citation c
+  JOIN depth1 d1 ON c.cited_id = d1.paper_id
+)
+SELECT p.paper_id, p.title, d.depth
+FROM (
+  SELECT * FROM depth1
+  UNION ALL
+  SELECT * FROM depth2
+) d
+JOIN paper p ON p.paper_id = d.paper_id
+ORDER BY d.depth, p.paper_id;"
+NESTED-03,nested,recursive,canonical,few_shot_correction,"Show the citation chain from ""The Llama 3 Herd of Models"" up to depth 3",1,0,0,0,37,35,1,5394.1877,0,0,,"WITH RECURSIVE chain(paper_id, title, depth) AS (
+  SELECT p.paper_id, p.title, 0
+  FROM paper p
+  WHERE lower(p.title) = lower('The Llama 3 Herd of Models')
+  UNION ALL
+  SELECT p2.paper_id, p2.title, c.depth + 1
+  FROM chain c
+  JOIN citation ci ON ci.cited_id = c.paper_id
+  JOIN paper p2 ON p2.paper_id = ci.citing_id
+  WHERE c.depth < 3
+)
+SELECT paper_id, title, depth
+FROM chain
+ORDER BY depth, paper_id;"
+NESTED-04,nested,recursive,canonical,few_shot_correction,"Show the citation chain from ""DeepSeek-V3 Technical Report"" up to depth 1",1,0,0,0,6,5,1,5971.5629,0,0,,"SELECT p.paper_id, p.title, 0 AS depth
+FROM paper p
+WHERE lower(p.title) = lower('DeepSeek-V3 Technical Report')
+UNION ALL
+SELECT cp.paper_id, cp.title, 1 AS depth
+FROM citation c
+JOIN paper cp ON cp.paper_id = c.citing_id
+WHERE c.cited_id = (
+    SELECT paper_id
+    FROM paper
+    WHERE lower(title) = lower('DeepSeek-V3 Technical Report')
+)
+ORDER BY depth ASC, paper_id ASC;"
+NESTED-05,nested,recursive,paraphrase,few_shot_correction,"Which references can I reach from ""Improved Denoising Diffusion Probabilistic Models"" within 2 outgoing citation hops?",1,0,1,0,4,4,0,10881.5406,1,0,,"SELECT DISTINCT r.paper_id,
+       r.title,
+       refs.depth
+FROM (
+    -- depth 1 citations
+    SELECT c.cited_id AS paper_id, 1 AS depth
+    FROM citation c
+    JOIN paper p_start ON p_start.paper_id = c.citing_id
+    WHERE lower(p_start.title) = lower('Improved Denoising Diffusion Probabilistic Models')
+    
+    UNION ALL
+    
+    -- depth 2 citations
+    SELECT c2.cited_id AS paper_id, 2 AS depth
+    FROM citation c1
+    JOIN citation c2 ON c2.citing_id = c1.cited_id
+    JOIN paper p_start ON p_start.paper_id = c1.citing_id
+    WHERE lower(p_start.title) = lower('Improved Denoising Diffusion Probabilistic Models')
+) AS refs
+JOIN paper r ON r.paper_id = refs.paper_id
+WHERE r.paper_id <> (
+    SELECT paper_id FROM paper WHERE lower(title) = lower('Improved Denoising Diffusion Probabilistic Models')
+)
+ORDER BY refs.depth, r.paper_id;"
+NESTED-06,nested,exclude_citation,canonical,few_shot_correction,"Papers that cite ""Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"" but not ""Scaling Laws for Neural Language Models""",1,1,1,1,14,11,1,3421.2755,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN citation c1 ON c1.citing_id = p.paper_id
+JOIN paper t1 ON t1.paper_id = c1.cited_id
+WHERE lower(t1.title) = lower('Chain-of-Thought Prompting Elicits Reasoning in Large Language Models')
+  AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    JOIN paper t2 ON t2.paper_id = c2.cited_id
+    WHERE c2.citing_id = p.paper_id
+      AND lower(t2.title) = lower('Scaling Laws for Neural Language Models')
+  )
+ORDER BY p.paper_id;"
+NESTED-07,nested,exclude_citation,canonical,few_shot_correction,"Papers that cite ""Scaling Laws for Neural Language Models"" but not ""Generating Long Sequences with Sparse Transformers""",1,1,1,1,11,10,1,3936.1504,0,0,,"SELECT paper.paper_id, paper.title, paper.publication_year
+FROM paper
+WHERE EXISTS (
+    SELECT 1 FROM citation
+    WHERE citation.citing_id = paper.paper_id
+      AND citation.cited_id = (
+          SELECT paper_id FROM paper
+          WHERE lower(title) = lower('Scaling Laws for Neural Language Models')
+      )
+)
+AND NOT EXISTS (
+    SELECT 1 FROM citation
+    WHERE citation.citing_id = paper.paper_id
+      AND citation.cited_id = (
+          SELECT paper_id FROM paper
+          WHERE lower(title) = lower('Generating Long Sequences with Sparse Transformers')
+      )
+)
+ORDER BY paper.paper_id;"
+NESTED-08,nested,exclude_citation,canonical,few_shot_correction,"Papers that cite ""Generating Long Sequences with Sparse Transformers"" but not ""Llama 2: Open Foundation and Fine-Tuned Chat Models""",1,1,1,1,11,9,1,5961.0942,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM citation c
+    WHERE c.citing_id = p.paper_id
+      AND c.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Generating Long Sequences with Sparse Transformers')
+          LIMIT 1
+      )
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    WHERE c2.citing_id = p.paper_id
+      AND c2.cited_id = (
+          SELECT paper_id
+          FROM paper
+          WHERE lower(title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+          LIMIT 1
+      )
+)
+ORDER BY p.paper_id;"
+NESTED-09,nested,exclude_citation,canonical,few_shot_correction,"Papers that cite ""Llama 2: Open Foundation and Fine-Tuned Chat Models"" but not ""Mistral 7B""",1,1,1,1,6,7,1,5053.5544,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN citation c1 ON c1.citing_id = p.paper_id
+JOIN paper t1 ON t1.paper_id = c1.cited_id
+WHERE lower(t1.title) = lower('Llama 2: Open Foundation and Fine-Tuned Chat Models')
+  AND NOT EXISTS (
+    SELECT 1
+    FROM citation c2
+    JOIN paper t2 ON t2.paper_id = c2.cited_id
+    WHERE c2.citing_id = p.paper_id
+      AND lower(t2.title) = lower('Mistral 7B')
+  )
+ORDER BY p.paper_id;"
+NESTED-10,nested,exclude_citation,paraphrase,few_shot_correction,"Find articles referencing ""Mistral 7B"" while excluding articles referencing ""Improved Denoising Diffusion Probabilistic Models"".",1,1,1,1,8,5,1,7281.7389,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper t1 ON t1.paper_id = c.cited_id
+    WHERE c.citing_id = p.paper_id
+      AND lower(t1.title) = lower('Mistral 7B')
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper t2 ON t2.paper_id = c.cited_id
+    WHERE c.citing_id = p.paper_id
+      AND lower(t2.title) = lower('Improved Denoising Diffusion Probabilistic Models')
+)
+ORDER BY p.paper_id;"
+NESTED-11,nested,zero_citation,canonical,few_shot_correction,Papers with no incoming citations in 2020,1,0,0,0,39,35,1,1862.0944,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON c.citing_id = cp.paper_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2020
+)
+ORDER BY p.paper_id;"
+NESTED-12,nested,zero_citation,canonical,few_shot_correction,Papers with no incoming citations in 2021,1,0,0,0,40,39,1,7488.7937,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON c.citing_id = cp.paper_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2021
+)
+ORDER BY p.paper_id;"
+NESTED-13,nested,zero_citation,canonical,few_shot_correction,Papers with no incoming citations in 2022,1,0,0,0,40,36,1,1360.452,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON c.citing_id = cp.paper_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2022
+)
+ORDER BY p.paper_id"
+NESTED-14,nested,zero_citation,canonical,few_shot_correction,Papers with no incoming citations in 2023,1,0,0,0,44,43,1,5731.0832,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM citation c
+    JOIN paper cp ON cp.paper_id = c.citing_id
+    WHERE c.cited_id = p.paper_id
+      AND cp.publication_year = 2023
+)
+ORDER BY p.paper_id;"
+NESTED-15,nested,zero_citation,paraphrase,few_shot_correction,Which 2024 works are absent from the cited side of every edge?,1,1,1,1,48,43,1,3822.1651,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2024
+  AND NOT EXISTS (
+    SELECT 1 FROM citation c WHERE c.cited_id = p.paper_id
+  )
+ORDER BY p.paper_id;"
+NESTED-16,nested,above_year_mean,canonical,few_shot_correction,Papers above the average citations in 2020,1,1,1,1,12,13,1,3014.2248,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2020
+  AND p.cited_by_count > (
+    SELECT AVG(cited_by_count) FROM paper WHERE publication_year = 2020
+  )
+ORDER BY p.paper_id;"
+NESTED-17,nested,above_year_mean,canonical,few_shot_correction,Papers above the average citations in 2021,1,0,0,0,9,14,1,2641.4015,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.cited_by_count > (
+    SELECT AVG(p2.cited_by_count)
+    FROM paper p2
+    WHERE p2.publication_year = 2021
+)
+ORDER BY p.paper_id;"
+NESTED-18,nested,above_year_mean,canonical,few_shot_correction,Papers above the average citations in 2022,1,0,0,0,10,9,1,3653.3312,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.cited_by_count > (
+    SELECT AVG(p2.cited_by_count)
+    FROM paper p2
+    WHERE p2.publication_year = 2022
+)
+ORDER BY p.paper_id;"
+NESTED-19,nested,above_year_mean,canonical,few_shot_correction,Papers above the average citations in 2023,1,1,1,1,8,12,1,3513.796,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year = 2023
+  AND p.cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper
+    WHERE publication_year = 2023
+  )
+ORDER BY p.paper_id;"
+NESTED-20,nested,above_year_mean,paraphrase,few_shot_correction,List 2024 papers whose citation count exceeds the mean for their submission year.,1,1,1,1,4,8,1,4771.5531,0,0,,"SELECT paper_id, title, publication_year
+FROM paper
+WHERE publication_year = 2024
+  AND cited_by_count > (
+    SELECT AVG(cited_by_count)
+    FROM paper
+    WHERE publication_year = 2024
+  )
+ORDER BY paper_id;"
+NESTED-21,nested,topic_intersection,canonical,few_shot_correction,"List papers tagged both ""cs.LG"" and ""cs.AI"" since 2018",1,1,1,1,96,96,1,4283.0225,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON pt1.paper_id = p.paper_id
+JOIN topic t1 ON t1.topic_id = pt1.topic_id
+JOIN paper_topic pt2 ON pt2.paper_id = p.paper_id
+JOIN topic t2 ON t2.topic_id = pt2.topic_id
+WHERE p.publication_year >= 2018
+  AND lower(t1.name) = lower('cs.LG')
+  AND lower(t2.name) = lower('cs.AI')
+ORDER BY p.paper_id;"
+NESTED-22,nested,topic_intersection,canonical,few_shot_correction,"List papers tagged both ""cs.LG"" and ""cs.CL"" since 2019",1,1,1,1,42,42,1,4882.8471,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON pt1.paper_id = p.paper_id
+JOIN topic t1 ON t1.topic_id = pt1.topic_id
+WHERE lower(t1.name) = lower('cs.LG')
+  AND p.publication_year >= 2019
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt2
+    JOIN topic t2 ON t2.topic_id = pt2.topic_id
+    WHERE pt2.paper_id = p.paper_id
+      AND lower(t2.name) = lower('cs.CL')
+  )
+ORDER BY p.paper_id;"
+NESTED-23,nested,topic_intersection,canonical,few_shot_correction,"List papers tagged both ""cs.LG"" and ""stat.ML"" since 2020",1,1,1,1,62,69,1,3861.266,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON pt1.paper_id = p.paper_id
+JOIN topic t1 ON t1.topic_id = pt1.topic_id
+JOIN paper_topic pt2 ON pt2.paper_id = p.paper_id
+JOIN topic t2 ON t2.topic_id = pt2.topic_id
+WHERE p.publication_year >= 2020
+  AND lower(t1.name) = lower('cs.LG')
+  AND lower(t2.name) = lower('stat.ML')
+GROUP BY p.paper_id, p.title, p.publication_year
+ORDER BY p.paper_id;"
+NESTED-24,nested,topic_intersection,canonical,few_shot_correction,"List papers tagged both ""cs.AI"" and ""cs.CL"" since 2021",1,1,1,1,30,25,1,6639.2075,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+JOIN paper_topic pt1 ON pt1.paper_id = p.paper_id
+JOIN topic t1 ON t1.topic_id = pt1.topic_id
+JOIN paper_topic pt2 ON pt2.paper_id = p.paper_id
+JOIN topic t2 ON t2.topic_id = pt2.topic_id
+WHERE p.publication_year >= 2021
+  AND lower(t1.name) = lower('cs.AI')
+  AND lower(t2.name) = lower('cs.CL')
+ORDER BY p.paper_id;"
+NESTED-25,nested,topic_intersection,paraphrase,few_shot_correction,"Which works from 2022 onward belong to the intersection of ""cs.LG"" and ""cs.CV""?",1,1,1,1,32,34,1,5903.6849,0,0,,"SELECT p.paper_id, p.title, p.publication_year
+FROM paper p
+WHERE p.publication_year >= 2022
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt
+    JOIN topic t ON t.topic_id = pt.topic_id
+    WHERE pt.paper_id = p.paper_id
+      AND lower(t.name) = lower('cs.LG')
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM paper_topic pt
+    JOIN topic t ON t.topic_id = pt.topic_id
+    WHERE pt.paper_id = p.paper_id
+      AND lower(t.name) = lower('cs.CV')
+  )
+ORDER BY p.paper_id;"

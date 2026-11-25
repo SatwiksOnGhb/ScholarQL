@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import time
 from dataclasses import dataclass
 from typing import Literal
 
@@ -54,6 +55,33 @@ class ProviderError(ValueError):
     pass
 
 
+# Free LLM tiers allow only a few requests per minute. On HTTP 429/503 wait (Retry-After if
+# given, else exponential) and try again. Defaults suit the live API (a user is waiting);
+# the benchmark can raise them, e.g. SCHOLARQL_LLM_RETRIES=8 SCHOLARQL_LLM_MIN_INTERVAL=2.
+RETRY_STATUS = {429, 503}
+_last_call = [0.0]
+
+
+def _post(client: httpx.Client, url: str, **kwargs) -> httpx.Response:
+    retries = int(os.getenv("SCHOLARQL_LLM_RETRIES", "3"))
+    min_interval = float(os.getenv("SCHOLARQL_LLM_MIN_INTERVAL", "0"))
+    for attempt in range(retries + 1):
+        wait = _last_call[0] + min_interval - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        _last_call[0] = time.monotonic()
+        res = client.post(url, **kwargs)
+        if res.status_code not in RETRY_STATUS or attempt == retries:
+            return res
+        header = res.headers.get("retry-after", "")
+        try:
+            delay = float(header)
+        except ValueError:
+            delay = 2.0**attempt
+        time.sleep(min(max(delay, 1.0), 60.0))
+    return res
+
+
 @dataclass(frozen=True)
 class Provider:
     vendor: str
@@ -90,7 +118,8 @@ class Provider:
             with httpx.Client(timeout=httpx.Timeout(45, connect=8)) as client:
                 if self.vendor == "gemini":
                     model = self.model.removeprefix("models/")
-                    res = client.post(
+                    res = _post(
+                        client,
                         f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
                         headers={"x-goog-api-key": self.key},
                         json={
@@ -104,7 +133,8 @@ class Provider:
                         for part in res.json()["candidates"][0]["content"]["parts"]
                         if not part.get("thought")
                     )
-                res = client.post(
+                res = _post(
+                    client,
                     "https://api.groq.com/openai/v1/chat/completions",
                     headers={"Authorization": f"Bearer {self.key}"},
                     json={

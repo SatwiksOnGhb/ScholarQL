@@ -40,6 +40,15 @@ def test_generator_prefers_configured_llm(monkeypatch):
     assert eng._generator(Fake()) == "local"
 
 
+def test_auto_uses_the_compiler_first_then_the_llm(monkeypatch):
+    class Fake:
+        providers = {"groq": object()}
+
+    monkeypatch.delenv("SCHOLARQL_GENERATOR", raising=False)
+    assert eng._generator(Fake(), "Find arXiv paper 2305.14314") == "local"  # compiler knows it
+    assert eng._generator(Fake(), "which works did the QLoRA folks put out?") == "groq"
+
+
 @pytest.fixture
 def engine(monkeypatch):
     """The real engine on the pilot PostgreSQL, with an in-memory MongoDB."""

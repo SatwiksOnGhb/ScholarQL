@@ -93,7 +93,7 @@ With MongoDB, `python -m scripts.bootstrap mongo --dense` stores vectors alongsi
 
 Raw measurements and summaries are in `results/`. The two benchmark files are in `data/`. The **Evaluation** page reads the recorded experiment outputs and provides downloads. [Reproduction steps](paper/REPRODUCE.md)
 
-The real-data pilot is a convenience sample. Its 353 records and 325 observed citation edges support the retrieval and SQL studies. The 50,000-paper workload measures PostgreSQL timing on synthetic data. The local compiler matched 80 canonical questions and abstained on 20 paraphrases. Live Gemini/Groq ablation scores and a larger real-data harvest remain to be measured.
+The real-data pilot is a convenience sample. Its 353 records and 325 observed citation edges support the retrieval and SQL studies. The 50,000-paper workload measures PostgreSQL timing on synthetic data. The local compiler matched 80 canonical questions and abstained on 20 paraphrases. Live LLM scores (GPT-OSS-120B on Groq) and the 49,478-paper real harvest are now measured: see `docs/team/llm-benchmark-results.md`.
 
 ## Project files
 

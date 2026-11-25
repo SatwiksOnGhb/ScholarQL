@@ -12,7 +12,14 @@ uv sync
 The Docker stack must be running (`docker compose up`); jobs connect to MongoDB on
 `localhost:27017` using the same settings as `.env`.
 
-## 1. Sample data (until A's ingest is ready)
+## 1. Data
+
+PostgreSQL already holds B's 353-paper pilot after the first `docker compose up` (db/init),
+and its abstracts are in `db/seed/pilot_content.jsonl`, so the embedding jobs below work
+straight away. For the full corpus, run A's pipeline (`pipeline/`) and pass its
+`papers_content.jsonl` with `--content`.
+
+The OpenAlex sample below is optional: a way to get papers without PostgreSQL.
 
 ```bash
 uv run python -m sample.fetch_openalex            # 500 papers -> ../data/sample/
@@ -23,8 +30,8 @@ Writes to `data/sample/` (gitignored; re-run to recreate):
 
 - `papers_content.jsonl`: `{"paper_id", "abstract", "tldr"}`, the same format A's pipeline
   will produce. `tldr` is null here (TLDRs come from A's Semantic Scholar step).
-- `papers_meta.jsonl`: title, year, venue and authors with institutions; a stand-in for
-  A's PostgreSQL tables. `# TODO(A)`: read these from the database once it's loaded.
+- `papers_meta.jsonl`: title, year, venue and authors with institutions, what A's
+  PostgreSQL tables hold. Pass it with `--meta` to run the jobs without PostgreSQL.
 
 No API key is needed for a few thousand papers. Beyond 10,000 results OpenAlex requires one:
 get a free key at https://openalex.org/settings/api and set `OPENALEX_API_KEY` in `.env`.
@@ -32,9 +39,11 @@ get a free key at https://openalex.org/settings/api and set `OPENALEX_API_KEY` i
 ## 2. Embeddings and author profiles
 
 ```bash
-uv run python -m embed.embed_papers    # papers -> MongoDB paper_content + vector index
+uv run python -m embed.embed_papers    # pilot papers -> MongoDB paper_content + vector index
 uv run python -m embed.build_authors   # author_profiles (mean of their papers) + vector index
 ```
+
+Titles, years, venues, authors and institutions come from A's PostgreSQL tables.
 
 - Model: `BAAI/bge-small-en-v1.5` via fastembed (384 dims, CPU). Downloaded once (~65 MB) to
   `~/.cache/fastembed`, outside the repo so OneDrive doesn't sync it.
@@ -44,10 +53,10 @@ uv run python -m embed.build_authors   # author_profiles (mean of their papers) 
   redo). `build_authors` rebuilds every profile each run.
 - Both create or update their vector index from `mongo/vector-indexes.json` and wait until
   it's queryable.
-- Point them at A's real file with `--content` / `--meta`.
-- `embed_papers` also fills the **temporary** `sample_paper_meta` collection (titles, venues,
-  institutions) that the API shows until A's PostgreSQL tables exist. `# TODO(A)`: drop it
-  then (`db.sample_paper_meta.drop()`).
+- A's full set: `--content ../data/papers_content.jsonl` (from
+  `pipeline/extract_papers_content.py`). The sample without PostgreSQL: add
+  `--meta ../data/sample/papers_meta.jsonl` to both jobs; `embed_papers` then also fills
+  `sample_paper_meta`, which the API reads titles from when PostgreSQL has none.
 
 ## 3. Demo analytics data (until B's engine has real traffic)
 

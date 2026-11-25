@@ -206,7 +206,7 @@
         "properties": {
           "author_id": {
             "title": "Author Id",
-            "type": "integer"
+            "type": "string"
           },
           "institution_name": {
             "anyOf": [
@@ -256,11 +256,11 @@
         "properties": {
           "cited_id": {
             "title": "Cited Id",
-            "type": "integer"
+            "type": "string"
           },
           "citing_id": {
             "title": "Citing Id",
-            "type": "integer"
+            "type": "string"
           }
         },
         "required": [
@@ -293,7 +293,13 @@
           },
           "root_id": {
             "title": "Root Id",
-            "type": "integer"
+            "type": "string"
+          },
+          "truncated": {
+            "default": false,
+            "description": "True if the node cap cut the walk short",
+            "title": "Truncated",
+            "type": "boolean"
           }
         },
         "required": [
@@ -314,21 +320,27 @@
           },
           "paper_id": {
             "title": "Paper Id",
-            "type": "integer"
+            "type": "string"
           },
           "title": {
             "title": "Title",
             "type": "string"
           },
           "year": {
-            "title": "Year",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
           }
         },
         "required": [
           "paper_id",
           "title",
-          "year",
           "depth"
         ],
         "title": "CitationNode",
@@ -378,7 +390,7 @@
         "properties": {
           "author_id": {
             "title": "Author Id",
-            "type": "integer"
+            "type": "string"
           },
           "name": {
             "anyOf": [
@@ -411,7 +423,7 @@
         "properties": {
           "institution_id": {
             "title": "Institution Id",
-            "type": "integer"
+            "type": "string"
           },
           "name": {
             "anyOf": [
@@ -543,7 +555,7 @@
           },
           "institution_id": {
             "title": "Institution Id",
-            "type": "integer"
+            "type": "string"
           },
           "name": {
             "title": "Name",
@@ -561,7 +573,7 @@
         "properties": {
           "paper_id": {
             "title": "Paper Id",
-            "type": "integer"
+            "type": "string"
           },
           "score": {
             "title": "Score",
@@ -624,6 +636,7 @@
             "type": "array"
           },
           "citation_count": {
+            "description": "Citations from papers in the corpus",
             "title": "Citation Count",
             "type": "integer"
           },
@@ -652,7 +665,7 @@
           },
           "paper_id": {
             "title": "Paper Id",
-            "type": "integer"
+            "type": "string"
           },
           "title": {
             "title": "Title",
@@ -688,14 +701,20 @@
             ]
           },
           "year": {
-            "title": "Year",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
           }
         },
         "required": [
           "paper_id",
           "title",
-          "year",
           "authors",
           "topics",
           "citation_count"
@@ -707,7 +726,7 @@
         "properties": {
           "author_id": {
             "title": "Author Id",
-            "type": "integer"
+            "type": "string"
           },
           "author_order": {
             "title": "Author Order",
@@ -721,7 +740,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Affiliation on this paper's byline (author_affiliation)"
           },
           "name": {
             "title": "Name",
@@ -734,6 +754,102 @@
           "author_order"
         ],
         "title": "PaperAuthor",
+        "type": "object"
+      },
+      "PaperList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PaperListItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "PaperList",
+        "type": "object"
+      },
+      "PaperListItem": {
+        "properties": {
+          "authors": {
+            "description": "Author names in byline order",
+            "items": {
+              "type": "string"
+            },
+            "title": "Authors",
+            "type": "array"
+          },
+          "citation_count": {
+            "title": "Citation Count",
+            "type": "integer"
+          },
+          "pagerank": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagerank"
+          },
+          "paper_id": {
+            "title": "Paper Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "venue_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue Name"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          }
+        },
+        "required": [
+          "paper_id",
+          "title",
+          "authors",
+          "citation_count"
+        ],
+        "title": "PaperListItem",
         "type": "object"
       },
       "QuestionCount": {
@@ -758,12 +874,12 @@
         "properties": {
           "author_id": {
             "title": "Author Id",
-            "type": "integer"
+            "type": "string"
           },
           "institution_id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -825,7 +941,7 @@
           "author_ids": {
             "description": "Submitting authors; they, their co-authors and same-institution authors are excluded",
             "items": {
-              "type": "integer"
+              "type": "string"
             },
             "maxItems": 20,
             "title": "Author Ids",
@@ -980,7 +1096,7 @@
           },
           "paper_id": {
             "title": "Paper Id",
-            "type": "integer"
+            "type": "string"
           },
           "score": {
             "description": "Vector search score (cosine-based, 0..1), higher is closer",
@@ -1005,7 +1121,7 @@
           "venue_id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -1073,7 +1189,7 @@
           },
           "topic_id": {
             "title": "Topic Id",
-            "type": "integer"
+            "type": "string"
           }
         },
         "required": [
@@ -1103,7 +1219,7 @@
           },
           "topic_id": {
             "title": "Topic Id",
-            "type": "integer"
+            "type": "string"
           }
         },
         "required": [
@@ -1153,7 +1269,7 @@
           },
           "venue_id": {
             "title": "Venue Id",
-            "type": "integer"
+            "type": "string"
           }
         },
         "required": [
@@ -1179,12 +1295,12 @@
                 "type": "null"
               }
             ],
-            "description": "conference or journal",
+            "description": "conference, journal, repository, \u2026",
             "title": "Type"
           },
           "venue_id": {
             "title": "Venue Id",
-            "type": "integer"
+            "type": "string"
           }
         },
         "required": [
@@ -1346,7 +1462,7 @@
                 }
               }
             },
-            "description": "Invalid request"
+            "description": "The engine can't answer this question"
           },
           "429": {
             "content": {
@@ -1367,6 +1483,26 @@
               }
             },
             "description": "Server error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "The engine failed"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "A database is unavailable"
           }
         },
         "summary": "Ask",
@@ -1498,6 +1634,177 @@
         ]
       }
     },
+    "/papers": {
+      "get": {
+        "description": "Browse papers with simple filters, most cited first by default.",
+        "operationId": "list_papers_papers_get",
+        "parameters": [
+          {
+            "description": "Words in the title",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Words in the title",
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "year_from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 2100,
+                  "minimum": 1800,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Year From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "year_to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 2100,
+                  "minimum": 1800,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Year To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "venue_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Venue Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "citations",
+              "pattern": "^(citations|pagerank|year)$",
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 25,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 100000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PostgreSQL unavailable"
+          }
+        },
+        "summary": "List Papers",
+        "tags": [
+          "papers"
+        ]
+      }
+    },
     "/papers/{paper_id}": {
       "get": {
         "operationId": "get_paper_papers__paper_id__get",
@@ -1508,7 +1815,7 @@
             "required": true,
             "schema": {
               "title": "Paper Id",
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -1562,6 +1869,16 @@
               }
             },
             "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PostgreSQL unavailable"
           }
         },
         "summary": "Get Paper",
@@ -1572,6 +1889,7 @@
     },
     "/papers/{paper_id}/citations": {
       "get": {
+        "description": "Breadth-first walk over the citation table in both directions (what the paper cites\nand what cites it), one indexed query per hop, capped at MAX_GRAPH_NODES papers.",
         "operationId": "get_citations_papers__paper_id__citations_get",
         "parameters": [
           {
@@ -1580,7 +1898,7 @@
             "required": true,
             "schema": {
               "title": "Paper Id",
-              "type": "integer"
+              "type": "string"
             }
           },
           {
@@ -1646,6 +1964,16 @@
               }
             },
             "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PostgreSQL unavailable"
           }
         },
         "summary": "Get Citations",
@@ -1868,7 +2196,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "maxLength": 64,
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -2004,7 +2333,48 @@
     },
     "/trends": {
       "get": {
+        "description": "Papers per topic per year, from A's topic_year_trends materialized view.",
         "operationId": "get_trends_trends_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "year_from",
+            "required": false,
+            "schema": {
+              "default": 2018,
+              "maximum": 2100,
+              "minimum": 1800,
+              "title": "Year From",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "year_to",
+            "required": false,
+            "schema": {
+              "default": 2024,
+              "maximum": 2100,
+              "minimum": 1800,
+              "title": "Year To",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Topics with the most papers in the window",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 8,
+              "description": "Topics with the most papers in the window",
+              "maximum": 40,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -2045,6 +2415,16 @@
               }
             },
             "description": "Server error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PostgreSQL unavailable"
           }
         },
         "summary": "Get Trends",

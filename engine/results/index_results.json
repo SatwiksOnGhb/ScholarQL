@@ -1,0 +1,166 @@
+{
+  "metadata": {
+    "postgresql": "PostgreSQL 17.12 (Debian 17.12-0+deb13u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+    "system": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "logical_cpus": 9,
+    "cpu_quota": null,
+    "memory_limit_bytes": null,
+    "counts": {
+      "paper": 50000,
+      "citation": 199886,
+      "author": 18000,
+      "venue": 256,
+      "authorship": 150000,
+      "paper_topic": 50000
+    },
+    "settings_server": {
+      "effective_cache_size": "524288",
+      "jit": "off",
+      "max_parallel_workers_per_gather": "2",
+      "shared_buffers": "16384",
+      "work_mem": "4096"
+    },
+    "settings_session": {
+      "jit": "off",
+      "max_parallel_workers_per_gather": 0
+    },
+    "repetitions_per_query_and_condition": 40,
+    "fixture": "deterministic synthetic",
+    "cache_method": "Warm cache; 3 untimed fetches per block per query; ABBA; shuffled query order within each repeat.",
+    "timing": "Client execute and fetchall on same TCP connection, including protocol and conversion; EXPLAIN is separate.",
+    "rows_verified_equal_across_conditions": true
+  },
+  "rows": [
+    {
+      "query": "venue_year_join",
+      "baseline_median_ms": 5.4848,
+      "indexed_median_ms": 0.811,
+      "baseline_p95_ms": 6.427,
+      "indexed_p95_ms": 1.127,
+      "speedup": 6.763,
+      "baseline_plan": "Limit",
+      "indexed_plan": "Limit",
+      "baseline_buffers_hit": 1847,
+      "indexed_buffers_hit": 394,
+      "result_rows": 100
+    },
+    {
+      "query": "citation_ranking",
+      "baseline_median_ms": 8.6777,
+      "indexed_median_ms": 0.2104,
+      "baseline_p95_ms": 10.2583,
+      "indexed_p95_ms": 0.4179,
+      "speedup": 41.252,
+      "baseline_plan": "Limit",
+      "indexed_plan": "Limit",
+      "baseline_buffers_hit": 1511,
+      "indexed_buffers_hit": 54,
+      "result_rows": 50
+    },
+    {
+      "query": "recursive_citations",
+      "baseline_median_ms": 0.6873,
+      "indexed_median_ms": 0.6254,
+      "baseline_p95_ms": 0.8898,
+      "indexed_p95_ms": 0.9385,
+      "speedup": 1.099,
+      "baseline_plan": "Sort",
+      "indexed_plan": "Sort",
+      "baseline_buffers_hit": 83,
+      "indexed_buffers_hit": 83,
+      "result_rows": 80
+    },
+    {
+      "query": "fuzzy_author",
+      "baseline_median_ms": 25.3137,
+      "indexed_median_ms": 0.4234,
+      "baseline_p95_ms": 27.5315,
+      "indexed_p95_ms": 0.6075,
+      "speedup": 59.787,
+      "baseline_plan": "Limit",
+      "indexed_plan": "Limit",
+      "baseline_buffers_hit": 133,
+      "indexed_buffers_hit": 45,
+      "result_rows": 10
+    },
+    {
+      "query": "topic_trend_base",
+      "baseline_median_ms": 108.5851,
+      "indexed_median_ms": 106.8114,
+      "baseline_p95_ms": 115.7068,
+      "indexed_p95_ms": 110.5311,
+      "speedup": 1.017,
+      "baseline_plan": "Aggregate",
+      "indexed_plan": "Aggregate",
+      "baseline_buffers_hit": 1783,
+      "indexed_buffers_hit": 1783,
+      "result_rows": 224
+    },
+    {
+      "query": "topic_trend_view",
+      "baseline_median_ms": 0.3215,
+      "indexed_median_ms": 0.2698,
+      "baseline_p95_ms": 0.5617,
+      "indexed_p95_ms": 0.4209,
+      "speedup": 1.192,
+      "baseline_plan": "Sort",
+      "indexed_plan": "Sort",
+      "baseline_buffers_hit": 2,
+      "indexed_buffers_hit": 2,
+      "result_rows": 224
+    },
+    {
+      "query": "author_papers",
+      "baseline_median_ms": 9.2207,
+      "indexed_median_ms": 0.3052,
+      "baseline_p95_ms": 11.3878,
+      "indexed_p95_ms": 0.4799,
+      "speedup": 30.21,
+      "baseline_plan": "Sort",
+      "indexed_plan": "Sort",
+      "baseline_buffers_hit": 835,
+      "indexed_buffers_hit": 35,
+      "result_rows": 8
+    },
+    {
+      "query": "doi_lookup",
+      "baseline_median_ms": 0.178,
+      "indexed_median_ms": 0.1224,
+      "baseline_p95_ms": 0.3693,
+      "indexed_p95_ms": 0.2133,
+      "speedup": 1.455,
+      "baseline_plan": "Index Scan",
+      "indexed_plan": "Index Scan",
+      "baseline_buffers_hit": 4,
+      "indexed_buffers_hit": 4,
+      "result_rows": 1
+    },
+    {
+      "query": "incoming_citations",
+      "baseline_median_ms": 0.5354,
+      "indexed_median_ms": 0.4188,
+      "baseline_p95_ms": 0.7803,
+      "indexed_p95_ms": 0.7538,
+      "speedup": 1.278,
+      "baseline_plan": "Limit",
+      "indexed_plan": "Limit",
+      "baseline_buffers_hit": 140,
+      "indexed_buffers_hit": 129,
+      "result_rows": 60
+    },
+    {
+      "query": "title_contains",
+      "baseline_median_ms": 14.5295,
+      "indexed_median_ms": 0.4355,
+      "baseline_p95_ms": 18.8101,
+      "indexed_p95_ms": 0.8056,
+      "speedup": 33.364,
+      "baseline_plan": "Limit",
+      "indexed_plan": "Limit",
+      "baseline_buffers_hit": 1511,
+      "indexed_buffers_hit": 160,
+      "result_rows": 50
+    }
+  ]
+}

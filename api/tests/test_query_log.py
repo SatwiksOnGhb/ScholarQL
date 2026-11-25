@@ -55,6 +55,16 @@ def test_build_log_doc_failure():
     assert "attempts" not in doc
 
 
+@pytest.fixture(autouse=True)
+def fake_engine(monkeypatch):
+    """B's engine needs both databases; these tests are about logging, so fake its answer."""
+
+    async def fake_answer(question):
+        return ANSWER.model_copy()
+
+    monkeypatch.setattr(ask_router.engine, "answer", fake_answer)
+
+
 @pytest.fixture
 def logged(monkeypatch):
     """Capture log_query calls instead of writing to MongoDB."""
@@ -93,7 +103,7 @@ def test_ask_logs_engine_failure(client, logged, monkeypatch):
     async def broken(question):
         raise TimeoutError("LLM took too long")
 
-    monkeypatch.setattr(ask_router, "_placeholder_answer", broken)
+    monkeypatch.setattr(ask_router.engine, "answer", broken)
     r = client.post("/ask", json={"question": "papers from 2020"})
     assert r.status_code == 502
     assert r.json()["error"]["code"] == "engine_error"
@@ -126,3 +136,18 @@ def test_feedback_unknown_id_is_404(client, monkeypatch):
 def test_feedback_rejects_malformed_id(client):
     r = client.post("/feedback", json={"query_id": "abc", "correct": True})
     assert r.status_code == 422
+
+
+def test_ask_unanswerable_question_is_422_and_logged(client, logged, monkeypatch):
+    async def unsupported(question):
+        raise ask_router.engine.UnsupportedQuestion("Add a research concept.")
+
+    monkeypatch.setattr(ask_router.engine, "answer", unsupported)
+    r = client.post("/ask", json={"question": "since 2021"})
+    assert r.status_code == 422
+    assert r.json()["error"] == {
+        "code": "unanswerable",
+        "message": "Add a research concept.",
+        "details": None,
+    }
+    assert logged[0]["error"] == "UnsupportedQuestion: Add a research concept."

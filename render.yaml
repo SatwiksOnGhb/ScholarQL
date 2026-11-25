@@ -9,7 +9,7 @@ services:
     # No rootDir: Render would resolve the two paths below inside it (api/api) and fail.
     # Both are relative to the repo root.
     dockerfilePath: ./api/Dockerfile
-    dockerContext: ./api
+    dockerContext: .  # repo root: the image includes B's engine/
     healthCheckPath: /health
     autoDeployTrigger: checksPass  # deploy main only after GitHub Actions CI passes
     envVars:
@@ -17,7 +17,17 @@ services:
         value: prod
       - key: MONGODB_DB
         value: scholarql
-      - key: DATABASE_URL  # Neon connection string
+      - key: DATABASE_URL  # Neon connection string (owner role)
+        sync: false
+      - key: SCHOLARQL_DATABASE_URL  # Neon, A's read-only scholarql_reader role (B's engine)
+        sync: false
+      - key: GEMINI_API_KEY  # optional LLM for B's engine
+        sync: false
+      - key: GEMINI_MODEL  # a Gemini Flash model name
+        sync: false
+      - key: GROQ_API_KEY  # optional fallback LLM
+        sync: false
+      - key: GROQ_MODEL  # a Llama model name on Groq
         sync: false
       - key: MONGODB_URI  # Atlas mongodb+srv:// connection string
         sync: false

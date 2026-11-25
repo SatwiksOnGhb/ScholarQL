@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
 
 import { PageHeader } from "@/components/page-header";
-import { PlaceholderNotice } from "@/components/placeholder-notice";
 
-import { AskPreview } from "./ask-preview";
+import { AskWorkbench } from "./ask-workbench";
 
 export const metadata: Metadata = { title: "Ask" };
 
-// TODO(B): replace with the real Ask page (question box, SQL viewer, results table, feedback)
 export default function AskPage() {
   return (
     <>
       <PageHeader
         title="Ask"
-        description="Ask a question in plain English and see the SQL behind the answer."
+        description="Ask a question in plain English. ScholarQL answers with SQL over PostgreSQL, ranks papers by meaning over MongoDB, or combines both, and shows its work."
       />
-      <PlaceholderNotice owner="B">
-        POST /ask returns a fixed placeholder answer until the NL-to-SQL engine is connected.
-      </PlaceholderNotice>
-      <AskPreview />
+      <AskWorkbench />
     </>
   );
 }

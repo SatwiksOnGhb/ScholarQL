@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 import { EmptyState } from "@/components/query-state";
 import { Badge } from "@/components/ui/badge";
@@ -31,16 +31,9 @@ function ResultCard({ hit }: { hit: Hit }) {
     <article className="rounded-lg border p-4 transition-colors hover:bg-muted/30">
       <div className="flex items-start justify-between gap-3">
         <h2 className="font-medium leading-snug">
-          {/* TODO(A): link to /papers/{id} once the paper page serves real data */}
-          <a
-            href={`https://openalex.org/W${hit.paper_id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-          >
+          <Link href={`/papers/${hit.paper_id}`} className="hover:underline">
             {hit.title}
-            <ExternalLink className="ml-1 inline size-3.5 align-baseline text-muted-foreground" />
-          </a>
+          </Link>
         </h2>
         <Badge variant="secondary" className="shrink-0 tabular-nums" title="Similarity score">
           {hit.score.toFixed(2)}

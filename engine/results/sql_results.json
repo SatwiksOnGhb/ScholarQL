@@ -1,0 +1,99 @@
+{
+  "primary_engine": "PostgreSQL",
+  "counterfactual_engine": "PostgreSQL",
+  "studies": {
+    "local": {
+      "overall": {
+        "n": 100,
+        "executed": 80,
+        "pilot_correct": 80,
+        "counterfactual_correct": 80,
+        "joint_correct": 80,
+        "empty_gold": 0,
+        "changed_gold": 73,
+        "p95_ms": 9.8118,
+        "repair_attempted": 0,
+        "repair_matched": 0
+      },
+      "tiers": {
+        "lookup": {
+          "n": 25,
+          "executed": 20,
+          "pilot_correct": 20,
+          "counterfactual_correct": 20,
+          "joint_correct": 20,
+          "empty_gold": 0,
+          "changed_gold": 13,
+          "p95_ms": 9.4099,
+          "repair_attempted": 0,
+          "repair_matched": 0
+        },
+        "joins": {
+          "n": 25,
+          "executed": 20,
+          "pilot_correct": 20,
+          "counterfactual_correct": 20,
+          "joint_correct": 20,
+          "empty_gold": 0,
+          "changed_gold": 13,
+          "p95_ms": 7.0039,
+          "repair_attempted": 0,
+          "repair_matched": 0
+        },
+        "aggregation": {
+          "n": 25,
+          "executed": 20,
+          "pilot_correct": 20,
+          "counterfactual_correct": 20,
+          "joint_correct": 20,
+          "empty_gold": 0,
+          "changed_gold": 23,
+          "p95_ms": 10.4071,
+          "repair_attempted": 0,
+          "repair_matched": 0
+        },
+        "nested": {
+          "n": 25,
+          "executed": 20,
+          "pilot_correct": 20,
+          "counterfactual_correct": 20,
+          "joint_correct": 20,
+          "empty_gold": 0,
+          "changed_gold": 24,
+          "p95_ms": 7.8943,
+          "repair_attempted": 0,
+          "repair_matched": 0
+        }
+      },
+      "wording": {
+        "canonical": {
+          "n": 80,
+          "executed": 80,
+          "pilot_correct": 80,
+          "counterfactual_correct": 80,
+          "joint_correct": 80,
+          "empty_gold": 0,
+          "changed_gold": 58,
+          "p95_ms": 10.0876,
+          "repair_attempted": 0,
+          "repair_matched": 0
+        },
+        "paraphrase": {
+          "n": 20,
+          "executed": 0,
+          "pilot_correct": 0,
+          "counterfactual_correct": 0,
+          "joint_correct": 0,
+          "empty_gold": 0,
+          "changed_gold": 15,
+          "p95_ms": 0.219,
+          "repair_attempted": 0,
+          "repair_matched": 0
+        }
+      }
+    }
+  },
+  "providers": {},
+  "benchmark_sha256": "22652063e4099c9329b7e1cd2a380bed900d152f1a33e633602d4615b98ea53e",
+  "pilot_sha256": "fe5526996d8eeda099fbfacc73663d02c934a686ad1e24bfabd021596ac4d9dc"
+}

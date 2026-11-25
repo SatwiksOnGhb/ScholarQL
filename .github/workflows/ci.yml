@@ -17,8 +17,27 @@ env:
 
 jobs:
   python:
-    name: Python (Ruff + lockfile)
+    name: Python (Ruff, lockfiles, tests)
     runs-on: ubuntu-latest
+    # A real PostgreSQL with A's schema and B's pilot data for the papers and engine tests
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: scholarql
+          POSTGRES_PASSWORD: scholarql
+          POSTGRES_DB: scholarql
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U scholarql" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: scholarql
+      PGPASSWORD: scholarql
+      PGDATABASE: scholarql
+      TEST_DATABASE_URL: postgresql://scholarql:scholarql@localhost:5432/scholarql
+      TEST_READER_URL: postgresql://scholarql_reader:ci_reader@localhost:5432/scholarql
     steps:
       - uses: actions/checkout@v7
 
@@ -40,11 +59,23 @@ jobs:
         run: |
           (cd api && uv lock --check)
           (cd jobs && uv lock --check)
+          (cd pipeline && uv lock --check)
 
-      # No databases in this job; the tests don't need them
+      # Same steps as db/init does in Docker
+      - name: Load A's schema, B's pilot data and the reader role
+        run: |
+          sed -n '/^-- migrate:up/,/^-- migrate:down/p' db/migrations/*.sql | psql -v ON_ERROR_STOP=1 -q
+          psql -v ON_ERROR_STOP=1 -q -f db/seed/pilot.sql
+          SCHOLARQL_READER_PASSWORD=ci_reader psql -v ON_ERROR_STOP=1 -q -f db/roles/reader.sql
+
       - name: API tests
         working-directory: api
         run: uv run --frozen pytest -q
+
+      # B's own tests (SQLite pilot), run in the API environment that installs the engine
+      - name: Engine tests
+        working-directory: api
+        run: uv run --frozen python -m unittest discover -s ../engine/tests
 
       # Contract check: the committed spec must match what FastAPI generates now
       - name: OpenAPI spec is up to date
@@ -96,7 +127,7 @@ jobs:
         run: pnpm build
 
   compose:
-    name: Docker Compose smoke test
+    name: Docker Compose + Playwright smoke tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -112,6 +143,35 @@ jobs:
         run: |
           curl --fail --silent --show-error http://localhost:8000/health
           curl --fail --silent --show-error --output /dev/null http://localhost:3000
+
+      # End-to-end smoke tests in a real browser against the running stack (databases empty)
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: web/package.json
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+
+      - name: Install Playwright
+        working-directory: web
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install --with-deps chromium
+
+      - name: Playwright smoke tests
+        working-directory: web
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: web/playwright-report/
+          retention-days: 7
 
       - name: Show logs on failure
         if: failure()

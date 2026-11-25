@@ -1,10 +1,8 @@
 """Paper titles, venue and institution names for search and the reviewer finder.
 
-These live in A's PostgreSQL tables (`paper`, `venue`, `institution`). Until they exist, fall
-back to the temporary MongoDB collection `sample_paper_meta`, which jobs/embed/embed_papers.py
-fills from the sample data (works the same locally and when deployed).
-TODO(A): once the schema is loaded, check the column names below match, then delete the
-fallback and drop sample_paper_meta.
+These live in A's PostgreSQL tables (`paper`, `venue`, `institution`). If PostgreSQL is down or
+empty, fall back to the optional MongoDB collection `sample_paper_meta`, which
+jobs/embed/embed_papers.py fills when it runs on the OpenAlex sample without PostgreSQL.
 """
 
 import logging
@@ -19,17 +17,11 @@ from app.db import mongo, postgres
 log = logging.getLogger(__name__)
 
 # Postgres not ready: tables missing, server down, or pool exhausted
-_NOT_READY = (psycopg.errors.UndefinedTable, psycopg.OperationalError, PoolTimeout, RuntimeError)
-
-
-def _plain_ints(ids: list[int]) -> list[int]:
-    # PyMongo returns big IDs as bson.Int64 and small ones as int; psycopg can't send a
-    # list that mixes the two, so normalise before querying PostgreSQL
-    return [int(i) for i in ids]
+NOT_READY = (psycopg.errors.UndefinedTable, psycopg.OperationalError, PoolTimeout, RuntimeError)
 
 
 def _sample_meta():
-    """TEMPORARY fallback collection (TODO(A))."""
+    """Fallback collection for running without PostgreSQL."""
     return mongo.get_db().sample_paper_meta
 
 
@@ -41,13 +33,14 @@ class PaperSummary:
 
 @dataclass(frozen=True)
 class VenueCount:
-    venue_id: int
+    venue_id: str
     name: str
     paper_count: int
 
 
-async def paper_summaries(ids: list[int]) -> dict[int, PaperSummary]:
-    ids = _plain_ints(ids)
+async def paper_summaries(ids: list[str]) -> dict[str, PaperSummary]:
+    if not ids:
+        return {}
     try:
         async with postgres.get_pool().connection(timeout=2) as conn:
             cur = await conn.execute(
@@ -55,8 +48,10 @@ async def paper_summaries(ids: list[int]) -> dict[int, PaperSummary]:
                 "LEFT JOIN venue v ON v.venue_id = p.venue_id WHERE p.paper_id = ANY(%s)",
                 (ids,),
             )
-            return {pid: PaperSummary(title, venue) for pid, title, venue in await cur.fetchall()}
-    except _NOT_READY as exc:
+            found = {pid: PaperSummary(title, venue) for pid, title, venue in await cur.fetchall()}
+            if found:
+                return found
+    except NOT_READY as exc:
         log.debug("paper table not available (%s); using sample_paper_meta", type(exc).__name__)
     try:
         cursor = _sample_meta().find({"_id": {"$in": ids}}, {"title": 1, "venue_name": 1})
@@ -75,8 +70,10 @@ async def top_venues(limit: int = 50) -> list[VenueCount]:
                 "GROUP BY v.venue_id, v.name ORDER BY n DESC LIMIT %s",
                 (limit,),
             )
-            return [VenueCount(vid, name, n) for vid, name, n in await cur.fetchall()]
-    except _NOT_READY:
+            venues = [VenueCount(vid, name, n) for vid, name, n in await cur.fetchall()]
+            if venues:
+                return venues
+    except NOT_READY:
         pass
     pipeline = [
         {"$match": {"venue_id": {"$ne": None}}},
@@ -92,19 +89,19 @@ async def top_venues(limit: int = 50) -> list[VenueCount]:
         return []
 
 
-async def institution_names(ids: list[int]) -> dict[int, str]:
+async def institution_names(ids: list[str]) -> dict[str, str]:
     if not ids:
         return {}
-    ids = _plain_ints(ids)
     try:
         async with postgres.get_pool().connection(timeout=2) as conn:
             cur = await conn.execute(
-                # TODO(A): check the column name (the synopsis ER says inst_id)
                 "SELECT institution_id, name FROM institution WHERE institution_id = ANY(%s)",
                 (ids,),
             )
-            return dict(await cur.fetchall())
-    except _NOT_READY:
+            found = dict(await cur.fetchall())
+            if found:
+                return found
+    except NOT_READY:
         pass
     pipeline = [
         {"$match": {"institutions.institution_id": {"$in": ids}}},

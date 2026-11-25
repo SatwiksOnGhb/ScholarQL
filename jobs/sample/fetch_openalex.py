@@ -6,8 +6,7 @@ Writes two JSON Lines files (one JSON object per line):
       Exactly the format A's pipeline will hand over (contract 4).
   papers_meta.jsonl     {"paper_id", "title", "year", "doi", "cited_by_count",
                          "venue_id", "venue_name", "authors": [...]}
-      Stand-in for what A's PostgreSQL tables will hold. TODO(A): once the database is
-      loaded, read these fields from paper/venue/authorship/author/institution instead.
+      What A's PostgreSQL tables hold; use it with --meta when running without PostgreSQL.
 
 OpenAlex has no arXiv categories, so "cs.LG" is approximated as: on arXiv, tagged with the
 "Machine learning" concept, primary topic in the "Artificial Intelligence" subfield,
@@ -56,11 +55,11 @@ FIELDS = ",".join(
 MIN_ABSTRACT_WORDS = 40  # skip stubs like "This paper is withdrawn."
 
 
-def openalex_id(url: str | None) -> int | None:
-    """https://openalex.org/W2741809807 -> 2741809807 (the shared numeric ID)."""
+def openalex_id(url: str | None) -> str | None:
+    """https://openalex.org/W2741809807 -> W2741809807 (A's primary-key format)."""
     if not url:
         return None
-    return int(url.rsplit("/", 1)[-1][1:])
+    return url.rsplit("/", 1)[-1]
 
 
 def rebuild_abstract(inverted: dict[str, list[int]] | None) -> str:
@@ -148,7 +147,7 @@ def main() -> None:
     content_path = args.out / "papers_content.jsonl"
     meta_path = args.out / "papers_meta.jsonl"
 
-    seen: set[int] = set()
+    seen: set[str] = set()
     page_no = 1
     with (
         httpx.Client(timeout=30, headers={"User-Agent": "ScholarQL (RVCE DBMS project)"}) as client,

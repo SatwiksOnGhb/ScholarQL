@@ -1,7 +1,7 @@
 """Build author_profiles: one vector per author, the mean of their papers' embeddings.
 
-Run after embed_papers. Authorship and institutions come from the sample papers_meta.jsonl
-until A's PostgreSQL is loaded. TODO(A): read them from authorship/author/institution.
+Run after embed_papers. Authorship and institutions come from A's PostgreSQL tables
+(authorship, author, author_affiliation, institution), or from papers_meta.jsonl with --meta.
 
 An author's institution is the one listed on their most recent paper. Authors with no
 embedded papers are skipped. Re-running replaces every profile, so it's always in sync.
@@ -16,12 +16,12 @@ from pathlib import Path
 import numpy as np
 from pymongo import ReplaceOne
 
-from common import SAMPLE_DIR, batched, ensure_vector_index, mongo_db, read_jsonl
+from common import batched, ensure_vector_index, load_meta, mongo_db
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--meta", type=Path, default=SAMPLE_DIR / "papers_meta.jsonl")
+    parser.add_argument("--meta", type=Path, help="papers_meta.jsonl instead of PostgreSQL")
     args = parser.parse_args()
 
     db = mongo_db()
@@ -32,9 +32,9 @@ def main() -> None:
     if not vectors:
         sys.exit("No embedded papers in paper_content. Run embed.embed_papers first.")
 
-    # Group papers by author (TODO(A): SELECT ... FROM authorship JOIN author ...)
-    authors: dict[int, dict] = {}
-    for paper in sorted(read_jsonl(args.meta), key=lambda p: p["year"]):
+    # Group papers by author; oldest first, so the last institution seen is the latest
+    authors: dict[str, dict] = {}
+    for paper in sorted(load_meta(args.meta).values(), key=lambda p: p["year"] or 0):
         if paper["paper_id"] not in vectors:
             continue
         for a in paper["authors"]:

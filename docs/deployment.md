@@ -6,7 +6,7 @@ Four free services, one per part of the stack:
 |------|------|--------------|
 | Web app | **Vercel** | Next.js (`web/`) |
 | API | **Render** | FastAPI Docker image (`api/Dockerfile`), defined in `render.yaml` |
-| PostgreSQL | **Neon** | A's schema and data (empty until A's migrations exist) |
+| PostgreSQL | **Neon** | A's schema, B's 353-paper pilot, A's read-only role for B's engine |
 | MongoDB | **Atlas M0** | `paper_content`, `author_profiles`, `query_logs` + 2 vector indexes |
 
 Do the steps in this order: the databases first (the API needs their URLs), then the API
@@ -32,9 +32,10 @@ Render URL and the Vercel URL. **Never commit them** or paste them into GitHub.
    `mongodb+srv://scholarql:<password>@...` string and put your password in it. This is
    `MONGODB_URI`.
 
-### Create the collections and load the sample data
+### Create the collections and load the data
 
-From the repo root, with the local Docker stack running (`docker compose up`).
+From the repo root, with the local Docker stack running (`docker compose up`). The jobs read
+paper titles and authors from the **local** PostgreSQL, which holds the same pilot as Neon.
 
 In **PowerShell**:
 
@@ -44,7 +45,7 @@ $env:MONGODB_URI = "mongodb+srv://scholarql:PASSWORD@scholarql.xxxxx.mongodb.net
 # Collections + $jsonSchema validation (uses mongosh inside the local mongodb container)
 docker compose exec -e MONGODB_DB=scholarql mongodb mongosh "$env:MONGODB_URI" /docker-entrypoint-initdb.d/01-collections.js
 
-# Embeddings, author profiles, vector indexes, demo analytics (from data/sample/)
+# Embeddings, author profiles, vector indexes (pilot papers), demo analytics
 cd jobs
 uv run python -m embed.embed_papers
 uv run python -m embed.build_authors
@@ -56,8 +57,7 @@ Remove-Item Env:MONGODB_URI   # so later local runs use the local database again
 
 In Git Bash, use `export MONGODB_URI="..."` / `unset MONGODB_URI` instead, and also
 `export MSYS_NO_PATHCONV=1` first: otherwise Git Bash rewrites `/docker-entrypoint-initdb.d/...`
-into a Windows path and mongosh can't find the script. No `data/sample/`? Run
-`cd jobs && uv run python -m sample.fetch_openalex` first.
+into a Windows path and mongosh can't find the script.
 
 Check in Atlas: *Browse Collections* shows the three collections, and *Atlas Search* lists
 `paper_embedding` and `author_embedding` as **Active**. M0 allows 3 search indexes; the third
@@ -71,8 +71,23 @@ is reserved for B's examples collection.
    (it ends in `?sslmode=require`). This is `DATABASE_URL`.
    The direct (non-pooled) string is deliberate: psycopg prepares repeated statements, which
    don't mix with the pooler's transaction mode; the API keeps its own small pool anyway.
-3. Nothing to load yet. Until A's schema and data are in Neon, the API falls back to
-   placeholder data. When A is ready, A runs the migrations in `db/` against this URL.
+3. Copy the local database (B's pilot, or the full corpus after `pipeline/harvest.py`) to
+   Neon. Add two lines to the repo-root `.env` (never committed):
+
+   ```
+   NEON_DATABASE_URL=<the connection string from step 2>
+   NEON_READER_PASSWORD=<a strong password you choose>
+   ```
+
+   Then, from the repo root with the Docker stack running:
+
+   ```powershell
+   uv run --project pipeline python db/load_neon.py           # add --reset to replace an earlier load
+   ```
+
+   It copies every table, function, PageRank score and view with `pg_dump`/`psql` inside the
+   local postgres container, creates A's read-only `scholarql_reader` role, and prints the
+   `SCHOLARQL_DATABASE_URL` (the read-only connection string) for Render.
 
 ## 3. Render (API)
 
@@ -81,6 +96,9 @@ is reserved for B's examples collection.
    `scholarql-api` service.
 3. Fill in the secrets it asks for:
    - `DATABASE_URL`: from step 2
+   - `SCHOLARQL_DATABASE_URL`: the read-only string `load_neon.py` printed
+   - `GEMINI_API_KEY` / `GEMINI_MODEL`, `GROQ_API_KEY` / `GROQ_MODEL`: optional; without
+     them B's engine uses its rule-based SQL compiler
    - `MONGODB_URI`: from step 1
    - `CORS_ORIGINS`: `http://localhost:3000` for now (you'll replace it in step 5)
    - `CORS_ORIGIN_REGEX`: leave empty for now
@@ -122,11 +140,11 @@ Open the Vercel URL:
 - [ ] **Search**: "contrastive learning" returns papers; the year filter narrows them
 - [ ] **Reviewers**: "Use an example" → Find reviewers returns names with matching papers
 - [ ] **Analytics**: charts show the seeded data
-- [ ] **Ask**: returns the placeholder answer; Yes/No saves feedback
+- [ ] **Ask**: the example chips return answers (SQL, semantic, hybrid); Yes/No saves feedback
+- [ ] **Papers**: the trends chart and library load; a paper opens with its citations
 
-Paper titles, venues and institution names come from A's tables in Neon once they exist.
-Until then they come from the temporary `sample_paper_meta` collection that `embed_papers`
-loads in step 1. If results show titles like "Paper W2963403868", re-run step 1.
+Paper titles, venues and institution names come from A's tables in Neon. If results show
+IDs instead of titles ("Paper W2963403868"), Neon wasn't loaded (step 2.3: `db/load_neon.py`).
 
 ---
 
@@ -147,6 +165,7 @@ Every variable, with local and production values, is documented in
 | Variable | Set in | Value |
 |----------|--------|-------|
 | `DATABASE_URL` | Render | Neon connection string |
+| `SCHOLARQL_DATABASE_URL` | Render | Neon string with the `scholarql_reader` user |
 | `MONGODB_URI` | Render (and your shell, when loading data into Atlas) | Atlas `mongodb+srv://` string |
 | `MONGODB_DB` | `render.yaml` | `scholarql` |
 | `CORS_ORIGINS` | Render | Vercel production URL |
@@ -155,7 +174,7 @@ Every variable, with local and production values, is documented in
 | `PORT` | Render (automatic) | 10000 |
 | `NEXT_PUBLIC_API_URL` | Vercel | Render URL |
 | `ENABLE_EXPERIMENTAL_COREPACK` | Vercel | `1` |
-| `GEMINI_API_KEY`, `GROQ_API_KEY` | Render, later (B) | from Google AI Studio / Groq |
+| `GEMINI_API_KEY`, `GEMINI_MODEL`, `GROQ_API_KEY`, `GROQ_MODEL` | Render (optional) | from Google AI Studio / Groq |
 
 ## Troubleshooting
 

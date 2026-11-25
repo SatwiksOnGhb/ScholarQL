@@ -13,6 +13,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SAMPLE_DIR = REPO_ROOT / "data" / "sample"
+# B's 353-paper pilot, already loaded into PostgreSQL by db/init (see db/seed/)
+PILOT_CONTENT = REPO_ROOT / "db" / "seed" / "pilot_content.jsonl"
 VECTOR_INDEXES = REPO_ROOT / "mongo" / "vector-indexes.json"
 
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
@@ -45,6 +47,73 @@ def mongo_db():
     client = MongoClient(uri, serverSelectionTimeoutMS=5000)
     client.admin.command("ping")  # fail fast with a clear error if Mongo isn't running
     return client[os.environ.get("MONGODB_DB", "scholarql")]
+
+
+def postgres_url() -> str:
+    """The owner connection to A's database (same defaults as docker-compose, host-side port)."""
+    load_env_file()
+    return os.environ.get("DATABASE_URL") or (
+        f"postgresql://{os.environ.get('POSTGRES_USER', 'scholarql')}:"
+        f"{os.environ.get('POSTGRES_PASSWORD', 'scholarql')}@localhost:"
+        f"{os.environ.get('POSTGRES_PORT', '5432')}/{os.environ.get('POSTGRES_DB', 'scholarql')}"
+    )
+
+
+def short_openalex_id(value: str) -> str:
+    """https://openalex.org/W2741809807 -> W2741809807 (A's primary-key format)."""
+    return value.removeprefix("https://openalex.org/").strip()
+
+
+def load_meta(meta_path: Path | None) -> dict[str, dict]:
+    """Per-paper title, year, venue and authors (with institution), keyed by paper_id.
+
+    From A's PostgreSQL tables by default; from a papers_meta.jsonl file (the OpenAlex sample,
+    see sample/fetch_openalex.py) when `meta_path` is given.
+    """
+    if meta_path is not None:
+        return {m["paper_id"]: m for m in read_jsonl(meta_path)}
+
+    import psycopg
+
+    meta: dict[str, dict] = {}
+    with psycopg.connect(postgres_url(), connect_timeout=5) as conn:
+        for pid, title, year, venue_id, venue_name in conn.execute(
+            """SELECT p.paper_id, p.title, p.publication_year, p.venue_id, v.name
+               FROM paper p LEFT JOIN venue v USING (venue_id)"""
+        ):
+            meta[pid] = {
+                "paper_id": pid,
+                "title": title,
+                "year": year,
+                "venue_id": venue_id,
+                "venue_name": venue_name,
+                "authors": [],
+            }
+        # One row per author per paper; their first affiliation on that paper's byline
+        for pid, author_id, name, inst_id, inst_name in conn.execute(
+            """SELECT au.paper_id, au.author_id, a.name, aff.institution_id, i.name
+               FROM authorship au
+               JOIN author a USING (author_id)
+               LEFT JOIN LATERAL (
+                   SELECT institution_id FROM author_affiliation af
+                   WHERE af.paper_id = au.paper_id AND af.author_id = au.author_id
+                   ORDER BY institution_id LIMIT 1
+               ) aff ON true
+               LEFT JOIN institution i ON i.institution_id = aff.institution_id
+               ORDER BY au.paper_id, au.author_order"""
+        ):
+            if pid in meta:
+                meta[pid]["authors"].append(
+                    {
+                        "author_id": author_id,
+                        "name": name,
+                        "institution_id": inst_id,
+                        "institution_name": inst_name,
+                    }
+                )
+    if not meta:
+        sys.exit("No papers in PostgreSQL. Load A's data first, or pass --meta <file>.")
+    return meta
 
 
 def embedding_model():

@@ -21,6 +21,11 @@ class Settings(BaseSettings):
 
     # Defaults match the Docker Compose ports, so running the API on the host just works
     database_url: str = "postgresql://scholarql:scholarql@localhost:5432/scholarql"
+    # B's engine runs generated SQL as A's read-only role (db/roles/reader.sql); empty = use
+    # database_url (fine for local dev, not for production)
+    scholarql_database_url: str = (
+        "postgresql://scholarql_reader:scholarql_reader@localhost:5432/scholarql"
+    )
     mongodb_uri: str = "mongodb://scholarql:scholarql@localhost:27017/?directConnection=true"
     mongodb_db: str = "scholarql"
 

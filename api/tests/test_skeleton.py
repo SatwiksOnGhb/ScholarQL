@@ -21,16 +21,8 @@ def test_health(client):
     assert set(r.json()) == {"status", "postgres", "mongodb"}
 
 
-@pytest.mark.parametrize(
-    "path",
-    ["/papers/1001", "/papers/1001/citations?depth=2", "/trends"],
-)
-def test_get_routes(client, path):
-    assert client.get(path).status_code == 200
-
-
-def test_not_found_uses_error_format(client):
-    r = client.get("/papers/999")
+def test_unknown_route_uses_error_format(client):
+    r = client.get("/no-such-route")
     assert r.status_code == 404
     assert r.json()["error"]["code"] == "not_found"
 

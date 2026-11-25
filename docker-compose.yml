@@ -10,12 +10,17 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-scholarql}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scholarql}
       POSTGRES_DB: ${POSTGRES_DB:-scholarql}
+      # Password of A's read-only role for B's engine (db/roles/reader.sql)
+      SCHOLARQL_READER_PASSWORD: ${SCHOLARQL_READER_PASSWORD:-scholarql_reader}
+      SCHOLARQL_SEED: ${SCHOLARQL_SEED:-pilot}  # "none" = empty tables
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      # *.sql / *.sh here run once, on the first start with an empty volume (A's schema + seed)
+      # Scripts here run once, on the first start with an empty volume: A's schema, B's pilot
+      # data, A's reader role. They read migrations/seed/roles from the whole db/ folder.
       - ./db/init:/docker-entrypoint-initdb.d:ro
+      - ./db:/scholarql-db:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -40,18 +45,29 @@ services:
       - ./mongo/init:/docker-entrypoint-initdb.d:ro
 
   api:
-    build: ./api
+    build:
+      context: .  # repo root, so the image can include B's engine/
+      dockerfile: api/Dockerfile
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-scholarql}:${POSTGRES_PASSWORD:-scholarql}@postgres:5432/${POSTGRES_DB:-scholarql}
+      SCHOLARQL_DATABASE_URL: postgresql://scholarql_reader:${SCHOLARQL_READER_PASSWORD:-scholarql_reader}@postgres:5432/${POSTGRES_DB:-scholarql}
       MONGODB_URI: mongodb://${MONGO_USER:-scholarql}:${MONGO_PASSWORD:-scholarql}@mongodb:27017/?directConnection=true
       MONGODB_DB: ${MONGODB_DB:-scholarql}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      # Optional LLMs for B's engine; without them it uses its rule-based SQL compiler
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-}
+      SCHOLARQL_GENERATOR: ${SCHOLARQL_GENERATOR:-auto}
       # File-change events don't cross Windows/macOS bind mounts reliably; poll instead
       WATCHFILES_FORCE_POLLING: "true"
-    # Dev mode: auto-reload when files in ./api/app change
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    # Dev mode: auto-reload when files in ./api/app or ./engine/scholarql change
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload",
+              "--reload-dir", "/app/app", "--reload-dir", "/engine/scholarql"]
     volumes:
       - ./api/app:/app/app
+      - ./engine/scholarql:/engine/scholarql
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:

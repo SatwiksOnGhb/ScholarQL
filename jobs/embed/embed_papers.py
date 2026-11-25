@@ -1,15 +1,18 @@
 """Embed paper abstracts into MongoDB paper_content, then make sure the vector index exists.
 
-Input: papers_content.jsonl ({"paper_id", "abstract", "tldr"}) from A's pipeline, plus
-title/year/venue_id per paper. Until A's PostgreSQL is loaded those come from the sample
-papers_meta.jsonl. TODO(A): read title, year, venue_id from the paper table instead.
+Input: papers_content.jsonl ({"paper_id", "abstract", "tldr"}) from A's pipeline
+(pipeline/extract_papers_content.py) or the pilot seed (db/seed/pilot_content.jsonl, the
+default), plus title/year/venue_id per paper from A's PostgreSQL tables. Without PostgreSQL,
+pass the OpenAlex sample's papers_meta.jsonl with --meta.
 
 Papers that already have an embedding are skipped, so the job can be re-run or resumed
 (use --force to re-embed everything).
 
 Usage (from jobs/):
-    uv run python -m embed.embed_papers
-    uv run python -m embed.embed_papers --content path/to/papers_content.jsonl --meta ...
+    uv run python -m embed.embed_papers                       # pilot, metadata from PostgreSQL
+    uv run python -m embed.embed_papers --content ../data/papers_content.jsonl   # A's full set
+    uv run python -m embed.embed_papers --content ../data/sample/papers_content.jsonl \
+        --meta ../data/sample/papers_meta.jsonl                # OpenAlex sample, no PostgreSQL
 """
 
 import argparse
@@ -21,12 +24,14 @@ from pymongo import ReplaceOne, UpdateOne
 
 from common import (
     EMBEDDING_DIM,
-    SAMPLE_DIR,
+    PILOT_CONTENT,
     batched,
     embedding_model,
     ensure_vector_index,
+    load_meta,
     mongo_db,
     read_jsonl,
+    short_openalex_id,
 )
 
 BATCH = 64
@@ -39,13 +44,13 @@ def document_text(title: str | None, abstract: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--content", type=Path, default=SAMPLE_DIR / "papers_content.jsonl")
-    parser.add_argument("--meta", type=Path, default=SAMPLE_DIR / "papers_meta.jsonl")
+    parser.add_argument("--content", type=Path, default=PILOT_CONTENT)
+    parser.add_argument("--meta", type=Path, help="papers_meta.jsonl instead of PostgreSQL")
     parser.add_argument("--force", action="store_true", help="re-embed papers that have vectors")
     args = parser.parse_args()
 
     db = mongo_db()
-    meta = {m["paper_id"]: m for m in read_jsonl(args.meta)}  # TODO(A): from PostgreSQL
+    meta = load_meta(args.meta)
     done = (
         set()
         if args.force
@@ -54,10 +59,10 @@ def main() -> None:
 
     todo, missing_meta = [], 0
     for paper in read_jsonl(args.content):
-        pid = paper["paper_id"]
+        pid = paper["paper_id"] = short_openalex_id(str(paper["paper_id"]))
         if pid in done or not paper.get("abstract"):
             continue
-        if pid not in meta:
+        if pid not in meta or meta[pid].get("year") is None:
             missing_meta += 1  # no year -> can't satisfy the paper_content validator
             continue
         todo.append(paper)
@@ -98,15 +103,15 @@ def main() -> None:
 
     ensure_vector_index(db, "paper_content")
     print(f"paper_content: {db.paper_content.count_documents({})} documents")
-    upload_sample_meta(db, meta)
+    if args.meta is not None:  # no PostgreSQL: the API reads titles from here instead
+        upload_sample_meta(db, meta)
 
 
 def upload_sample_meta(db, meta: dict[int, dict]) -> None:
-    """TEMPORARY (TODO(A)): copy titles, venues and institutions into a scratch collection.
+    """Copy titles, venues and institutions into `sample_paper_meta` (only with --meta).
 
-    The API reads paper titles from A's PostgreSQL tables. Until those exist, it falls back to
-    `sample_paper_meta` so search and reviewer results show real titles, locally and when
-    deployed. Drop the collection once A's data is loaded:  db.sample_paper_meta.drop()
+    The API reads paper titles from A's PostgreSQL tables and falls back to this collection
+    when PostgreSQL has none, so the OpenAlex sample works without it.
     """
     ops = []
     for pid, m in meta.items():

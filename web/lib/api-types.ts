@@ -78,6 +78,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/papers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Papers
+         * @description Browse papers with simple filters, most cited first by default.
+         */
+        get: operations["list_papers_papers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/papers/{paper_id}": {
         parameters: {
             query?: never;
@@ -102,7 +122,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Citations */
+        /**
+         * Get Citations
+         * @description Breadth-first walk over the citation table in both directions (what the paper cites
+         *     and what cites it), one indexed query per hop, capped at MAX_GRAPH_NODES papers.
+         */
         get: operations["get_citations_papers__paper_id__citations_get"];
         put?: never;
         post?: never;
@@ -193,7 +217,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Trends */
+        /**
+         * Get Trends
+         * @description Papers per topic per year, from A's topic_year_trends materialized view.
+         */
         get: operations["get_trends_trends_get"];
         put?: never;
         post?: never;
@@ -285,7 +312,7 @@ export interface components {
         /** AuthorOption */
         AuthorOption: {
             /** Author Id */
-            author_id: number;
+            author_id: string;
             /** Institution Name */
             institution_name?: string | null;
             /** Name */
@@ -301,9 +328,9 @@ export interface components {
         /** CitationEdge */
         CitationEdge: {
             /** Cited Id */
-            cited_id: number;
+            cited_id: string;
             /** Citing Id */
-            citing_id: number;
+            citing_id: string;
         };
         /**
          * CitationGraph
@@ -317,7 +344,13 @@ export interface components {
             /** Nodes */
             nodes: components["schemas"]["CitationNode"][];
             /** Root Id */
-            root_id: number;
+            root_id: string;
+            /**
+             * Truncated
+             * @description True if the node cap cut the walk short
+             * @default false
+             */
+            truncated: boolean;
         };
         /** CitationNode */
         CitationNode: {
@@ -327,11 +360,11 @@ export interface components {
              */
             depth: number;
             /** Paper Id */
-            paper_id: number;
+            paper_id: string;
             /** Title */
             title: string;
             /** Year */
-            year: number;
+            year?: number | null;
         };
         /** ErrorBody */
         ErrorBody: {
@@ -352,7 +385,7 @@ export interface components {
         /** ExcludedAuthor */
         ExcludedAuthor: {
             /** Author Id */
-            author_id: number;
+            author_id: string;
             /** Name */
             name?: string | null;
             /**
@@ -364,7 +397,7 @@ export interface components {
         /** ExcludedInstitution */
         ExcludedInstitution: {
             /** Institution Id */
-            institution_id: number;
+            institution_id: string;
             /** Name */
             name?: string | null;
         };
@@ -421,14 +454,14 @@ export interface components {
             /** Country */
             country?: string | null;
             /** Institution Id */
-            institution_id: number;
+            institution_id: string;
             /** Name */
             name: string;
         };
         /** MatchingPaper */
         MatchingPaper: {
             /** Paper Id */
-            paper_id: number;
+            paper_id: string;
             /** Score */
             score: number;
             /** Title */
@@ -447,7 +480,10 @@ export interface components {
             arxiv_id?: string | null;
             /** Authors */
             authors: components["schemas"]["PaperAuthor"][];
-            /** Citation Count */
+            /**
+             * Citation Count
+             * @description Citations from papers in the corpus
+             */
             citation_count: number;
             /** Doi */
             doi?: string | null;
@@ -457,7 +493,7 @@ export interface components {
              */
             pagerank?: number | null;
             /** Paper Id */
-            paper_id: number;
+            paper_id: string;
             /** Title */
             title: string;
             /**
@@ -469,17 +505,49 @@ export interface components {
             topics: components["schemas"]["TopicRef"][];
             venue?: components["schemas"]["VenueRef"] | null;
             /** Year */
-            year: number;
+            year?: number | null;
         };
         /** PaperAuthor */
         PaperAuthor: {
             /** Author Id */
-            author_id: number;
+            author_id: string;
             /** Author Order */
             author_order: number;
+            /** @description Affiliation on this paper's byline (author_affiliation) */
             institution?: components["schemas"]["InstitutionRef"] | null;
             /** Name */
             name: string;
+        };
+        /** PaperList */
+        PaperList: {
+            /** Items */
+            items: components["schemas"]["PaperListItem"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** PaperListItem */
+        PaperListItem: {
+            /**
+             * Authors
+             * @description Author names in byline order
+             */
+            authors: string[];
+            /** Citation Count */
+            citation_count: number;
+            /** Pagerank */
+            pagerank?: number | null;
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** Venue Name */
+            venue_name?: string | null;
+            /** Year */
+            year?: number | null;
         };
         /** QuestionCount */
         QuestionCount: {
@@ -491,9 +559,9 @@ export interface components {
         /** Reviewer */
         Reviewer: {
             /** Author Id */
-            author_id: number;
+            author_id: string;
             /** Institution Id */
-            institution_id?: number | null;
+            institution_id?: string | null;
             /** Institution Name */
             institution_name?: string | null;
             /**
@@ -519,7 +587,7 @@ export interface components {
              * Author Ids
              * @description Submitting authors; they, their co-authors and same-institution authors are excluded
              */
-            author_ids?: number[];
+            author_ids?: string[];
             /**
              * K
              * @default 10
@@ -587,7 +655,7 @@ export interface components {
              */
             abstract?: string | null;
             /** Paper Id */
-            paper_id: number;
+            paper_id: string;
             /**
              * Score
              * @description Vector search score (cosine-based, 0..1), higher is closer
@@ -598,7 +666,7 @@ export interface components {
             /** Tldr */
             tldr?: string | null;
             /** Venue Id */
-            venue_id?: number | null;
+            venue_id?: string | null;
             /** Venue Name */
             venue_name?: string | null;
             /** Year */
@@ -616,7 +684,7 @@ export interface components {
             /** Name */
             name: string;
             /** Topic Id */
-            topic_id: number;
+            topic_id: string;
         };
         /** TopicTrend */
         TopicTrend: {
@@ -630,7 +698,7 @@ export interface components {
             /** Name */
             name: string;
             /** Topic Id */
-            topic_id: number;
+            topic_id: string;
         };
         /** TrendsResponse */
         TrendsResponse: {
@@ -648,7 +716,7 @@ export interface components {
             /** Paper Count */
             paper_count: number;
             /** Venue Id */
-            venue_id: number;
+            venue_id: string;
         };
         /** VenueRef */
         VenueRef: {
@@ -656,11 +724,11 @@ export interface components {
             name: string;
             /**
              * Type
-             * @description conference or journal
+             * @description conference, journal, repository, …
              */
             type?: string | null;
             /** Venue Id */
-            venue_id: number;
+            venue_id: string;
         };
         /** VenuesResponse */
         VenuesResponse: {
@@ -764,7 +832,7 @@ export interface operations {
                     "application/json": components["schemas"]["AskResponse"];
                 };
             };
-            /** @description Invalid request */
+            /** @description The engine can't answer this question */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -784,6 +852,24 @@ export interface operations {
             };
             /** @description Server error */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The engine failed */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A database is unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -900,12 +986,77 @@ export interface operations {
             };
         };
     };
+    list_papers_papers_get: {
+        parameters: {
+            query?: {
+                /** @description Words in the title */
+                q?: string | null;
+                year_from?: number | null;
+                year_to?: number | null;
+                venue_id?: string | null;
+                sort?: string;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperList"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PostgreSQL unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_paper_papers__paper_id__get: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                paper_id: number;
+                paper_id: string;
             };
             cookie?: never;
         };
@@ -956,6 +1107,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description PostgreSQL unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_citations_papers__paper_id__citations_get: {
@@ -965,7 +1125,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                paper_id: number;
+                paper_id: string;
             };
             cookie?: never;
         };
@@ -1009,6 +1169,15 @@ export interface operations {
             };
             /** @description Server error */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PostgreSQL unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1145,7 +1314,7 @@ export interface operations {
                 q: string;
                 k?: number;
                 year_from?: number | null;
-                venue_id?: number | null;
+                venue_id?: string | null;
             };
             header?: never;
             path?: never;
@@ -1251,7 +1420,12 @@ export interface operations {
     };
     get_trends_trends_get: {
         parameters: {
-            query?: never;
+            query?: {
+                year_from?: number;
+                year_to?: number;
+                /** @description Topics with the most papers in the window */
+                limit?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1287,6 +1461,15 @@ export interface operations {
             };
             /** @description Server error */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PostgreSQL unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

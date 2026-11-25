@@ -10,6 +10,11 @@ from app.routers import reviewers as reviewers_router
 from app.services.reviewers import Candidate, rank_papers, select_candidates
 
 
+@pytest.fixture
+def anyio_backend():
+    return "asyncio"
+
+
 @pytest.fixture(scope="module")
 def client():
     with TestClient(app) as c:
@@ -44,16 +49,16 @@ def test_reviewers_endpoint_passes_request(client, monkeypatch):
         calls.append((abstract, author_ids, k))
         return ReviewerResponse(
             reviewers=[],
-            excluded_authors=[ExcludedAuthor(author_id=7, name="X", reason="submitting_author")],
+            excluded_authors=[ExcludedAuthor(author_id="A7", name="X", reason="submitting_author")],
             excluded_institutions=[],
         )
 
     monkeypatch.setattr(reviewers_router, "find_reviewers", fake_find)
-    body = {"abstract": "  " + "a" * 30 + "  ", "author_ids": [7], "k": 3}
+    body = {"abstract": "  " + "a" * 30 + "  ", "author_ids": ["A7"], "k": 3}
     r = client.post("/reviewers", json=body)
     assert r.status_code == 200
     assert r.json()["excluded_authors"][0]["reason"] == "submitting_author"
-    assert calls == [("a" * 30, [7], 3)]
+    assert calls == [("a" * 30, ["A7"], 3)]
 
 
 def test_reviewers_rejects_short_abstract(client):
@@ -64,9 +69,68 @@ def test_reviewers_rejects_short_abstract(client):
 
 def test_author_picker(client, monkeypatch):
     async def fake_search(q, limit):
-        return [AuthorOption(author_id=1, name="Ting Chen", paper_count=2)]
+        return [AuthorOption(author_id="A1", name="Ting Chen", paper_count=2)]
 
     monkeypatch.setattr(reviewers_router, "search_authors", fake_search)
     r = client.get("/reviewers/authors", params={"q": "chen"})
     assert r.json()["authors"][0]["name"] == "Ting Chen"
     assert client.get("/reviewers/authors", params={"q": "c"}).status_code == 422  # min 2 chars
+
+
+class _FakeCursor:
+    def __init__(self, rows):
+        self._rows = rows
+
+    async def fetchall(self):
+        return self._rows
+
+
+class _FakeConn:
+    def __init__(self, result):
+        self._result = result
+
+    async def execute(self, sql, params):
+        if isinstance(self._result, Exception):
+            raise self._result
+        return _FakeCursor(self._result)
+
+
+class _FakePool:
+    def __init__(self, result):
+        self._result = result
+
+    def connection(self, timeout=None):
+        pool = self
+
+        class _Ctx:
+            async def __aenter__(self):
+                return _FakeConn(pool._result)
+
+            async def __aexit__(self, *exc):
+                return False
+
+        return _Ctx()
+
+
+@pytest.mark.anyio
+async def test_coauthors_uses_sql_function(monkeypatch):
+    from app.services import reviewers as svc
+
+    monkeypatch.setattr(svc.postgres, "get_pool", lambda: _FakePool([("A5",), ("A6",), ("A1",)]))
+    assert await svc.coauthors("A1") == {"A5", "A6"}  # the author themself is dropped
+
+
+@pytest.mark.anyio
+async def test_coauthors_falls_back_when_function_missing(monkeypatch):
+    import psycopg
+
+    from app.services import reviewers as svc
+
+    missing = psycopg.errors.UndefinedFunction("function coauthors(text) does not exist")
+    monkeypatch.setattr(svc.postgres, "get_pool", lambda: _FakePool(missing))
+
+    async def fake_mongo(author_id):
+        return {"A42"}
+
+    monkeypatch.setattr(svc, "_coauthors_from_mongo", fake_mongo)
+    assert await svc.coauthors("A1") == {"A42"}

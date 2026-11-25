@@ -1,0 +1,20 @@
+[project]
+name = "scholarql-engine"
+version = "0.1.0"
+description = "Person B's NL-to-SQL and document ranking engine (contract 3: scholarql.answer)"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27,<1",
+    "numpy>=1.26,<3",
+    "pglast>=7.7,<9",
+    "psycopg[binary]>=3.2,<4",
+    "pymongo>=4.10,<5",
+    "python-dotenv>=1,<2",
+]
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["scholarql"]

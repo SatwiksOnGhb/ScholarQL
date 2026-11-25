@@ -1,0 +1,11 @@
+query,baseline_median_ms,indexed_median_ms,baseline_p95_ms,indexed_p95_ms,speedup,baseline_plan,indexed_plan,baseline_buffers_hit,indexed_buffers_hit,result_rows
+venue_year_join,5.4848,0.811,6.427,1.127,6.763,Limit,Limit,1847,394,100
+citation_ranking,8.6777,0.2104,10.2583,0.4179,41.252,Limit,Limit,1511,54,50
+recursive_citations,0.6873,0.6254,0.8898,0.9385,1.099,Sort,Sort,83,83,80
+fuzzy_author,25.3137,0.4234,27.5315,0.6075,59.787,Limit,Limit,133,45,10
+topic_trend_base,108.5851,106.8114,115.7068,110.5311,1.017,Aggregate,Aggregate,1783,1783,224
+topic_trend_view,0.3215,0.2698,0.5617,0.4209,1.192,Sort,Sort,2,2,224
+author_papers,9.2207,0.3052,11.3878,0.4799,30.21,Sort,Sort,835,35,8
+doi_lookup,0.178,0.1224,0.3693,0.2133,1.455,Index Scan,Index Scan,4,4,1
+incoming_citations,0.5354,0.4188,0.7803,0.7538,1.278,Limit,Limit,140,129,60
+title_contains,14.5295,0.4355,18.8101,0.8056,33.364,Limit,Limit,1511,160,50

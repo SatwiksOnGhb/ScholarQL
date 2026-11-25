@@ -14,6 +14,7 @@ from app.errors import register_error_handlers
 from app.limits import limiter
 from app.models.common import COMMON_RESPONSES, HealthResponse
 from app.routers import admin, ask, papers, reviewers, search
+from app.services import engine
 
 
 @asynccontextmanager
@@ -21,7 +22,9 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     # Runs once at startup (before `yield`) and once at shutdown (after it)
     await postgres.open_pool()
     mongo.connect()
+    engine.configure()
     yield
+    engine.close()
     await postgres.close_pool()
     await mongo.close()
 

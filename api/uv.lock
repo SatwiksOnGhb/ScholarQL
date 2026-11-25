@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = "==3.12.*"
 
 [[package]]
@@ -352,6 +352,20 @@ wheels = [
 ]
 
 [[package]]
+name = "mongomock"
+version = "4.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+    { name = "pytz" },
+    { name = "sentinels" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4d/a4/4a560a9f2a0bec43d5f63104f55bc48666d619ca74825c8ae156b08547cf/mongomock-4.3.0.tar.gz", hash = "sha256:32667b79066fabc12d4f17f16a8fd7361b5f4435208b3ba32c226e52212a8c30", size = 135862, upload-time = "2024-11-16T11:23:25.957Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/94/4d/8bea712978e3aff017a2ab50f262c620e9239cc36f348aae45e48d6a4786/mongomock-4.3.0-py2.py3-none-any.whl", hash = "sha256:5ef86bd12fc8806c6e7af32f21266c61b6c4ba96096f85129852d1c4fec1327e", size = 64891, upload-time = "2024-11-16T11:23:24.748Z" },
+]
+
+[[package]]
 name = "numpy"
 version = "2.5.4"
 source = { registry = "https://pypi.org/simple" }
@@ -407,6 +421,23 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/7d/fa/3944b40b07da9ce895c0e6303a5ab7d53da063554f534556b134a54d6093/packaging-26.3.tar.gz", hash = "sha256:94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79", size = 313412, upload-time = "2026-08-04T18:15:28.737Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl", hash = "sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c", size = 129956, upload-time = "2026-08-04T18:15:27.159Z" },
+]
+
+[[package]]
+name = "pglast"
+version = "8.9"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f1/21/de733535c819287b267f16cd63b59c5d10f8934e12d79f4921d4be2e5bbb/pglast-8.9.tar.gz", hash = "sha256:d99df8cbe4a5902c193be31eebc04c08602766379a61c3d7fc5f9bb74986e450", size = 4105589, upload-time = "2026-11-19T07:35:26.377Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ad/c9/241996887b3e7c30dec4062ba71518991fdcbfde0acbb73c36a418f80d67/pglast-8.9-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:3d36ebfc97ae49e942db24b4ccb7a089b8a2e721e92be94558165cb75eb08ef6", size = 1792230, upload-time = "2026-11-19T08:08:42.303Z" },
+    { url = "https://files.pythonhosted.org/packages/0f/ad/a53a19b92e305b1d30c15a6a7f60b1ee271519e134fe1fa72e12568c5324/pglast-8.9-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:42d951836469d9b521a35dec809dbfb368f4611b391b2cc845803d3f7b9edd7e", size = 1709592, upload-time = "2026-11-19T08:08:43.622Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/33/50f67d1298a5f4ab779b4182389990d2f9ea9f5ab7ec213627e8030fd3db/pglast-8.9-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:93be5cfea643e1fc40a7e0b2b98ed1d430fe6345e2a37d7c173e5d140a13f099", size = 7711695, upload-time = "2026-11-19T08:08:45.309Z" },
+    { url = "https://files.pythonhosted.org/packages/6b/1f/b2c005473492b1ef3d78fe2f6454b14b7b948e104a4d729270cd043e9e10/pglast-8.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:8e77490a0d9f589c35c7bd25318ed95ccb3c93aef5d362a5b82890f63284d440", size = 7985337, upload-time = "2026-11-19T08:08:46.9Z" },
+    { url = "https://files.pythonhosted.org/packages/9e/35/7def77a19aaaebd4fafddadc6974aed4bc8bee1f4d639dff343ace72b33b/pglast-8.9-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:0689eabd1f7c21503b4fa9e5227cc1cf7a9ebb7c90ab593758117c3241729277", size = 7455469, upload-time = "2026-11-19T08:08:48.507Z" },
+    { url = "https://files.pythonhosted.org/packages/16/47/08f1460dda16fe59514fc49dc567789c5439fe2a90b1a872f0266471b746/pglast-8.9-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:b5c2fc3e63171721d721d2ae97b98e31ffd628f0c159d908c3da113fa9169978", size = 7735862, upload-time = "2026-11-19T08:08:50.376Z" },
+    { url = "https://files.pythonhosted.org/packages/b3/0e/632360995322694b28f6f8eab265953f3b0af2721dbd633a6bbb6c06aa64/pglast-8.9-cp312-cp312-win32.whl", hash = "sha256:a4b7047e5e572591ffa67f955060864653b15c8634e8dc92557edbdb9f702b8a", size = 1486703, upload-time = "2026-11-19T08:08:52.12Z" },
+    { url = "https://files.pythonhosted.org/packages/08/1a/33e58402633315d76d470a760cd95def5da2ba13b1aa9958309cd6833ef0/pglast-8.9-cp312-cp312-win_amd64.whl", hash = "sha256:c7e76599e9aa8f34065aa54acc2d093eb392ddb42e89029af1d20e9c2e22e1c4", size = 1610899, upload-time = "2026-11-19T08:08:53.623Z" },
+    { url = "https://files.pythonhosted.org/packages/63/39/d1bf7bff1eff4f1efd3c74d7cd37325dff3d2820a765c62e455cf1fb7e24/pglast-8.9-cp312-cp312-win_arm64.whl", hash = "sha256:28645fc02f9fce3c8f04300d7c84109b67d8fc22287642a090b71fbe92ac27cb", size = 1493620, upload-time = "2026-11-19T08:08:55.202Z" },
 ]
 
 [[package]]
@@ -635,6 +666,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pytz"
+version = "2026.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f5/b0/168030b0bfcc334cf09fa3313afdb888d892c8a0027324683d1de0ec277e/pytz-2026.6.tar.gz", hash = "sha256:3b0fc2727707663d6e517936f444fd8a8b240f1fc32f4bf7ee03274245945284", size = 318520, upload-time = "2026-10-29T09:05:47.011Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b6/25/564f3fc5b70c1398d706c51f2b1470d0ea0b1b2f96fee67877b6f5bdf3b6/pytz-2026.6-py2.py3-none-any.whl", hash = "sha256:7fed3fee8fd6bd4a2b7b75a8d56021d0624127bf69bd5691f115db929ac570b3", size = 506321, upload-time = "2026-10-29T09:05:45.14Z" },
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -702,6 +742,7 @@ dependencies = [
     { name = "psycopg", extra = ["binary", "pool"] },
     { name = "pydantic-settings" },
     { name = "pymongo" },
+    { name = "scholarql-engine" },
     { name = "slowapi" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -709,6 +750,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "httpx" },
+    { name = "mongomock" },
     { name = "pytest" },
     { name = "ruff" },
 ]
@@ -720,6 +762,7 @@ requires-dist = [
     { name = "psycopg", extras = ["binary", "pool"], specifier = ">=3.3.6" },
     { name = "pydantic-settings", specifier = ">=2.16.1" },
     { name = "pymongo", specifier = ">=4.19.0" },
+    { name = "scholarql-engine", editable = "../engine" },
     { name = "slowapi", specifier = ">=0.1.10" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.32" },
 ]
@@ -727,8 +770,41 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "mongomock", specifier = ">=4.3.0" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "ruff", specifier = "==0.17.2" },
+]
+
+[[package]]
+name = "scholarql-engine"
+version = "0.1.0"
+source = { editable = "../engine" }
+dependencies = [
+    { name = "httpx" },
+    { name = "numpy" },
+    { name = "pglast" },
+    { name = "psycopg", extra = ["binary"] },
+    { name = "pymongo" },
+    { name = "python-dotenv" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.27,<1" },
+    { name = "numpy", specifier = ">=1.26,<3" },
+    { name = "pglast", specifier = ">=7.7,<9" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.2,<4" },
+    { name = "pymongo", specifier = ">=4.10,<5" },
+    { name = "python-dotenv", specifier = ">=1,<2" },
+]
+
+[[package]]
+name = "sentinels"
+version = "1.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/9b/07195878aa25fe6ed209ec74bc55ae3e3d263b60a489c6e73fdca3c8fe05/sentinels-1.1.1.tar.gz", hash = "sha256:3c2f64f754187c19e0a1a029b148b74cf58dd12ec27b4e19c0e5d6e22b5a9a86", size = 4393, upload-time = "2025-08-12T07:57:50.26Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/49/65/dea992c6a97074f6d8ff9eab34741298cac2ce23e2b6c74fb7d08afdf85c/sentinels-1.1.1-py3-none-any.whl", hash = "sha256:835d3b28f3b47f5284afa4bf2db6e00f2dc5f80f9923d4b7e7aeeeccf6146a11", size = 3744, upload-time = "2025-08-12T07:57:48.858Z" },
 ]
 
 [[package]]

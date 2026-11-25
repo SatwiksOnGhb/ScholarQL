@@ -1,0 +1,137 @@
+{
+  "metadata": {
+    "questions": 24,
+    "documents": 353,
+    "k": 5,
+    "miniLM_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "onnx_sha256": "b941bf19f1f1283680f449fa6a7336bb5600bdcd5f84d10ddc5cd72218a0fd21",
+    "pilot_sha256": "fe5526996d8eeda099fbfacc73663d02c934a686ad1e24bfabd021596ac4d9dc",
+    "qrels_sha256": "c982c8528d411f09283a457d0b372b284b48df2b74bcccef3f4f32366da142b9"
+  },
+  "summaries": {
+    "semantic": {
+      "bm25_prefilter": {
+        "n": 8,
+        "recall": 0.61458,
+        "ndcg": 0.65503,
+        "mrr": 0.75417,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 5.0,
+        "p95_ms": 0.9534
+      },
+      "tfidf_prefilter": {
+        "n": 8,
+        "recall": 0.59375,
+        "ndcg": 0.72533,
+        "mrr": 0.84375,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 5.0,
+        "p95_ms": 0.8692
+      },
+      "minilm_vector_only": {
+        "n": 8,
+        "recall": 0.76042,
+        "ndcg": 0.81191,
+        "mrr": 0.875,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 5.0,
+        "p95_ms": 2.8989
+      },
+      "minilm_postfilter": {
+        "n": 8,
+        "recall": 0.76042,
+        "ndcg": 0.81191,
+        "mrr": 0.875,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 5.0,
+        "p95_ms": 3.5772
+      },
+      "minilm_prefilter": {
+        "n": 8,
+        "recall": 0.76042,
+        "ndcg": 0.81191,
+        "mrr": 0.875,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 5.0,
+        "p95_ms": 3.755
+      }
+    },
+    "hybrid": {
+      "bm25_prefilter": {
+        "n": 16,
+        "recall": 0.77604,
+        "ndcg": 0.81522,
+        "mrr": 0.9375,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 4.875,
+        "p95_ms": 0.8835
+      },
+      "tfidf_prefilter": {
+        "n": 16,
+        "recall": 0.79688,
+        "ndcg": 0.77915,
+        "mrr": 0.875,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 4.875,
+        "p95_ms": 0.9836
+      },
+      "minilm_vector_only": {
+        "n": 16,
+        "recall": 0.58333,
+        "ndcg": 0.61232,
+        "mrr": 0.75521,
+        "eligibility": 0.475,
+        "queries_with_violations": 16,
+        "nonempty_rate": 1.0,
+        "mean_results": 5.0,
+        "p95_ms": 2.951
+      },
+      "minilm_postfilter": {
+        "n": 16,
+        "recall": 0.58333,
+        "ndcg": 0.67712,
+        "mrr": 0.90625,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 2.375,
+        "p95_ms": 3.3184
+      },
+      "minilm_prefilter": {
+        "n": 16,
+        "recall": 0.75,
+        "ndcg": 0.7582,
+        "mrr": 0.92188,
+        "eligibility": 1.0,
+        "queries_with_violations": 0,
+        "nonempty_rate": 1.0,
+        "mean_results": 5.0,
+        "p95_ms": 3.3673
+      }
+    }
+  },
+  "paired_hybrid_recall": {
+    "comparison": "MiniLM prefilter minus MiniLM postfilter, absolute Recall@5 on the 16 hybrid questions",
+    "mean_delta": 0.16667,
+    "bootstrap_95": [
+      0.06771,
+      0.27604
+    ],
+    "n_resamples": 10000,
+    "seed": 4801
+  }
+}

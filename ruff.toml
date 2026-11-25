@@ -7,3 +7,10 @@ src = [".", "api", "jobs"]
 [lint]
 # E/F: pycodestyle + pyflakes (defaults), I: import sorting, UP: modern syntax, B: likely bugs
 select = ["E", "F", "I", "UP", "B"]
+
+# Teammates' code brought in from their own projects (A: db/bench, pipeline; B: engine):
+# formatted with Ruff, but long SQL/prompt strings and a few style rules are left as written
+[lint.per-file-ignores]
+"db/bench/**" = ["E501", "B905"]
+"pipeline/**" = ["E501", "B905"]
+"engine/**" = ["E501", "B905", "B904", "B007", "E731"]

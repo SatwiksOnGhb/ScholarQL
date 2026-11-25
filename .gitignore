@@ -23,3 +23,11 @@ data/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Committed seed and benchmark data
+!db/seed/*.jsonl
+!bench/*.jsonl
+!engine/data/
+!engine/data/*.jsonl
+# B engine caches (SQLite pilot, model, embeddings)
+engine/runtime/

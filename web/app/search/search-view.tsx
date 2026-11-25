@@ -32,11 +32,11 @@ export function SearchView() {
   const params = useSearchParams();
   const q = params.get("q")?.trim() ?? "";
   const yearFrom = toInt(params.get("year_from"));
-  const venueId = toInt(params.get("venue_id"));
+  const venueId = params.get("venue_id") || undefined;
 
   const [draft, setDraft] = useState(q);
 
-  function update(next: { q?: string; year_from?: number; venue_id?: number }) {
+  function update(next: { q?: string; year_from?: number; venue_id?: string }) {
     const merged = { q, year_from: yearFrom, venue_id: venueId, ...next };
     const search = new URLSearchParams();
     if (merged.q) search.set("q", merged.q);
@@ -106,7 +106,7 @@ export function SearchView() {
               className="max-w-64"
               value={venueId ?? ""}
               disabled={!venues.data}
-              onChange={(e) => update({ venue_id: toInt(e.target.value) })}
+              onChange={(e) => update({ venue_id: e.target.value || undefined })}
             >
               <option value="">Any venue</option>
               {venues.data?.venues.map((v) => (

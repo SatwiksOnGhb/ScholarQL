@@ -26,7 +26,7 @@ class VectorFilters(TypedDict, total=False):
 
     year_from: int
     year_to: int
-    venue_id: int
+    venue_id: str
 
 
 def mongo_filter(filters: VectorFilters | None) -> dict | None:
@@ -50,7 +50,7 @@ def mongo_filter(filters: VectorFilters | None) -> dict | None:
 
 async def vector_search(
     text: str, k: int = 10, filters: VectorFilters | None = None
-) -> list[tuple[int, float]]:
+) -> list[tuple[str, float]]:
     """Top-k papers by meaning: [(paper_id, score)], best first. Score is cosine-based, 0..1."""
     stage: dict = {
         "index": INDEX,
@@ -95,7 +95,7 @@ async def search_papers(text: str, k: int, filters: VectorFilters | None) -> lis
             SearchHit(
                 paper_id=paper_id,
                 score=round(score, 4),
-                title=summary.title if summary else f"Paper W{paper_id}",
+                title=summary.title if summary else f"Paper {paper_id}",
                 year=doc.get("year"),
                 venue_id=doc.get("venue_id"),
                 venue_name=summary.venue_name if summary else None,

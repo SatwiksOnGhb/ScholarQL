@@ -5,15 +5,15 @@
 //   Local:  see mongo/README.md for the docker compose exec command
 //   Atlas:  mongosh "<atlas-uri>" mongo/init/01-collections.js
 //
-// IDs are OpenAlex numbers (W2741809807 -> 2741809807), the same keys as in PostgreSQL.
-// They don't fit in 32 bits, so most are stored as BSON long; small ones may be int.
+// IDs are OpenAlex short IDs as strings ("W2741809807", "A5023651", "S4306420609"), exactly the
+// text primary keys in A's PostgreSQL tables, so results join across the two databases as-is.
 // Vector search indexes are defined in mongo/vector-indexes.json, not here.
 
 const DB_NAME = (typeof process !== "undefined" && process.env.MONGODB_DB) || "scholarql";
 const target = db.getSiblingDB(DB_NAME);
 
-const ID = { bsonType: ["int", "long"] };
-const OPTIONAL_ID = { bsonType: ["int", "long", "null"] };
+const ID = { bsonType: "string", minLength: 1 };
+const OPTIONAL_ID = { bsonType: ["string", "null"] };
 const EMBEDDING = {
   bsonType: "array",
   minItems: 384,

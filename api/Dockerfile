@@ -1,3 +1,5 @@
+# Build context is the repo root (docker-compose.yml, render.yaml), so B's engine/ can be
+# installed alongside the API. Root .dockerignore keeps the context small.
 FROM python:3.12-slim
 
 # uv installs the exact versions pinned in uv.lock
@@ -11,9 +13,12 @@ ENV UV_COMPILE_BYTECODE=1 \
 
 WORKDIR /app
 
-# Install dependencies first so this layer is cached until the lockfile changes.
-# The venv lives in /opt/venv so the dev bind mount of ./app doesn't hide it.
-COPY pyproject.toml uv.lock ./
+# Install dependencies first so this layer is cached until the lockfile or engine changes.
+# The venv lives in /opt/venv so the dev bind mounts of ./app and ./engine don't hide it.
+# B's engine is a path dependency (../engine in api/pyproject.toml), so it sits at /engine.
+COPY api/pyproject.toml api/uv.lock ./
+COPY engine/pyproject.toml /engine/pyproject.toml
+COPY engine/scholarql /engine/scholarql
 RUN uv sync --frozen --no-dev --no-install-project
 
 # Bake the embedding model into the image (~65 MB) so the first search doesn't download it
@@ -21,7 +26,7 @@ ENV FASTEMBED_CACHE=/opt/fastembed \
     HF_HUB_DISABLE_SYMLINKS_WARNING=1
 RUN python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-small-en-v1.5', cache_dir='/opt/fastembed')"
 
-COPY app ./app
+COPY api/app ./app
 
 EXPOSE 8000
 # Hosts like Render choose the port via $PORT (8000 locally). --proxy-headers makes uvicorn

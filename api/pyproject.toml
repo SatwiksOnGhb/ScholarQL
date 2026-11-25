@@ -9,13 +9,19 @@ dependencies = [
     "psycopg[binary,pool]>=3.3.6",
     "pydantic-settings>=2.16.1",
     "pymongo>=4.19.0",
+    "scholarql-engine",
     "slowapi>=0.1.10",
     "uvicorn[standard]>=0.32",
 ]
 
+# Person B's engine (../engine), installed from the repo, editable for local development
+[tool.uv.sources]
+scholarql-engine = { path = "../engine", editable = true }
+
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
+    "mongomock>=4.3.0",
     "pytest>=9.1.1",
     "ruff==0.17.2",  # keep in sync with RUFF_VERSION in .github/workflows/ci.yml
 ]

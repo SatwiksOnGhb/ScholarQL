@@ -1,9 +1,7 @@
-"""Natural-language question endpoints. Owned by Person B.
+"""Natural-language question endpoints: B's engine behind POST /ask, plus feedback.
 
-PLACEHOLDER: `_placeholder_answer` returns a fixed Answer built from the fake catalog.
-TODO(B): replace it with `await engine.answer(question)` (or run the sync engine with
-asyncio.to_thread). Logging and feedback storage are done (C, task 10); keep the
-log_query() calls when swapping in the engine.
+Every question is logged to MongoDB query_logs (answers and failures), and the log's ID is
+returned as `query_id` for POST /feedback.
 """
 
 import logging
@@ -11,47 +9,39 @@ import time
 
 from fastapi import APIRouter, Request
 
-from app import fake_data as fake
 from app.config import settings
 from app.errors import ApiError
 from app.limits import limiter
-from app.models.ask import Answer, AskRequest, AskResponse, FeedbackRequest, FeedbackResponse
-from app.models.common import NOT_FOUND
+from app.models.ask import AskRequest, AskResponse, FeedbackRequest, FeedbackResponse
+from app.models.common import NOT_FOUND, ErrorResponse
+from app.services import engine
 from app.services.query_log import log_query, record_feedback
 
 log = logging.getLogger(__name__)
 router = APIRouter(tags=["ask"])
 
 
-async def _placeholder_answer(question: str) -> Answer:
-    # TODO(B): engine.answer(question)
-    rows = [
-        [p["title"], p["year"], fake.VENUES[p["venue_id"]]["name"]]
-        for p in fake.PAPERS.values()
-        if p["year"] == 2020
-    ]
-    return Answer(
-        sql=(
-            "SELECT p.title, p.year, v.name AS venue\n"
-            "FROM paper p JOIN venue v ON v.venue_id = p.venue_id\n"
-            "WHERE p.year = 2020\nORDER BY p.title\nLIMIT 100"
-        ),
-        columns=["title", "year", "venue"],
-        rows=rows,
-        route="sql",
-        explanation=f'Placeholder answer for "{question}": papers published in 2020.',
-        attempts=1,
-        latency_ms=0,
-    )
+ASK_ERRORS = {
+    422: {"model": ErrorResponse, "description": "The engine can't answer this question"},
+    502: {"model": ErrorResponse, "description": "The engine failed"},
+    503: {"model": ErrorResponse, "description": "A database is unavailable"},
+}
 
 
-@router.post("/ask")
+@router.post("/ask", responses=ASK_ERRORS)
 @limiter.limit(settings.rate_limit_heavy)  # each question costs LLM quota
 async def ask(request: Request, body: AskRequest) -> AskResponse:
     question = body.question.strip()
     start = time.perf_counter()
     try:
-        answer = await _placeholder_answer(question)
+        answer = await engine.answer(question)
+    except engine.EngineError as exc:
+        # Unsupported wording or rejected SQL: log it, and show the engine's explanation
+        latency_ms = round((time.perf_counter() - start) * 1000)
+        await log_query(question, None, latency_ms=latency_ms, error=f"{type(exc).__name__}: {exc}")
+        if isinstance(exc, engine.DocumentsUnavailable):
+            raise ApiError(503, "service_unavailable", str(exc)) from exc
+        raise ApiError(422, "unanswerable", str(exc)) from exc
     except Exception as exc:
         # Log failures too: the analytics page reports failure reasons
         latency_ms = round((time.perf_counter() - start) * 1000)

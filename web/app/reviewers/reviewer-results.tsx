@@ -1,4 +1,5 @@
 import { ShieldCheck } from "lucide-react";
+import Link from "next/link";
 
 import { EmptyState } from "@/components/query-state";
 import { Badge } from "@/components/ui/badge";
@@ -90,15 +91,13 @@ function ReviewerCard({ reviewer, rank }: { reviewer: Schemas["Reviewer"]; rank:
           <ul className="space-y-1 text-sm">
             {reviewer.matching_papers.map((p) => (
               <li key={p.paper_id} className="flex items-baseline justify-between gap-3">
-                <a
-                  href={`https://openalex.org/W${p.paper_id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={`/papers/${p.paper_id}`}
                   className="min-w-0 truncate hover:underline"
                   title={p.title}
                 >
                   {p.title}
-                </a>
+                </Link>
                 <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                   {p.year} · {p.score.toFixed(2)}
                 </span>

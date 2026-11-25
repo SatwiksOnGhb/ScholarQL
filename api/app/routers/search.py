@@ -17,7 +17,7 @@ async def search(
     q: str = Query(min_length=1, max_length=500, description="What the papers should be about"),
     k: int = Query(10, ge=1, le=50),
     year_from: int | None = Query(None, ge=1900, le=2100),
-    venue_id: int | None = None,
+    venue_id: str | None = Query(None, max_length=64),
 ) -> SearchResponse:
     filters: VectorFilters = {}
     if year_from is not None:

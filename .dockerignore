@@ -1,0 +1,9 @@
+# Build context for api/Dockerfile is the repo root; only api/ and engine/ are needed
+*
+!api/pyproject.toml
+!api/uv.lock
+!api/app/
+!engine/pyproject.toml
+!engine/scholarql/
+**/__pycache__
+**/*.pyc

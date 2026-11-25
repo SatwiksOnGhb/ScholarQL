@@ -118,14 +118,14 @@ From now on Render redeploys automatically when `main` changes **and CI passes**
    the browser bundle at build time):
    - `NEXT_PUBLIC_API_URL` = `https://<your-service>.onrender.com` (no trailing slash)
    - `ENABLE_EXPERIMENTAL_COREPACK` = `1` (lets Vercel use pnpm 12 from `web/package.json`)
-5. *Deploy*. Note the production URL, e.g. `https://scholarql.vercel.app`.
+5. *Deploy*. Note the production URL, e.g. `https://scholarql-web.vercel.app`.
 
 ## 5. Connect them (CORS)
 
 The API only answers browsers from origins it knows. In Render: *scholarql-api →
 Environment*:
 
-- `CORS_ORIGINS` = your Vercel production URL, e.g. `https://scholarql.vercel.app`
+- `CORS_ORIGINS` = your Vercel production URL, e.g. `https://scholarql-web.vercel.app`
 - optional `CORS_ORIGIN_REGEX` = `https://scholarql(-[a-z0-9-]+)?\.vercel\.app` so Vercel's
   preview deployments (one per branch/PR) work too. Adjust `scholarql` to your project name.
 

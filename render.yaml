@@ -31,7 +31,7 @@ services:
         sync: false
       - key: MONGODB_URI  # Atlas mongodb+srv:// connection string
         sync: false
-      - key: CORS_ORIGINS  # the Vercel production URL, e.g. https://scholarql.vercel.app
+      - key: CORS_ORIGINS  # the Vercel production URL, e.g. https://scholarql-web.vercel.app
         sync: false
       - key: CORS_ORIGIN_REGEX  # optional: allow Vercel preview deployments
         sync: false

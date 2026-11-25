@@ -7,6 +7,7 @@ Routes get a connection with `conn: AsyncConnection = Depends(get_conn)`.
 from collections.abc import AsyncIterator
 
 from psycopg import AsyncConnection
+from psycopg.rows import tuple_row
 from psycopg_pool import AsyncConnectionPool
 
 from app.config import settings
@@ -14,9 +15,18 @@ from app.config import settings
 _pool: AsyncConnectionPool | None = None
 
 
+async def _reset(conn: AsyncConnection) -> None:
+    """Give every borrowed connection the default tuple rows again. The papers router sets
+    dict rows on its connection; without this, the next borrower (search titles, venue list,
+    reviewer finder) would get dicts and unpack their keys instead of their values."""
+    conn.row_factory = tuple_row
+
+
 async def open_pool() -> None:
     global _pool
-    _pool = AsyncConnectionPool(settings.database_url, min_size=1, max_size=10, open=False)
+    _pool = AsyncConnectionPool(
+        settings.database_url, min_size=1, max_size=10, open=False, reset=_reset
+    )
     # Doesn't wait for a first connection, so the API still starts if Postgres is down
     await _pool.open(wait=False)
 

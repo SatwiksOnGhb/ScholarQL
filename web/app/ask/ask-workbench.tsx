@@ -19,9 +19,9 @@ type Answer = Schemas["AskResponse"];
 // From B's demo list: one per kind of question the engine handles
 const EXAMPLES = [
   { kind: "Aggregation", q: "Top 5 venues by average citations since 2021" },
-  { kind: "Lookup", q: "Find arXiv paper 2305.14314" },
-  { kind: "Recursive SQL", q: 'Show the citation chain from "Mistral 7B" up to depth 2' },
-  { kind: "Set difference", q: 'Papers that cite "LoRA: Low-Rank Adaptation of Large Language Models" but not "Mistral 7B"' },
+  { kind: "Lookup", q: "Find arXiv paper 2106.09685" },
+  { kind: "Recursive SQL", q: 'Show the citation chain from "GPT-4 Technical Report" up to depth 2' },
+  { kind: "Set difference", q: 'Papers that cite "LoRA: Low-Rank Adaptation of Large Language Models" but not "GPT-4 Technical Report"' },
   { kind: "Semantic", q: "Explain how diffusion models generate images" },
   { kind: "Hybrid", q: "Find papers about adapting language models on a small GPU published since 2023" },
 ];
@@ -151,6 +151,8 @@ function cell(column: string, value: unknown) {
       </Link>
     );
   }
+  // Years and IDs are shown as-is (2023, not 2,023)
+  if (typeof value === "number" && /year/i.test(column)) return String(value);
   if (typeof value === "number") return value.toLocaleString("en-US", { maximumFractionDigits: 4 });
   if (typeof value === "object") return <code className="text-xs">{JSON.stringify(value)}</code>;
   return String(value);

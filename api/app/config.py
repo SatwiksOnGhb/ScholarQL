@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     mongodb_uri: str = "mongodb://scholarql:scholarql@localhost:27017/?directConnection=true"
     mongodb_db: str = "scholarql"
 
-    # Comma-separated list, e.g. "http://localhost:3000,https://scholarql.vercel.app"
+    # Comma-separated list, e.g. "http://localhost:3000,https://scholarql-web.vercel.app"
     cors_origins: str = "http://localhost:3000"
     # Optional regex for origins that change per deploy, e.g. Vercel preview URLs:
     # "https://scholarql(-[a-z0-9-]+)?\.vercel\.app"
